@@ -115,11 +115,11 @@ $.DEBUG = 0;
 $.setup = 0;
 
 var w,h;
-$.getUrlVar('w')  ? w=$.getUrlVar('w') : w=12;
-$.getUrlVar('h')  ? h=$.getUrlVar('h') : h=12;
-$.getUrlVar('wa') ? $.wallImage = $.getUrlVar('wa') : $.wallImage = "wall.png";
-$.getUrlVar('c')  ? $.ceilImage =  $.getUrlVar('c') : $.ceilImage = "ceiling.png";
-$.getUrlVar('f')  ? $.floorImage = $.getUrlVar('f') : $.floorImage = "floor.png";
+w=12;
+h=12;
+$.wallImage = "wall.png";
+$.ceilImage = "ceiling.png";
+$.floorImage = "floor.png";
 
 scene = new THREE.Scene();
 
@@ -133,9 +133,6 @@ $.autopilot = $.getUrlVar('a');
 
 console.log('p1');
 console.log($("#wall"));
-//$("#wall").load("images.php?f=wall.png");
-//$("#floor").load("images.php?f=floor.png");
-$("#ceiling").load("ceiling.png");
 console.log('p2');
 $("#w").val(w);
 $("#h").val(h);
@@ -319,7 +316,7 @@ function End(Y,X)
     this.mesh = new THREE.Mesh
     (
         new THREE.CubeGeometry( 100, 100, 0, 1, 1, 1, null),
-        new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture("img/cool.png") })
+        new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture("cool.png") })
     )
     this.mesh.material.transparent=1;
     this.posY = Y;
@@ -407,7 +404,7 @@ function Rat(Y,X)
     this.mesh = new THREE.Mesh
     (
         new THREE.CubeGeometry( 200, 100, 0, 1, 1, 1, null),
-        new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture("img/rat2.png") })
+        new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture("rat2.png") })
     )
     
     this.mesh.material.transparent=1;
@@ -599,13 +596,13 @@ function init()
     
     
     var floorImg = new Image();
-    floorImg.src = "img/"+$.floorImage;
+    floorImg.src = $.floorImage;
 
     floorImg.onload = function()
     {
         console.log('ceilImg.onload');
         var floorGeometry = new THREE.CubeGeometry( 320*w, 0, 320*h, 1, 1, 1, null);
-        var floorTexture = THREE.ImageUtils.loadTexture("img/"+$.floorImage);
+        var floorTexture = THREE.ImageUtils.loadTexture($.floorImage);
         floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
         floorTexture.offset.x = 0;
         floorTexture.offset.y = 0;
@@ -698,26 +695,26 @@ function init()
         }
     }
     
-    wallsMesh = new THREE.Mesh( combinedWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture("img/"+$.wallImage)}));
+    wallsMesh = new THREE.Mesh( combinedWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture($.wallImage)}));
     
     wallsMesh.scale.y = .05;
     
     scene.add( wallsMesh );
     
-    coolWallsMesh = new THREE.Mesh( coolWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture("img/globe.png")}));
+    coolWallsMesh = new THREE.Mesh( coolWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture("globe.png")}));
     
     coolWallsMesh.scale.y = .05;
     
     scene.add( coolWallsMesh );
     
     var ceilImg = new Image();
-    ceilImg.src = "img/"+$.ceilImage;
+    ceilImg.src = $.ceilImage;
 
     ceilImg.onload = function()
     {
         console.log('ceilImg.onload');
         var ceilGeometry = new THREE.CubeGeometry( 320*w, 0, 320*h, 1, 1, 1, null);
-        var ceilTexture = THREE.ImageUtils.loadTexture("img/"+$.ceilImage);
+        var ceilTexture = THREE.ImageUtils.loadTexture($.ceilImage);
         ceilTexture.wrapS = ceilTexture.wrapT = THREE.RepeatWrapping;
         ceilTexture.offset.x = 0;
         ceilTexture.offset.y = 0;
