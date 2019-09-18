@@ -262,16 +262,10 @@ $.rats = Math.ceil((w*h)/50);
 $("#w").val(w);
 $("#h").val(h);
 
-new THREE.JSONLoader().load
-( 
-    "n64_.js", function( geometry ){createActors( geometry )}
-);
-
-function createActors(n64Geometry)
+function createActors()
 {
     actors = new Array();
 
-    $.n64Mesh = new THREE.Mesh( n64Geometry, new THREE.MeshFaceMaterial() );
     //Add actors
     for(i=0;i<$.rats;++i)
     {
@@ -308,6 +302,7 @@ function createActors(n64Geometry)
     //alert(actors[1].posY + " " + actors[1].posX + "\n" + actors[2].posY + " " + actors[2].posX)
 }
 
+createActors();
 
 
 function displayHearts(h)
@@ -376,7 +371,7 @@ function End(Y,X)
         new THREE.CubeGeometry( 100, 100, 0, 1, 1, 1, null),
         new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture("cool.png") })
     )
-    this.mesh.material.transparent=1;
+    this.mesh.material.transparent=true;
     this.posY = Y;
     this.posX = X;
     this.mesh.position.z = -( (this.posY*320) + (320)/2 );
@@ -415,38 +410,31 @@ function End(Y,X)
     }
 }
 
-function OpenGL(Y,X)
-{
+function OpenGL(Y,X) {   
+    var loader = new THREE.FontLoader();
+    loader.load('droid_serif_bold.typeface.json',
+    function (font) {
     this.mesh = new THREE.Mesh
     (
-        new THREE.TextGeometry( "WebGL",
+        new THREE.TextGeometry( "OpenGL",
         {
             size: 25,
-            height: 50,
-            curveSegments: 2,
+            height: 10,
+            curveSegments: 12,
 
-            font: "droid serif",
-            weight: "normal",
-            style: "normal",
-
-            bevelThickness: 2,
-            bevelSize: 2,
-            bevelEnabled: 1
+            font: font,
+            weight: "bold",
+            style: "bold",
         }),
-        new THREE.MeshPhongMaterial( { color: 0xff0000, specular: 0xffffff, ambient: 0xaa0000 } )
+        new THREE.MeshPhongMaterial( { color: 0x00ff00, specular: 0xffffff} )
     )
-    //this.mesh = new THREE.Mesh();
-    //this.mesh2.position.x=-100;
-    //this.mesh2.position.y=-100;
-    
-    //THREE.GeometryUtils.merge(this.mesh,this.mesh2);
     
     this.posY = Y;
     this.posX = X;
     this.mesh.position.z = -( (this.posY*320) + (320)/2 - 50);
-    this.mesh.position.x = -( (this.posX*320) + (320)/2 - 50);
+    this.mesh.position.x = -( (this.posX*320) + (320)/2 + 50);
     this.mesh.position.y = 100;
-    this.mesh.scale.y = 0;
+    //this.mesh.scale.y = 0;
 
     scene.add(this.mesh)
     
@@ -454,6 +442,8 @@ function OpenGL(Y,X)
     {
         this.mesh.rotation.y = camera.rotation.y;
     }
+    });
+    
 }
 
 function Rat(Y,X)
@@ -461,11 +451,11 @@ function Rat(Y,X)
     this.name="rat";
     this.mesh = new THREE.Mesh
     (
-        new THREE.CubeGeometry( 200, 100, 0, 1, 1, 1, null),
+        new THREE.CubeGeometry( 100, 50, 0, 1, 1, 1, null),
         new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture("rat2.png") })
     )
     
-    this.mesh.material.transparent=1;
+    this.mesh.material.transparent=true;
     this.mesh.scale.y = 0;
     this.posY = Y;
     this.posX = X;
@@ -578,18 +568,16 @@ function Rat(Y,X)
 
 function Spinner(Y,X)
 {
-    this.name="n64";
+    this.name="Spinner";
     
     this.mesh = new THREE.Mesh
     (
-        $.n64Mesh.geometry,
-        $.n64Mesh.material
+        new THREE.IcosahedronGeometry(),
+        new THREE.MeshPhongMaterial({ color: 0xcccccc, specular: 0xffffff})
     )
-    
-    this.mesh.material.transparent=1;
-    this.mesh.scale.x=10;
-    this.mesh.scale.y=10;
-    this.mesh.scale.z=10;
+    this.mesh.scale.x=50;
+    this.mesh.scale.y=50;
+    this.mesh.scale.z=50;
     this.posY = Y;
     this.posX = X;
 
@@ -774,7 +762,7 @@ function init()
         ceilTexture.offset.y = 0;
         ceilTexture.repeat.x = (w*320)/this.width;
         ceilTexture.repeat.y = (h*320)/this.height;
-        var ceilMaterial = new THREE.MeshBasicMaterial({map: ceilTexture });
+        var ceilMaterial = new THREE.MeshBasicMaterial({map: ceilTexture});
         ceilMesh = new THREE.Mesh( ceilGeometry, ceilMaterial );
         ceilMesh.position.z = -( 320*h / 2 );
         ceilMesh.position.y = 200;
