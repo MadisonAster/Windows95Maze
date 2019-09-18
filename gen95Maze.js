@@ -263,11 +263,6 @@ $.rats = Math.ceil((w*h)/50);
 $("#w").val(w);
 $("#h").val(h);
 
-$("#optionsButton").mouseover(function()
-{
-    $("body").css("cursor", "pointer");
-});
-
 $("#setupBar").mousedown(function()
 {
     $.drag = 1;
@@ -286,17 +281,6 @@ $(document).mousemove(function(e)
         $("#setup").css("left",e.pageX+"px")
     }
 }); 
-
-$("#optionsButton").mouseleave(function()
-{
-    $("body").css("cursor", "default");
-});
-
-$("#optionsButton").mouseup(function()
-{
-    $.setup=1;
-    $("#setup").css("z-index","2");
-});
 
 $("#xButton").mouseup(function()
 {
