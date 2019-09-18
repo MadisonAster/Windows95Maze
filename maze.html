@@ -103,10 +103,6 @@ canvas
 </div>
 
 <script>
-//Hello source code reader
-//If you see something that looks to be in bad form/could be optimized please tell me
-//sirtophatte@gmail.com
-
 
 $.ajaxSetup({async:false})
 
@@ -127,13 +123,11 @@ scene = new THREE.Scene();
 $.w=w;
 $.h=h;
 //r == $.rats
-$.getUrlVar("r") ? $.rats = $.getUrlVar('r') : $.rats = Math.ceil((w*h)/50);
+$.rats = Math.ceil((w*h)/50);
 
-$.autopilot = $.getUrlVar('a');
+//$.autopilot = $.getUrlVar('a');
+//$.autopilot = true;
 
-console.log('p1');
-console.log($("#wall"));
-console.log('p2');
 $("#w").val(w);
 $("#h").val(h);
 
@@ -179,27 +173,6 @@ $("#xButton").mouseup(function()
     
 });
 
-/*
-$("#go").click(function()
-{
-    console.log('go function!');
-    URL = "?w="  + $("#w").val()
-                    
-    URL += "&h="  + $("#h").val()
-                    
-    URL += "&wa=" + $("#wall").val()
-                    
-    URL += "&f="  + $("#floor").val()
-                    
-    URL += "&c="  + $("#ceiling").val()
-        
-    document.location = URL
-});
-*/
-
-
-console.log('p3');
-
 new THREE.JSONLoader().load
 ( 
     "n64_.js", function( geometry ){createActors( geometry )}
@@ -207,11 +180,9 @@ new THREE.JSONLoader().load
 
 function createActors(n64Geometry)
 {
-    console.log('createActors');
     actors = new Array();
 
     $.n64Mesh = new THREE.Mesh( n64Geometry, new THREE.MeshFaceMaterial() );
-    //console.log($.n64Mesh);
     //Add actors
     for(i=0;i<$.rats;++i)
     {
@@ -272,8 +243,6 @@ konami.code = function()
     flip();
 }
 konami.load();
-
-console.log('p4');
 
 function gameOver()
 {
@@ -433,7 +402,6 @@ function Rat(Y,X)
                 }
                 $.i=1;
                 that=this;
-                //alert();
                 this.hurtInterval = setInterval(function()
                 {
                     $.i--;
@@ -559,7 +527,6 @@ function Spinner(Y,X)
 
 function init()
 {
-    console.log('init');
     health=3;
     $.t=0; //turning
     $.g=0; //going
@@ -600,7 +567,6 @@ function init()
 
     floorImg.onload = function()
     {
-        console.log('ceilImg.onload');
         var floorGeometry = new THREE.CubeGeometry( 320*w, 0, 320*h, 1, 1, 1, null);
         var floorTexture = THREE.ImageUtils.loadTexture($.floorImage);
         floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
@@ -712,7 +678,6 @@ function init()
 
     ceilImg.onload = function()
     {
-        console.log('ceilImg.onload');
         var ceilGeometry = new THREE.CubeGeometry( 320*w, 0, 320*h, 1, 1, 1, null);
         var ceilTexture = THREE.ImageUtils.loadTexture($.ceilImage);
         ceilTexture.wrapS = ceilTexture.wrapT = THREE.RepeatWrapping;
@@ -820,8 +785,6 @@ $().mousemove( function(e)
     $.mouseX = e.pageX; 
     $.mouseY = e.pageY;
 });
-
-console.log('p5');
 
 function flip()
 {
@@ -1124,7 +1087,5 @@ function render()
 {
     renderer.render( scene, camera );
 }
-
-console.log('p6');
 
 </script>
