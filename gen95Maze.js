@@ -240,7 +240,6 @@ $.ajaxSetup({async:false})
 
 
 $.DEBUG = 0;
-$.setup = 0;
 
 var w,h;
 w=12;
@@ -262,32 +261,6 @@ $.rats = Math.ceil((w*h)/50);
 
 $("#w").val(w);
 $("#h").val(h);
-
-$("#setupBar").mousedown(function()
-{
-    $.drag = 1;
-});
-
-$("#setupBar").mouseup(function()
-{
-    $.drag = 0;
-});
-
-$(document).mousemove(function(e)
-{
-    if($.drag)
-    {
-        $("#setup").css("top",e.pageY+"px")
-        $("#setup").css("left",e.pageX+"px")
-    }
-}); 
-
-$("#xButton").mouseup(function()
-{
-    $("#setup").css("z-index","-2");
-    $.setup=0;
-    
-});
 
 new THREE.JSONLoader().load
 ( 
@@ -831,42 +804,40 @@ function animate()
 }
 
 $(window).keydown(function(event)
-{    if(!$.setup)
+{
+    if(!gameOverCounter)
     {
-        if(!gameOverCounter)
+        try
         {
-            try
+            switch(event.keyCode)
             {
-                switch(event.keyCode)
-                {
-                    case 65: //a
-                        turn('l');
-                        break;
-                    case 68: //d
-                        turn('r');
-                        break;
-                    case 87: //w
-                        go('f');
-                        break;
-                    case 83: //s
-                        go('b');
-                        break;
-                    case 38: //Up
-                        go('f');
-                        break;
-                    case 37: //Left
-                        turn('l');
-                        break;
-                    case 40: //Down
-                        go('b');
-                        break;
-                    case 39: //Right
-                        turn('r');
-                        break;
-                }
+                case 65: //a
+                    turn('l');
+                    break;
+                case 68: //d
+                    turn('r');
+                    break;
+                case 87: //w
+                    go('f');
+                    break;
+                case 83: //s
+                    go('b');
+                    break;
+                case 38: //Up
+                    go('f');
+                    break;
+                case 37: //Left
+                    turn('l');
+                    break;
+                case 40: //Down
+                    go('b');
+                    break;
+                case 39: //Right
+                    turn('r');
+                    break;
             }
-            catch(err){}
         }
+        catch(err){}
     }
 });
 
