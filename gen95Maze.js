@@ -1,202 +1,3 @@
-function init(){
-    $.t=0; //turning
-    $.g=0; //going
-    $.f=0; //flipping
-    $.i=0; //temporary invincibility to $.rats
-    $.p=0; //presses for go()
-    $.p2=0; //presses for turn()
-    face = 'n';
-    
-    //Creates the variable $.rows which is an array of arrays of cells of the maze
-    windows95Maze(window.MazeWidth,window.MazeDepth);
-    
-    $.posX = Math.round(window.MazeWidth/2);
-    $.posY = window.MazeDepth-1;
-    
-    //var ambient = new THREE.AmbientLight( 0xFFFFFF );
-    //scene.add( ambient );
-    
-    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
-    camera.position.z = -( ($.posY*320) + (320)/2 ) //+ (320/2);
-    camera.position.y = 100;
-    camera.position.x = -( $.posX*320 + (320/2));//-(window.MazeWidth*320)/2 - (320/2);
-    camera.rotation.y = rad(180);
-    camera.far = 100;// greater(window.MazeWidth,window.MazeDepth)*320;
-
-    scene.add( camera );
-    
-    pointLight = new THREE.PointLight( 0xFFFFFF );
-    pointLight.position.z = -( ($.posY*320) + (320)/2 );
-    pointLight.position.x = -( ($.posX*320) + (320)/2 );
-
-    scene.add(pointLight)
-    
-    
-    var floorImg = new Image();
-    floorImg.src = $.floorImage;
-
-    floorImg.onload = function()
-    {
-        var floorGeometry = new THREE.CubeGeometry( 320*window.MazeWidth, 0, 320*window.MazeDepth, 1, 1, 1, null);
-        var floorTexture = THREE.ImageUtils.loadTexture($.floorImage);
-        floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-        floorTexture.offset.x = 0;
-        floorTexture.offset.y = 0;
-        floorTexture.repeat.x = (window.MazeWidth*320)/this.width;
-        floorTexture.repeat.y = (window.MazeDepth*320)/this.height;
-        var floorMaterial = new THREE.MeshBasicMaterial({map: floorTexture });
-        floorMesh = new THREE.Mesh( floorGeometry, floorMaterial );
-        floorMesh.position.z = -( 320*window.MazeDepth / 2 );
-        floorMesh.position.y = 0;
-        floorMesh.position.x = -320*window.MazeWidth / 2;
-        
-        scene.add(floorMesh);
-    }
-    
-    //Crazy wall generation shenanigans
-    var combinedWalls = new THREE.Geometry();
-    
-    var coolWalls = new THREE.Geometry();
-    
-    for(y=0;y<window.MazeDepth;++y)
-    {
-        for(x=0;x<window.MazeWidth;++x)
-        {
-    
-            if($.rows[y][x].up)
-            {
-                mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
-                mesh.position.x = -((x+1)*320) + (320/2);
-                mesh.position.y = 100;
-                mesh.position.z = -( y*320 )//(window.MazeDepth*320) - y;
-
-                if(randint(0,window.MazeWidth*window.MazeDepth))
-                {
-                    THREE.GeometryUtils.merge( combinedWalls, mesh );
-                }
-                else
-                {
-                    THREE.GeometryUtils.merge( coolWalls, mesh );
-                }
-
-            }
-            if($.rows[y][x].left)
-            {
-                mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
-                mesh.position.x = -((x)*320)// - (320/2);
-                mesh.position.y = 100;
-                mesh.position.z = -( ((y+1)*320) - (320/2) );//(window.MazeDepth*320) - y;
-                
-                if(randint(0,window.MazeWidth*window.MazeDepth))
-                {
-                    THREE.GeometryUtils.merge( combinedWalls, mesh );
-                }
-                else
-                {
-                    THREE.GeometryUtils.merge( coolWalls, mesh );
-                }
-            }
-            if($.rows[y][x].down && y==window.MazeDepth-1) //It only does this on the outside so that there aren't cloned walls all over
-            {
-                mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
-                mesh.position.x = -(((x+1)*320) - (320/2));
-                mesh.position.y = 100;
-                mesh.position.z = -( (y+1)*320 );//(window.MazeDepth*320) - y;
-
-                if(randint(0,window.MazeWidth*window.MazeDepth))
-                {
-                    THREE.GeometryUtils.merge( combinedWalls, mesh );
-                }
-                else
-                {
-                    THREE.GeometryUtils.merge( coolWalls, mesh );
-                }
-            }
-            if($.rows[y][x].right && x==window.MazeWidth-1) //Ditto
-            {
-                mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
-                mesh.position.x = -((x+1)*320)// - (320/2);
-                mesh.position.y = 100;
-                mesh.position.z = - ( ((y+1)*320) - (320/2) );//(window.MazeDepth*320) - y;
-
-                if(randint(0,window.MazeWidth*window.MazeDepth))
-                {
-                    THREE.GeometryUtils.merge( combinedWalls, mesh );
-                }
-                else
-                {
-                    THREE.GeometryUtils.merge( coolWalls, mesh );
-                }
-            }    
-        }
-    }
-    
-    wallsMesh = new THREE.Mesh(combinedWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture($.wallImage)}));
-    
-    wallsMesh.scale.y = .05;
-    
-    scene.add(wallsMesh);
-    
-    coolWallsMesh = new THREE.Mesh( coolWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture("globe.png")}));
-    
-    coolWallsMesh.scale.y = .05;
-    
-    scene.add( coolWallsMesh );
-    
-    var ceilImg = new Image();
-    ceilImg.src = $.ceilImage;
-
-    ceilImg.onload = function()
-    {
-        var ceilGeometry = new THREE.CubeGeometry( 320*window.MazeWidth, 0, 320*window.MazeDepth, 1, 1, 1, null);
-        var ceilTexture = THREE.ImageUtils.loadTexture($.ceilImage);
-        ceilTexture.wrapS = ceilTexture.wrapT = THREE.RepeatWrapping;
-        ceilTexture.offset.x = 0;
-        ceilTexture.offset.y = 0;
-        ceilTexture.repeat.x = (window.MazeWidth*320)/this.width;
-        ceilTexture.repeat.y = (window.MazeDepth*320)/this.height;
-        var ceilMaterial = new THREE.MeshBasicMaterial({map: ceilTexture});
-        ceilMesh = new THREE.Mesh( ceilGeometry, ceilMaterial );
-        ceilMesh.position.z = -( 320*window.MazeDepth / 2 );
-        ceilMesh.position.y = 200;
-        ceilMesh.position.x = -320*window.MazeWidth / 2;
-        scene.add(ceilMesh);
-    }
-    
-    try
-    {
-        renderer = new THREE.WebGLRenderer();
-        renderer.setSize( window.innerWidth, window.innerHeight );
-
-        document.body.appendChild( renderer.domElement );
-    }
-    catch(err)
-    {
-        alert("WebGL couldn't start! Make sure you're using a supported browser and graphics card and that your graphics card's drivers are up to date.");
-    }
-
-}
-
-function animate(){
-    requestAnimationFrame(animate);
-    render();
-}
-
-window.requestAnimFrame = (function(){
-    return  window.requestAnimationFrame || 
-    window.webkitRequestAnimationFrame || 
-    window.mozRequestAnimationFrame || 
-    window.oRequestAnimationFrame ||  
-    window.msRequestAnimationFrame || 
-    function(callback){
-        window.setTimeout(callback, 1000.0/window.frameRate);
-    };
-})();
-
-function render(){
-    renderer.render(scene, camera);
-}
-
 ///////////Maze Generation////////
 function windows95Maze(width,height){
     function Cell()
@@ -490,7 +291,7 @@ function End(Y,X){
     this.mesh.position.x = -( (this.posX*320) + (320)/2 );
     this.mesh.position.y = 50;
     this.mesh.scale.y = 0;
-    scene.add(this.mesh)
+    window.MazeScene.add(this.mesh)
     this.tick = function()
     {
         this.mesh.rotation.y = camera.rotation.y;
@@ -548,7 +349,7 @@ function OpenGL(Y,X){
     this.mesh.position.y = 100;
     //this.mesh.scale.y = 0;
 
-    scene.add(this.mesh)
+    window.MazeScene.add(this.mesh)
     
     this.tick = function()
     {
@@ -574,7 +375,7 @@ function Rat(Y,X){
     this.mesh.position.x = -( (this.posX*320) + (320)/2 );
     this.mesh.position.y = 50;
     
-    scene.add(this.mesh)
+    window.MazeScene.add(this.mesh)
     this.m=0;
     
     this.tick = function()
@@ -676,7 +477,7 @@ function Spinner(Y,X){
     this.mesh.position.x = -( (this.posX*320) + (320)/2 );
     this.mesh.position.y = 50;
 
-    scene.add(this.mesh)
+    window.MazeScene.add(this.mesh)
     this.tick = function()
     {
         this.mesh.rotation.y += rad(1);
@@ -1062,8 +863,12 @@ function UpdateWorld(){
             pointLight.position.x = -( ($.posX*320) + (320)/2 );
         }catch(err){}
 };
-    
+//////////////////////////////////
+
+//////////////Main()//////////////
 function init0(){
+    window.MazeScene = new THREE.Scene();
+
     $.ajaxSetup({async:false})
 
     $.DEBUG = 0;
@@ -1084,7 +889,7 @@ function init0(){
 
     $(window).resize(ResizeHandling);
     
-    var camera, scene, renderer, geometry, material, mesh, maze;
+    var camera, renderer, geometry, material, mesh, maze;
     var clock = new THREE.Clock();
     
     var konami = new Konami();
@@ -1099,9 +904,206 @@ function init0(){
     $.speed = 4;
     updateWorld = setInterval(UpdateWorld,10);
 }
-//////////////////////////////////
 
-//////////////Main()//////////////
-scene = new THREE.Scene();
-init0();
+function init(){
+    init0();
+    
+    $.t=0; //turning
+    $.g=0; //going
+    $.f=0; //flipping
+    $.i=0; //temporary invincibility to $.rats
+    $.p=0; //presses for go()
+    $.p2=0; //presses for turn()
+    face = 'n';
+    
+    //Creates the variable $.rows which is an array of arrays of cells of the maze
+    windows95Maze(window.MazeWidth,window.MazeDepth);
+    
+    $.posX = Math.round(window.MazeWidth/2);
+    $.posY = window.MazeDepth-1;
+    
+    //var ambient = new THREE.AmbientLight( 0xFFFFFF );
+    //window.MazeScene.add( ambient );
+    
+    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+    camera.position.z = -( ($.posY*320) + (320)/2 ) //+ (320/2);
+    camera.position.y = 100;
+    camera.position.x = -( $.posX*320 + (320/2));//-(window.MazeWidth*320)/2 - (320/2);
+    camera.rotation.y = rad(180);
+    camera.far = 100;// greater(window.MazeWidth,window.MazeDepth)*320;
+
+    window.MazeScene.add( camera );
+    
+    pointLight = new THREE.PointLight( 0xFFFFFF );
+    pointLight.position.z = -( ($.posY*320) + (320)/2 );
+    pointLight.position.x = -( ($.posX*320) + (320)/2 );
+
+    window.MazeScene.add(pointLight)
+    
+    
+    var floorImg = new Image();
+    floorImg.src = $.floorImage;
+
+    floorImg.onload = function()
+    {
+        var floorGeometry = new THREE.CubeGeometry( 320*window.MazeWidth, 0, 320*window.MazeDepth, 1, 1, 1, null);
+        var floorTexture = THREE.ImageUtils.loadTexture($.floorImage);
+        floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+        floorTexture.offset.x = 0;
+        floorTexture.offset.y = 0;
+        floorTexture.repeat.x = (window.MazeWidth*320)/this.width;
+        floorTexture.repeat.y = (window.MazeDepth*320)/this.height;
+        var floorMaterial = new THREE.MeshBasicMaterial({map: floorTexture });
+        floorMesh = new THREE.Mesh( floorGeometry, floorMaterial );
+        floorMesh.position.z = -( 320*window.MazeDepth / 2 );
+        floorMesh.position.y = 0;
+        floorMesh.position.x = -320*window.MazeWidth / 2;
+        
+        window.MazeScene.add(floorMesh);
+    }
+    
+    //Crazy wall generation shenanigans
+    var combinedWalls = new THREE.Geometry();
+    
+    var coolWalls = new THREE.Geometry();
+    
+    for(y=0;y<window.MazeDepth;++y)
+    {
+        for(x=0;x<window.MazeWidth;++x)
+        {
+    
+            if($.rows[y][x].up)
+            {
+                mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
+                mesh.position.x = -((x+1)*320) + (320/2);
+                mesh.position.y = 100;
+                mesh.position.z = -( y*320 )//(window.MazeDepth*320) - y;
+
+                if(randint(0,window.MazeWidth*window.MazeDepth))
+                {
+                    THREE.GeometryUtils.merge( combinedWalls, mesh );
+                }
+                else
+                {
+                    THREE.GeometryUtils.merge( coolWalls, mesh );
+                }
+
+            }
+            if($.rows[y][x].left)
+            {
+                mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
+                mesh.position.x = -((x)*320)// - (320/2);
+                mesh.position.y = 100;
+                mesh.position.z = -( ((y+1)*320) - (320/2) );//(window.MazeDepth*320) - y;
+                
+                if(randint(0,window.MazeWidth*window.MazeDepth))
+                {
+                    THREE.GeometryUtils.merge( combinedWalls, mesh );
+                }
+                else
+                {
+                    THREE.GeometryUtils.merge( coolWalls, mesh );
+                }
+            }
+            if($.rows[y][x].down && y==window.MazeDepth-1) //It only does this on the outside so that there aren't cloned walls all over
+            {
+                mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
+                mesh.position.x = -(((x+1)*320) - (320/2));
+                mesh.position.y = 100;
+                mesh.position.z = -( (y+1)*320 );//(window.MazeDepth*320) - y;
+
+                if(randint(0,window.MazeWidth*window.MazeDepth))
+                {
+                    THREE.GeometryUtils.merge( combinedWalls, mesh );
+                }
+                else
+                {
+                    THREE.GeometryUtils.merge( coolWalls, mesh );
+                }
+            }
+            if($.rows[y][x].right && x==window.MazeWidth-1) //Ditto
+            {
+                mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
+                mesh.position.x = -((x+1)*320)// - (320/2);
+                mesh.position.y = 100;
+                mesh.position.z = - ( ((y+1)*320) - (320/2) );//(window.MazeDepth*320) - y;
+
+                if(randint(0,window.MazeWidth*window.MazeDepth))
+                {
+                    THREE.GeometryUtils.merge( combinedWalls, mesh );
+                }
+                else
+                {
+                    THREE.GeometryUtils.merge( coolWalls, mesh );
+                }
+            }    
+        }
+    }
+    
+    wallsMesh = new THREE.Mesh(combinedWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture($.wallImage)}));
+    
+    wallsMesh.scale.y = .05;
+    
+    window.MazeScene.add(wallsMesh);
+    
+    coolWallsMesh = new THREE.Mesh( coolWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture("globe.png")}));
+    
+    coolWallsMesh.scale.y = .05;
+    
+    window.MazeScene.add( coolWallsMesh );
+    
+    var ceilImg = new Image();
+    ceilImg.src = $.ceilImage;
+
+    ceilImg.onload = function()
+    {
+        var ceilGeometry = new THREE.CubeGeometry( 320*window.MazeWidth, 0, 320*window.MazeDepth, 1, 1, 1, null);
+        var ceilTexture = THREE.ImageUtils.loadTexture($.ceilImage);
+        ceilTexture.wrapS = ceilTexture.wrapT = THREE.RepeatWrapping;
+        ceilTexture.offset.x = 0;
+        ceilTexture.offset.y = 0;
+        ceilTexture.repeat.x = (window.MazeWidth*320)/this.width;
+        ceilTexture.repeat.y = (window.MazeDepth*320)/this.height;
+        var ceilMaterial = new THREE.MeshBasicMaterial({map: ceilTexture});
+        ceilMesh = new THREE.Mesh( ceilGeometry, ceilMaterial );
+        ceilMesh.position.z = -( 320*window.MazeDepth / 2 );
+        ceilMesh.position.y = 200;
+        ceilMesh.position.x = -320*window.MazeWidth / 2;
+        window.MazeScene.add(ceilMesh);
+    }
+    
+    try
+    {
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+        document.body.appendChild( renderer.domElement );
+    }
+    catch(err)
+    {
+        alert("WebGL couldn't start! Make sure you're using a supported browser and graphics card and that your graphics card's drivers are up to date.");
+    }
+
+}
+
+function animate(){
+    requestAnimationFrame(animate);
+    render();
+}
+
+window.requestAnimFrame = (function(){
+    return  window.requestAnimationFrame || 
+    window.webkitRequestAnimationFrame || 
+    window.mozRequestAnimationFrame || 
+    window.oRequestAnimationFrame ||  
+    window.msRequestAnimationFrame || 
+    function(callback){
+        window.setTimeout(callback, 1000.0/window.frameRate);
+    };
+})();
+
+function render(){
+    renderer.render(window.MazeScene, camera);
+}
+//init0();
 //////////////////////////////////
