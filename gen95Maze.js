@@ -1,5 +1,204 @@
-function windows95Maze(width,height)
-{
+function init(){
+    $.t=0; //turning
+    $.g=0; //going
+    $.f=0; //flipping
+    $.i=0; //temporary invincibility to $.rats
+    $.p=0; //presses for go()
+    $.p2=0; //presses for turn()
+    face = 'n';
+    
+    //Creates the variable $.rows which is an array of arrays of cells of the maze
+    windows95Maze(w,h);
+    
+    $.posX = Math.round(w/2);
+    $.posY = h-1;
+    
+    //var ambient = new THREE.AmbientLight( 0xFFFFFF );
+    //scene.add( ambient );
+    
+    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+    camera.position.z = -( ($.posY*320) + (320)/2 ) //+ (320/2);
+    camera.position.y = 100;
+    camera.position.x = -( $.posX*320 + (320/2));//-(w*320)/2 - (320/2);
+    camera.rotation.y = rad(180);
+    camera.far = 100;// greater(w,h)*320;
+
+    scene.add( camera );
+    
+    pointLight = new THREE.PointLight( 0xFFFFFF );
+    pointLight.position.z = -( ($.posY*320) + (320)/2 );
+    pointLight.position.x = -( ($.posX*320) + (320)/2 );
+
+    scene.add(pointLight)
+    
+    
+    var floorImg = new Image();
+    floorImg.src = $.floorImage;
+
+    floorImg.onload = function()
+    {
+        var floorGeometry = new THREE.CubeGeometry( 320*w, 0, 320*h, 1, 1, 1, null);
+        var floorTexture = THREE.ImageUtils.loadTexture($.floorImage);
+        floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+        floorTexture.offset.x = 0;
+        floorTexture.offset.y = 0;
+        floorTexture.repeat.x = (w*320)/this.width;
+        floorTexture.repeat.y = (h*320)/this.height;
+        var floorMaterial = new THREE.MeshBasicMaterial({map: floorTexture });
+        floorMesh = new THREE.Mesh( floorGeometry, floorMaterial );
+        floorMesh.position.z = -( 320*h / 2 );
+        floorMesh.position.y = 0;
+        floorMesh.position.x = -320*w / 2;
+        
+        scene.add(floorMesh);
+    }
+    
+    //Crazy wall generation shenanigans
+    var combinedWalls = new THREE.Geometry();
+    
+    var coolWalls = new THREE.Geometry();
+    
+    for(y=0;y<h;++y)
+    {
+        for(x=0;x<w;++x)
+        {
+    
+            if($.rows[y][x].up)
+            {
+                mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
+                mesh.position.x = -((x+1)*320) + (320/2);
+                mesh.position.y = 100;
+                mesh.position.z = -( y*320 )//(h*320) - y;
+
+                if(randint(0,w*h))
+                {
+                    THREE.GeometryUtils.merge( combinedWalls, mesh );
+                }
+                else
+                {
+                    THREE.GeometryUtils.merge( coolWalls, mesh );
+                }
+
+            }
+            if($.rows[y][x].left)
+            {
+                mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
+                mesh.position.x = -((x)*320)// - (320/2);
+                mesh.position.y = 100;
+                mesh.position.z = -( ((y+1)*320) - (320/2) );//(h*320) - y;
+                
+                if(randint(0,w*h))
+                {
+                    THREE.GeometryUtils.merge( combinedWalls, mesh );
+                }
+                else
+                {
+                    THREE.GeometryUtils.merge( coolWalls, mesh );
+                }
+            }
+            if($.rows[y][x].down && y==h-1) //It only does this on the outside so that there aren't cloned walls all over
+            {
+                mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
+                mesh.position.x = -(((x+1)*320) - (320/2));
+                mesh.position.y = 100;
+                mesh.position.z = -( (y+1)*320 );//(h*320) - y;
+
+                if(randint(0,w*h))
+                {
+                    THREE.GeometryUtils.merge( combinedWalls, mesh );
+                }
+                else
+                {
+                    THREE.GeometryUtils.merge( coolWalls, mesh );
+                }
+            }
+            if($.rows[y][x].right && x==w-1) //Ditto
+            {
+                mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
+                mesh.position.x = -((x+1)*320)// - (320/2);
+                mesh.position.y = 100;
+                mesh.position.z = - ( ((y+1)*320) - (320/2) );//(h*320) - y;
+
+                if(randint(0,w*h))
+                {
+                    THREE.GeometryUtils.merge( combinedWalls, mesh );
+                }
+                else
+                {
+                    THREE.GeometryUtils.merge( coolWalls, mesh );
+                }
+            }    
+        }
+    }
+    
+    wallsMesh = new THREE.Mesh( combinedWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture($.wallImage)}));
+    
+    wallsMesh.scale.y = .05;
+    
+    scene.add( wallsMesh );
+    
+    coolWallsMesh = new THREE.Mesh( coolWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture("globe.png")}));
+    
+    coolWallsMesh.scale.y = .05;
+    
+    scene.add( coolWallsMesh );
+    
+    var ceilImg = new Image();
+    ceilImg.src = $.ceilImage;
+
+    ceilImg.onload = function()
+    {
+        var ceilGeometry = new THREE.CubeGeometry( 320*w, 0, 320*h, 1, 1, 1, null);
+        var ceilTexture = THREE.ImageUtils.loadTexture($.ceilImage);
+        ceilTexture.wrapS = ceilTexture.wrapT = THREE.RepeatWrapping;
+        ceilTexture.offset.x = 0;
+        ceilTexture.offset.y = 0;
+        ceilTexture.repeat.x = (w*320)/this.width;
+        ceilTexture.repeat.y = (h*320)/this.height;
+        var ceilMaterial = new THREE.MeshBasicMaterial({map: ceilTexture});
+        ceilMesh = new THREE.Mesh( ceilGeometry, ceilMaterial );
+        ceilMesh.position.z = -( 320*h / 2 );
+        ceilMesh.position.y = 200;
+        ceilMesh.position.x = -320*w / 2;
+        scene.add(ceilMesh);
+    }
+    
+    try
+    {
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+        document.body.appendChild( renderer.domElement );
+    }
+    catch(err)
+    {
+        alert("WebGL couldn't start! Make sure you're using a supported browser and graphics card and that your graphics card's drivers are up to date.");
+    }
+
+}
+
+function animate(){
+    requestAnimationFrame(animate);
+    render();
+}
+
+window.requestAnimFrame = (function(){
+    return  window.requestAnimationFrame || 
+    window.webkitRequestAnimationFrame || 
+    window.mozRequestAnimationFrame || 
+    window.oRequestAnimationFrame ||  
+    window.msRequestAnimationFrame || 
+    function(callback){
+		window.setTimeout(callback, 1000.0/window.frameRate);
+    };
+})();
+
+function render(){
+    renderer.render(scene, camera);
+}
+
+
+function windows95Maze(width,height){
     function Cell()
     {
         //Walls: 0: Nothing, 1: Brick, 2: Lego Globe Thing
@@ -322,10 +521,9 @@ konami.code = function()
 }
 konami.load();
 
-//Actors
+/////////////Actors///////////////
 
-function End(Y,X)
-{
+function End(Y,X){
     this.name="end";
     this.mesh = new THREE.Mesh
     (
@@ -371,7 +569,7 @@ function End(Y,X)
     }
 }
 
-function OpenGL(Y,X) {   
+function OpenGL(Y,X){   
     var loader = new THREE.FontLoader();
     loader.load('droid_serif_bold.typeface.json',
     function (font) {
@@ -407,8 +605,7 @@ function OpenGL(Y,X) {
     
 }
 
-function Rat(Y,X)
-{
+function Rat(Y,X){
     this.name="rat";
     this.mesh = new THREE.Mesh
     (
@@ -508,8 +705,7 @@ function Rat(Y,X)
     }
 }
 
-function Spinner(Y,X)
-{
+function Spinner(Y,X){
     this.name="Spinner";
     
     this.mesh = new THREE.Mesh
@@ -542,194 +738,8 @@ function Spinner(Y,X)
     }
 }
 
-//End Actors
+//////////////////////////////////
 
-function init()
-{
-    $.t=0; //turning
-    $.g=0; //going
-    $.f=0; //flipping
-    $.i=0; //temporary invincibility to $.rats
-    $.p=0; //presses for go()
-    $.p2=0; //presses for turn()
-    face = 'n';
-    
-    //Creates the variable $.rows which is an array of arrays of cells of the maze
-    windows95Maze(w,h);
-    
-    $.posX = Math.round(w/2);
-    $.posY = h-1;
-    
-    //var ambient = new THREE.AmbientLight( 0xFFFFFF );
-    //scene.add( ambient );
-    
-    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
-    camera.position.z = -( ($.posY*320) + (320)/2 ) //+ (320/2);
-    camera.position.y = 100;
-    camera.position.x = -( $.posX*320 + (320/2));//-(w*320)/2 - (320/2);
-    camera.rotation.y = rad(180);
-    camera.far = 100;// greater(w,h)*320;
-
-    scene.add( camera );
-    
-    pointLight = new THREE.PointLight( 0xFFFFFF );
-    pointLight.position.z = -( ($.posY*320) + (320)/2 );
-    pointLight.position.x = -( ($.posX*320) + (320)/2 );
-
-    scene.add(pointLight)
-    
-    
-    var floorImg = new Image();
-    floorImg.src = $.floorImage;
-
-    floorImg.onload = function()
-    {
-        var floorGeometry = new THREE.CubeGeometry( 320*w, 0, 320*h, 1, 1, 1, null);
-        var floorTexture = THREE.ImageUtils.loadTexture($.floorImage);
-        floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-        floorTexture.offset.x = 0;
-        floorTexture.offset.y = 0;
-        floorTexture.repeat.x = (w*320)/this.width;
-        floorTexture.repeat.y = (h*320)/this.height;
-        var floorMaterial = new THREE.MeshBasicMaterial({map: floorTexture });
-        floorMesh = new THREE.Mesh( floorGeometry, floorMaterial );
-        floorMesh.position.z = -( 320*h / 2 );
-        floorMesh.position.y = 0;
-        floorMesh.position.x = -320*w / 2;
-        
-        scene.add(floorMesh);
-    }
-    
-    //Crazy wall generation shenanigans
-    var combinedWalls = new THREE.Geometry();
-    
-    var coolWalls = new THREE.Geometry();
-    
-    for(y=0;y<h;++y)
-    {
-        for(x=0;x<w;++x)
-        {
-    
-            if($.rows[y][x].up)
-            {
-                mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
-                mesh.position.x = -((x+1)*320) + (320/2);
-                mesh.position.y = 100;
-                mesh.position.z = -( y*320 )//(h*320) - y;
-
-                if(randint(0,w*h))
-                {
-                    THREE.GeometryUtils.merge( combinedWalls, mesh );
-                }
-                else
-                {
-                    THREE.GeometryUtils.merge( coolWalls, mesh );
-                }
-
-            }
-            if($.rows[y][x].left)
-            {
-                mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
-                mesh.position.x = -((x)*320)// - (320/2);
-                mesh.position.y = 100;
-                mesh.position.z = -( ((y+1)*320) - (320/2) );//(h*320) - y;
-                
-                if(randint(0,w*h))
-                {
-                    THREE.GeometryUtils.merge( combinedWalls, mesh );
-                }
-                else
-                {
-                    THREE.GeometryUtils.merge( coolWalls, mesh );
-                }
-            }
-            if($.rows[y][x].down && y==h-1) //It only does this on the outside so that there aren't cloned walls all over
-            {
-                mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
-                mesh.position.x = -(((x+1)*320) - (320/2));
-                mesh.position.y = 100;
-                mesh.position.z = -( (y+1)*320 );//(h*320) - y;
-
-                if(randint(0,w*h))
-                {
-                    THREE.GeometryUtils.merge( combinedWalls, mesh );
-                }
-                else
-                {
-                    THREE.GeometryUtils.merge( coolWalls, mesh );
-                }
-            }
-            if($.rows[y][x].right && x==w-1) //Ditto
-            {
-                mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
-                mesh.position.x = -((x+1)*320)// - (320/2);
-                mesh.position.y = 100;
-                mesh.position.z = - ( ((y+1)*320) - (320/2) );//(h*320) - y;
-
-                if(randint(0,w*h))
-                {
-                    THREE.GeometryUtils.merge( combinedWalls, mesh );
-                }
-                else
-                {
-                    THREE.GeometryUtils.merge( coolWalls, mesh );
-                }
-            }    
-        }
-    }
-    
-    wallsMesh = new THREE.Mesh( combinedWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture($.wallImage)}));
-    
-    wallsMesh.scale.y = .05;
-    
-    scene.add( wallsMesh );
-    
-    coolWallsMesh = new THREE.Mesh( coolWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture("globe.png")}));
-    
-    coolWallsMesh.scale.y = .05;
-    
-    scene.add( coolWallsMesh );
-    
-    var ceilImg = new Image();
-    ceilImg.src = $.ceilImage;
-
-    ceilImg.onload = function()
-    {
-        var ceilGeometry = new THREE.CubeGeometry( 320*w, 0, 320*h, 1, 1, 1, null);
-        var ceilTexture = THREE.ImageUtils.loadTexture($.ceilImage);
-        ceilTexture.wrapS = ceilTexture.wrapT = THREE.RepeatWrapping;
-        ceilTexture.offset.x = 0;
-        ceilTexture.offset.y = 0;
-        ceilTexture.repeat.x = (w*320)/this.width;
-        ceilTexture.repeat.y = (h*320)/this.height;
-        var ceilMaterial = new THREE.MeshBasicMaterial({map: ceilTexture});
-        ceilMesh = new THREE.Mesh( ceilGeometry, ceilMaterial );
-        ceilMesh.position.z = -( 320*h / 2 );
-        ceilMesh.position.y = 200;
-        ceilMesh.position.x = -320*w / 2;
-        scene.add(ceilMesh);
-    }
-    
-    try
-    {
-        renderer = new THREE.WebGLRenderer();
-        renderer.setSize( window.innerWidth, window.innerHeight );
-
-        document.body.appendChild( renderer.domElement );
-    }
-    catch(err)
-    {
-        alert("WebGL couldn't start! Make sure you're using a supported browser and graphics card and that your graphics card's drivers are up to date.");
-    }
-
-}
-
-
-function animate()
-{
-    requestAnimationFrame( animate );
-    render();
-}
 
 $(window).keydown(function(event)
 {
@@ -775,8 +785,7 @@ $().mousemove( function(e)
     $.mouseY = e.pageY;
 });
 
-function flip()
-{
+function flip(){
     if(!$.f)
     {
         flipInt = setInterval(function()
@@ -794,8 +803,7 @@ function flip()
 
 $.turnInts = new Array();
 
-function turn(d)
-{
+function turn(d){
     if(!$.t)
     {
         $.p2++;
@@ -867,8 +875,7 @@ function turn(d)
 }
 $.speed = 4;
 //I have a feeling this might be able to be simplified a bit 
-function go(d)
-{
+function go(d){
     if(!$.g)
     {
         $.p++;
@@ -1072,7 +1079,3 @@ updateWorld = setInterval(function()
 
 },10);
 
-function render()
-{
-    renderer.render( scene, camera );
-}
