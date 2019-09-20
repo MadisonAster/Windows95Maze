@@ -8,10 +8,10 @@ function init(){
     face = 'n';
     
     //Creates the variable $.rows which is an array of arrays of cells of the maze
-    windows95Maze(w,h);
+    windows95Maze(window.MazeWidth,window.MazeDepth);
     
-    $.posX = Math.round(w/2);
-    $.posY = h-1;
+    $.posX = Math.round(window.MazeWidth/2);
+    $.posY = window.MazeDepth-1;
     
     //var ambient = new THREE.AmbientLight( 0xFFFFFF );
     //scene.add( ambient );
@@ -19,9 +19,9 @@ function init(){
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
     camera.position.z = -( ($.posY*320) + (320)/2 ) //+ (320/2);
     camera.position.y = 100;
-    camera.position.x = -( $.posX*320 + (320/2));//-(w*320)/2 - (320/2);
+    camera.position.x = -( $.posX*320 + (320/2));//-(window.MazeWidth*320)/2 - (320/2);
     camera.rotation.y = rad(180);
-    camera.far = 100;// greater(w,h)*320;
+    camera.far = 100;// greater(window.MazeWidth,window.MazeDepth)*320;
 
     scene.add( camera );
     
@@ -37,18 +37,18 @@ function init(){
 
     floorImg.onload = function()
     {
-        var floorGeometry = new THREE.CubeGeometry( 320*w, 0, 320*h, 1, 1, 1, null);
+        var floorGeometry = new THREE.CubeGeometry( 320*window.MazeWidth, 0, 320*window.MazeDepth, 1, 1, 1, null);
         var floorTexture = THREE.ImageUtils.loadTexture($.floorImage);
         floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
         floorTexture.offset.x = 0;
         floorTexture.offset.y = 0;
-        floorTexture.repeat.x = (w*320)/this.width;
-        floorTexture.repeat.y = (h*320)/this.height;
+        floorTexture.repeat.x = (window.MazeWidth*320)/this.width;
+        floorTexture.repeat.y = (window.MazeDepth*320)/this.height;
         var floorMaterial = new THREE.MeshBasicMaterial({map: floorTexture });
         floorMesh = new THREE.Mesh( floorGeometry, floorMaterial );
-        floorMesh.position.z = -( 320*h / 2 );
+        floorMesh.position.z = -( 320*window.MazeDepth / 2 );
         floorMesh.position.y = 0;
-        floorMesh.position.x = -320*w / 2;
+        floorMesh.position.x = -320*window.MazeWidth / 2;
         
         scene.add(floorMesh);
     }
@@ -58,9 +58,9 @@ function init(){
     
     var coolWalls = new THREE.Geometry();
     
-    for(y=0;y<h;++y)
+    for(y=0;y<window.MazeDepth;++y)
     {
-        for(x=0;x<w;++x)
+        for(x=0;x<window.MazeWidth;++x)
         {
     
             if($.rows[y][x].up)
@@ -68,9 +68,9 @@ function init(){
                 mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
                 mesh.position.x = -((x+1)*320) + (320/2);
                 mesh.position.y = 100;
-                mesh.position.z = -( y*320 )//(h*320) - y;
+                mesh.position.z = -( y*320 )//(window.MazeDepth*320) - y;
 
-                if(randint(0,w*h))
+                if(randint(0,window.MazeWidth*window.MazeDepth))
                 {
                     THREE.GeometryUtils.merge( combinedWalls, mesh );
                 }
@@ -85,9 +85,9 @@ function init(){
                 mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
                 mesh.position.x = -((x)*320)// - (320/2);
                 mesh.position.y = 100;
-                mesh.position.z = -( ((y+1)*320) - (320/2) );//(h*320) - y;
+                mesh.position.z = -( ((y+1)*320) - (320/2) );//(window.MazeDepth*320) - y;
                 
-                if(randint(0,w*h))
+                if(randint(0,window.MazeWidth*window.MazeDepth))
                 {
                     THREE.GeometryUtils.merge( combinedWalls, mesh );
                 }
@@ -96,14 +96,14 @@ function init(){
                     THREE.GeometryUtils.merge( coolWalls, mesh );
                 }
             }
-            if($.rows[y][x].down && y==h-1) //It only does this on the outside so that there aren't cloned walls all over
+            if($.rows[y][x].down && y==window.MazeDepth-1) //It only does this on the outside so that there aren't cloned walls all over
             {
                 mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
                 mesh.position.x = -(((x+1)*320) - (320/2));
                 mesh.position.y = 100;
-                mesh.position.z = -( (y+1)*320 );//(h*320) - y;
+                mesh.position.z = -( (y+1)*320 );//(window.MazeDepth*320) - y;
 
-                if(randint(0,w*h))
+                if(randint(0,window.MazeWidth*window.MazeDepth))
                 {
                     THREE.GeometryUtils.merge( combinedWalls, mesh );
                 }
@@ -112,14 +112,14 @@ function init(){
                     THREE.GeometryUtils.merge( coolWalls, mesh );
                 }
             }
-            if($.rows[y][x].right && x==w-1) //Ditto
+            if($.rows[y][x].right && x==window.MazeWidth-1) //Ditto
             {
                 mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
                 mesh.position.x = -((x+1)*320)// - (320/2);
                 mesh.position.y = 100;
-                mesh.position.z = - ( ((y+1)*320) - (320/2) );//(h*320) - y;
+                mesh.position.z = - ( ((y+1)*320) - (320/2) );//(window.MazeDepth*320) - y;
 
-                if(randint(0,w*h))
+                if(randint(0,window.MazeWidth*window.MazeDepth))
                 {
                     THREE.GeometryUtils.merge( combinedWalls, mesh );
                 }
@@ -131,11 +131,11 @@ function init(){
         }
     }
     
-    wallsMesh = new THREE.Mesh( combinedWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture($.wallImage)}));
+    wallsMesh = new THREE.Mesh(combinedWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture($.wallImage)}));
     
     wallsMesh.scale.y = .05;
     
-    scene.add( wallsMesh );
+    scene.add(wallsMesh);
     
     coolWallsMesh = new THREE.Mesh( coolWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture("globe.png")}));
     
@@ -148,18 +148,18 @@ function init(){
 
     ceilImg.onload = function()
     {
-        var ceilGeometry = new THREE.CubeGeometry( 320*w, 0, 320*h, 1, 1, 1, null);
+        var ceilGeometry = new THREE.CubeGeometry( 320*window.MazeWidth, 0, 320*window.MazeDepth, 1, 1, 1, null);
         var ceilTexture = THREE.ImageUtils.loadTexture($.ceilImage);
         ceilTexture.wrapS = ceilTexture.wrapT = THREE.RepeatWrapping;
         ceilTexture.offset.x = 0;
         ceilTexture.offset.y = 0;
-        ceilTexture.repeat.x = (w*320)/this.width;
-        ceilTexture.repeat.y = (h*320)/this.height;
+        ceilTexture.repeat.x = (window.MazeWidth*320)/this.width;
+        ceilTexture.repeat.y = (window.MazeDepth*320)/this.height;
         var ceilMaterial = new THREE.MeshBasicMaterial({map: ceilTexture});
         ceilMesh = new THREE.Mesh( ceilGeometry, ceilMaterial );
-        ceilMesh.position.z = -( 320*h / 2 );
+        ceilMesh.position.z = -( 320*window.MazeDepth / 2 );
         ceilMesh.position.y = 200;
-        ceilMesh.position.x = -320*w / 2;
+        ceilMesh.position.x = -320*window.MazeWidth / 2;
         scene.add(ceilMesh);
     }
     
@@ -189,7 +189,7 @@ window.requestAnimFrame = (function(){
     window.oRequestAnimationFrame ||  
     window.msRequestAnimationFrame || 
     function(callback){
-		window.setTimeout(callback, 1000.0/window.frameRate);
+        window.setTimeout(callback, 1000.0/window.frameRate);
     };
 })();
 
@@ -197,7 +197,7 @@ function render(){
     renderer.render(scene, camera);
 }
 
-
+///////////Maze Generation////////
 function windows95Maze(width,height){
     function Cell()
     {
@@ -434,7 +434,7 @@ function windows95Maze(width,height){
     }
     */
 }
-
+//////////////////////////////////
 
 /////////////Actors///////////////
 function createActors(){
@@ -452,8 +452,8 @@ function createActors(){
     for(i=0;i<$.rats;++i)
     {
         $.bad=0;
-        Y = randint(0,h-2);
-        X = randint(0,w-1);
+        Y = randint(0,window.MazeDepth-2);
+        X = randint(0,window.MazeWidth-1);
         
         for(q=0;q<$.takenSpinnerPlaces.length;++q)
         {
@@ -692,6 +692,7 @@ function Spinner(Y,X){
 }
 //////////////////////////////////
 
+/////////////Animation////////////
 function flip(){
     if(!$.f)
     {
@@ -779,8 +780,8 @@ function turn(d){
     }
 }
 
-//I have a feeling this might be able to be simplified a bit 
 function go(d){
+    //I have a feeling this might be able to be simplified a bit 
     if(!$.g)
     {
         $.p++;
@@ -947,51 +948,69 @@ function go(d){
         }
     }
 }
+//////////////////////////////////
 
-$.ajaxSetup({async:false})
+///////////Generic Stuff//////////
+function randint(min,max){ 
+    return Math.floor(Math.random()*(max-min+1))+min
+}
 
-$.DEBUG = 0;
+function forInRange(start,end,variable,code){
+    eval(variable+"="+start+";for("+variable+"=start;"+variable+"<end;"+variable+"++){code()}");
+}
 
-var w,h;
-w=12;
-h=12;
-$.wallImage = "wall.png";
-$.ceilImage = "ceiling.png";
-$.floorImage = "floor.png";
+function greater(a,b){
+    (a>b) ? c=a : c=b;
+    return c;
+}
 
-scene = new THREE.Scene();
+function lesser(a,b){
+    (a<b) ? c=a : c=b;
+    return c;
+}
 
-//hnng
-$.w=w;
-$.h=h;
-//r == $.rats
-$.rats = Math.ceil((w*h)/50);
+function difference(a,b){
+    return greater(a,b) - lesser(a,b);
+}
 
-//$.autopilot = $.getUrlVar('a');
-//$.autopilot = true;
-
-$("#w").val(w);
-$("#h").val(h);
-
-createActors();
-
-$(window).resize(function()
+$.extend(
 {
-    //renderer.setSize( window.innerWidth, window.innerHeight );
-    //init();animate();
+    getUrlVars:function()
+    {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    },
+    getUrlVar: function(name)
+    {
+        return $.getUrlVars()[name];
+    }
 });
 
-var camera, scene, renderer, geometry, material, mesh, maze;
-var clock = new THREE.Clock();
-
-var konami = new Konami();
-konami.code = function(){
-    flip();
+function rad(n){
+    return n*(Math.PI/180);
 }
-konami.load();
 
-$(window).keydown(function(event)
-{
+function getImgSize(imgSrc){
+    var newImg = new Image();
+    newImg.src = imgSrc;
+    return[newImg.width,newImg.height];
+}
+//////////////////////////////////
+
+//////////////Unsorted////////////
+function ResizeHandling(){
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    //init();animate();
+}
+
+function KeyHandling(event){
     try
     {
         switch(event.keyCode)
@@ -1023,53 +1042,86 @@ $(window).keydown(function(event)
         }
     }
     catch(err){}
-});
+};
 
-$.mouseX = 0;
-$.mouseY = 0;
-$().mousemove( function(e)
-{
+function MouseUpdate(e){
     $.mouseX = e.pageX; 
     $.mouseY = e.pageY;
-});
+};
 
-$.turnInts = new Array();
-$.speed = 4;
-
-
-updateWorld = setInterval(function()
-{
+function UpdateWorld(){
     if($.ended)
-    {
-        clearInterval(updateWorld);
-    }
-    if (wallsMesh.scale.y < 1)
-    {
-        wallsMesh.scale.y += .01;
-        coolWallsMesh.scale.y += .01;
-    }
-    for(i=0;i<actors.length;++i)
-    {
+        {
+            clearInterval(updateWorld);
+        }
+        if (wallsMesh.scale.y < 1)
+        {
+            wallsMesh.scale.y += .01;
+            coolWallsMesh.scale.y += .01;
+        }
+        for(i=0;i<actors.length;++i)
+        {
+            try
+            {
+                actors[i].tick();
+
+                //actors[i].mesh.position.z = -( (actors[i].posY*320) + (320)/2 );
+                //actors[i].mesh.position.x = -( (actors[i].posX*320) + (320)/2 );
+                //actors[i].mesh.position.y = 50;
+                
+                if(actors[i].mesh.scale.y < 1)
+                {
+                    actors[i].mesh.scale.y += .01;
+                }
+            }
+            catch(err){}
+        }
         try
         {
-            actors[i].tick();
+            pointLight.position.z = -( ($.posY*320) + (320)/2 );
+            pointLight.position.x = -( ($.posX*320) + (320)/2 );
+        }catch(err){}
+};
+    
+function init0(){
+    $.ajaxSetup({async:false})
 
-            //actors[i].mesh.position.z = -( (actors[i].posY*320) + (320)/2 );
-            //actors[i].mesh.position.x = -( (actors[i].posX*320) + (320)/2 );
-            //actors[i].mesh.position.y = 50;
-            
-            if(actors[i].mesh.scale.y < 1)
-            {
-                actors[i].mesh.scale.y += .01;
-            }
-        }
-        catch(err){}
-    }
-    try
-    {
-        pointLight.position.z = -( ($.posY*320) + (320)/2 );
-        pointLight.position.x = -( ($.posX*320) + (320)/2 );
-    }catch(err){}
+    $.DEBUG = 0;
 
-},10);
+    window.MazeWidth = 12;
+    window.MazeDepth = 12;
+    $.wallImage = "wall.png";
+    $.ceilImage = "ceiling.png";
+    $.floorImage = "floor.png";
+    $.rats = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
+    
+    //$.rats = Math.ceil((window.MazeWidth*window.MazeDepth));
 
+    //$.autopilot = $.getUrlVar('a');
+    //$.autopilot = true;
+
+    createActors();
+
+    $(window).resize(ResizeHandling);
+    
+    var camera, scene, renderer, geometry, material, mesh, maze;
+    var clock = new THREE.Clock();
+    
+    var konami = new Konami();
+    konami.code = flip;
+    konami.load();
+    
+    $(window).keydown(KeyHandling);
+    $.mouseX = 0;
+    $.mouseY = 0;
+    $().mousemove(MouseUpdate);
+    $.turnInts = new Array();
+    $.speed = 4;
+    updateWorld = setInterval(UpdateWorld,10);
+}
+//////////////////////////////////
+
+//////////////Main()//////////////
+scene = new THREE.Scene();
+init0();
+//////////////////////////////////
