@@ -435,34 +435,9 @@ function windows95Maze(width,height){
     */
 }
 
-$.ajaxSetup({async:false})
 
-
-$.DEBUG = 0;
-
-var w,h;
-w=12;
-h=12;
-$.wallImage = "wall.png";
-$.ceilImage = "ceiling.png";
-$.floorImage = "floor.png";
-
-scene = new THREE.Scene();
-
-//hnng
-$.w=w;
-$.h=h;
-//r == $.rats
-$.rats = Math.ceil((w*h)/50);
-
-//$.autopilot = $.getUrlVar('a');
-//$.autopilot = true;
-
-$("#w").val(w);
-$("#h").val(h);
-
-function createActors()
-{
+/////////////Actors///////////////
+function createActors(){
     actors = new Array();
 
     //Add actors
@@ -500,28 +475,6 @@ function createActors()
     actors.push(new End(0,0));
     //alert(actors[1].posY + " " + actors[1].posX + "\n" + actors[2].posY + " " + actors[2].posX)
 }
-
-createActors();
-
-
-
-$(window).resize(function()
-{
-    //renderer.setSize( window.innerWidth, window.innerHeight );
-    //init();animate();
-});
-
-var camera, scene, renderer, geometry, material, mesh, maze;
-var clock = new THREE.Clock();
-
-var konami = new Konami();
-konami.code = function()
-{
-    flip();
-}
-konami.load();
-
-/////////////Actors///////////////
 
 function End(Y,X){
     this.name="end";
@@ -737,53 +690,7 @@ function Spinner(Y,X){
         }
     }
 }
-
 //////////////////////////////////
-
-
-$(window).keydown(function(event)
-{
-    try
-    {
-        switch(event.keyCode)
-        {
-            case 65: //a
-                turn('l');
-                break;
-            case 68: //d
-                turn('r');
-                break;
-            case 87: //w
-                go('f');
-                break;
-            case 83: //s
-                go('b');
-                break;
-            case 38: //Up
-                go('f');
-                break;
-            case 37: //Left
-                turn('l');
-                break;
-            case 40: //Down
-                go('b');
-                break;
-            case 39: //Right
-                turn('r');
-                break;
-        }
-    }
-    catch(err){}
-});
-
-
-$.mouseX = 0;
-$.mouseY = 0;
-$().mousemove( function(e)
-{
-    $.mouseX = e.pageX; 
-    $.mouseY = e.pageY;
-});
 
 function flip(){
     if(!$.f)
@@ -800,8 +707,6 @@ function flip(){
         },5);
     }
 }
-
-$.turnInts = new Array();
 
 function turn(d){
     if(!$.t)
@@ -873,7 +778,7 @@ function turn(d){
         }
     }
 }
-$.speed = 4;
+
 //I have a feeling this might be able to be simplified a bit 
 function go(d){
     if(!$.g)
@@ -1042,6 +947,95 @@ function go(d){
         }
     }
 }
+
+$.ajaxSetup({async:false})
+
+$.DEBUG = 0;
+
+var w,h;
+w=12;
+h=12;
+$.wallImage = "wall.png";
+$.ceilImage = "ceiling.png";
+$.floorImage = "floor.png";
+
+scene = new THREE.Scene();
+
+//hnng
+$.w=w;
+$.h=h;
+//r == $.rats
+$.rats = Math.ceil((w*h)/50);
+
+//$.autopilot = $.getUrlVar('a');
+//$.autopilot = true;
+
+$("#w").val(w);
+$("#h").val(h);
+
+createActors();
+
+$(window).resize(function()
+{
+    //renderer.setSize( window.innerWidth, window.innerHeight );
+    //init();animate();
+});
+
+var camera, scene, renderer, geometry, material, mesh, maze;
+var clock = new THREE.Clock();
+
+var konami = new Konami();
+konami.code = function(){
+    flip();
+}
+konami.load();
+
+$(window).keydown(function(event)
+{
+    try
+    {
+        switch(event.keyCode)
+        {
+            case 65: //a
+                turn('l');
+                break;
+            case 68: //d
+                turn('r');
+                break;
+            case 87: //w
+                go('f');
+                break;
+            case 83: //s
+                go('b');
+                break;
+            case 38: //Up
+                go('f');
+                break;
+            case 37: //Left
+                turn('l');
+                break;
+            case 40: //Down
+                go('b');
+                break;
+            case 39: //Right
+                turn('r');
+                break;
+        }
+    }
+    catch(err){}
+});
+
+$.mouseX = 0;
+$.mouseY = 0;
+$().mousemove( function(e)
+{
+    $.mouseX = e.pageX; 
+    $.mouseY = e.pageY;
+});
+
+$.turnInts = new Array();
+$.speed = 4;
+
 
 updateWorld = setInterval(function()
 {
