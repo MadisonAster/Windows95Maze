@@ -305,12 +305,6 @@ function createActors()
 createActors();
 
 
-function displayHearts(h)
-{
-    $("#hearts").css("clip","rect(0px,"+(64*h)+"px,64px,0px)");
-}
-
-
 
 $(window).resize(function()
 {
@@ -327,39 +321,6 @@ konami.code = function()
     flip();
 }
 konami.load();
-
-function gameOver()
-{
-    var that = this;
-    gameOverInterval = setInterval(function()
-    {
-        gameOverCounter++;
-        //camera.rotation.z -= rad(1);
-        switch(face)
-        {
-            case 'n':
-                camera.rotation.x -= rad(1);
-                break;
-            case 's':
-                camera.rotation.x += rad(1);
-                break;
-            case 'e':
-                camera.rotation.z -= rad(1);
-                camera.rotation.x -= rad(1);
-                camera.rotation.y += rad(1);
-                break;
-            case 'w':
-                camera.rotation.z -= rad(1);
-                camera.rotation.y -= rad(1)
-                camera.rotation.x -= rad(1);
-                break;
-        }
-        if(gameOverCounter==90)
-        {
-            clearInterval(gameOverInterval);
-        }
-    },1);
-}
 
 //Actors
 
@@ -469,25 +430,6 @@ function Rat(Y,X)
     this.tick = function()
     {
         this.mesh.rotation.y = camera.rotation.y;
-        if(!$.i)
-        {
-            if((difference(this.mesh.position.z,camera.position.z) < 10 && difference(this.mesh.position.x,camera.position.x) < 10) && !$.i)
-            {
-                health--;
-                displayHearts(health);
-                if(!health)
-                {
-                    gameOver();
-                }
-                $.i=1;
-                that=this;
-                this.hurtInterval = setInterval(function()
-                {
-                    $.i--;
-                    clearInterval(that.hurtInterval);
-                },1000);
-            }
-        }
         if(!this.m)
         {
             var randey = randint(0,3);
@@ -604,14 +546,12 @@ function Spinner(Y,X)
 
 function init()
 {
-    health=3;
     $.t=0; //turning
     $.g=0; //going
     $.f=0; //flipping
     $.i=0; //temporary invincibility to $.rats
     $.p=0; //presses for go()
     $.p2=0; //presses for turn()
-    gameOverCounter = 0;
     face = 'n';
     
     //Creates the variable $.rows which is an array of arrays of cells of the maze
@@ -793,40 +733,37 @@ function animate()
 
 $(window).keydown(function(event)
 {
-    if(!gameOverCounter)
+    try
     {
-        try
+        switch(event.keyCode)
         {
-            switch(event.keyCode)
-            {
-                case 65: //a
-                    turn('l');
-                    break;
-                case 68: //d
-                    turn('r');
-                    break;
-                case 87: //w
-                    go('f');
-                    break;
-                case 83: //s
-                    go('b');
-                    break;
-                case 38: //Up
-                    go('f');
-                    break;
-                case 37: //Left
-                    turn('l');
-                    break;
-                case 40: //Down
-                    go('b');
-                    break;
-                case 39: //Right
-                    turn('r');
-                    break;
-            }
+            case 65: //a
+                turn('l');
+                break;
+            case 68: //d
+                turn('r');
+                break;
+            case 87: //w
+                go('f');
+                break;
+            case 83: //s
+                go('b');
+                break;
+            case 38: //Up
+                go('f');
+                break;
+            case 37: //Left
+                turn('l');
+                break;
+            case 40: //Down
+                go('b');
+                break;
+            case 39: //Right
+                turn('r');
+                break;
         }
-        catch(err){}
     }
+    catch(err){}
 });
 
 
