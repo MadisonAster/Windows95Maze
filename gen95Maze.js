@@ -294,8 +294,8 @@ function End(Y,X){
     window.MazeScene.add(this.mesh)
     this.tick = function()
     {
-        this.mesh.rotation.y = camera.rotation.y;
-        if(difference(this.mesh.position.z,camera.position.z) < 10 && difference(this.mesh.position.x,camera.position.x) < 10)
+        this.mesh.rotation.y = window.MazeCamera.rotation.y;
+        if(difference(this.mesh.position.z,window.MazeCamera.position.z) < 10 && difference(this.mesh.position.x,window.MazeCamera.position.x) < 10)
         {
             that=this;
             endInterval = setInterval(function()
@@ -353,7 +353,7 @@ function OpenGL(Y,X){
     
     this.tick = function()
     {
-        this.mesh.rotation.y = camera.rotation.y;
+        this.mesh.rotation.y = window.MazeCamera.rotation.y;
     }
     });
     
@@ -380,7 +380,7 @@ function Rat(Y,X){
     
     this.tick = function()
     {
-        this.mesh.rotation.y = camera.rotation.y;
+        this.mesh.rotation.y = window.MazeCamera.rotation.y;
         if(!this.m)
         {
             var randey = randint(0,3);
@@ -481,7 +481,7 @@ function Spinner(Y,X){
     this.tick = function()
     {
         this.mesh.rotation.y += rad(1);
-        if(difference(this.mesh.position.z,camera.position.z) < 10 && difference(this.mesh.position.x,camera.position.x) < 10)
+        if(difference(this.mesh.position.z,window.MazeCamera.position.z) < 10 && difference(this.mesh.position.x,window.MazeCamera.position.x) < 10)
         {
             flip();
             this.mesh.scale.x=0;
@@ -500,7 +500,7 @@ function flip(){
         flipInt = setInterval(function()
         {
             $.f++;
-            camera.rotation.z -= rad(1);
+            window.MazeCamera.rotation.z -= rad(1);
             if($.f==180)
             {
                 $.f=0;
@@ -537,7 +537,7 @@ function turn(d){
                     turnInt = setInterval(function()
                     {
                         $.t++;
-                        camera.rotation.y += rad(1);
+                        window.MazeCamera.rotation.y += rad(1);
                         if($.t==90)
                         {
                             $.t=0;
@@ -564,7 +564,7 @@ function turn(d){
                     turnInt = setInterval(function()
                     {
                         $.t++;
-                        camera.rotation.y -= rad(1);
+                        window.MazeCamera.rotation.y -= rad(1);
                         if($.t==90)
                         {
                             $.t=0;
@@ -601,7 +601,7 @@ function go(d){
                                 goInt = setInterval(function()
                                 {
                                     $.g++;
-                                    camera.position.z += $.speed;
+                                    window.MazeCamera.position.z += $.speed;
                                     if( $.g>=320/$.speed)
                                     {
                                         $.g=0;
@@ -618,7 +618,7 @@ function go(d){
                                 goInt = setInterval(function()
                                 {
                                     $.g++;
-                                    camera.position.z -= $.speed;
+                                    window.MazeCamera.position.z -= $.speed;
                                     if( $.g>=320/$.speed)
                                     {
                                         $.g=0;
@@ -635,7 +635,7 @@ function go(d){
                                 goInt = setInterval(function()
                                 {
                                     $.g++;
-                                    camera.position.x += $.speed;
+                                    window.MazeCamera.position.x += $.speed;
                                     if( $.g>=320/$.speed)
                                     {
                                         $.g=0;
@@ -652,7 +652,7 @@ function go(d){
                                 goInt = setInterval(function()
                                 {
                                     $.g++;
-                                    camera.position.x -= $.speed;
+                                    window.MazeCamera.position.x -= $.speed;
                                     if( $.g>=320/$.speed)
                                     {
                                         $.g=0;
@@ -678,7 +678,7 @@ function go(d){
                                 goInt = setInterval(function()
                                 {
                                     $.g++;
-                                    camera.position.z -= $.speed;
+                                    window.MazeCamera.position.z -= $.speed;
                                     if( $.g>=320/$.speed)
                                     {
                                         $.g=0;
@@ -695,7 +695,7 @@ function go(d){
                                 goInt = setInterval(function()
                                 {
                                     $.g++;
-                                    camera.position.z += $.speed;
+                                    window.MazeCamera.position.z += $.speed;
                                     if( $.g>=320/$.speed)
                                     {
                                         $.g=0;
@@ -712,7 +712,7 @@ function go(d){
                                 goInt = setInterval(function()
                                 {
                                     $.g++;
-                                    camera.position.x -= $.speed;
+                                    window.MazeCamera.position.x -= $.speed;
                                     if( $.g>=320/$.speed)
                                     {
                                         $.g=0;
@@ -729,7 +729,7 @@ function go(d){
                                 goInt = setInterval(function()
                                 {
                                     $.g++;
-                                    camera.position.x += $.speed;
+                                    window.MazeCamera.position.x += $.speed;
                                     if( $.g>=320/$.speed)
                                     {
                                         $.g=0;
@@ -889,9 +889,6 @@ function init0(){
 
     $(window).resize(ResizeHandling);
     
-    var camera, geometry, material, mesh, maze;
-    var clock = new THREE.Clock();
-    
     var konami = new Konami();
     konami.code = flip;
     konami.load();
@@ -925,14 +922,14 @@ function init(){
     //var ambient = new THREE.AmbientLight( 0xFFFFFF );
     //window.MazeScene.add( ambient );
     
-    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
-    camera.position.z = -( ($.posY*320) + (320)/2 ) //+ (320/2);
-    camera.position.y = 100;
-    camera.position.x = -( $.posX*320 + (320/2));//-(window.MazeWidth*320)/2 - (320/2);
-    camera.rotation.y = rad(180);
-    camera.far = 100;// greater(window.MazeWidth,window.MazeDepth)*320;
+    window.MazeCamera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+    window.MazeCamera.position.z = -( ($.posY*320) + (320)/2 ) //+ (320/2);
+    window.MazeCamera.position.y = 100;
+    window.MazeCamera.position.x = -( $.posX*320 + (320/2));//-(window.MazeWidth*320)/2 - (320/2);
+    window.MazeCamera.rotation.y = rad(180);
+    window.MazeCamera.far = 100;// greater(window.MazeWidth,window.MazeDepth)*320;
 
-    window.MazeScene.add( camera );
+    window.MazeScene.add( window.MazeCamera );
     
     pointLight = new THREE.PointLight( 0xFFFFFF );
     pointLight.position.z = -( ($.posY*320) + (320)/2 );
@@ -1103,7 +1100,7 @@ window.requestAnimFrame = (function(){
 })();
 
 function render(){
-    window.MazeRenderer.render(window.MazeScene, camera);
+    window.MazeRenderer.render(window.MazeScene, window.MazeCamera);
 }
 //init0();
 //////////////////////////////////
