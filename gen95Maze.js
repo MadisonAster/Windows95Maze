@@ -866,7 +866,7 @@ function UpdateWorld(){
 //////////////////////////////////
 
 //////////////Main()//////////////
-function init0(){
+function init(){
     window.MazeScene = new THREE.Scene();
 
     $.ajaxSetup({async:false})
@@ -900,10 +900,6 @@ function init0(){
     $.turnInts = new Array();
     $.speed = 4;
     updateWorld = setInterval(UpdateWorld,10);
-}
-
-function init(){
-    init0();
     
     $.t=0; //turning
     $.g=0; //going
