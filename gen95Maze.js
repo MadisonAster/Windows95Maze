@@ -787,7 +787,7 @@ function getImgSize(imgSrc){
 
 //////////////Unsorted////////////
 function ResizeHandling(){
-    renderer.setSize( window.innerWidth, window.innerHeight );
+    window.MazeRenderer.setSize( window.innerWidth, window.innerHeight );
     //init();animate();
 }
 
@@ -889,7 +889,7 @@ function init0(){
 
     $(window).resize(ResizeHandling);
     
-    var camera, renderer, geometry, material, mesh, maze;
+    var camera, geometry, material, mesh, maze;
     var clock = new THREE.Clock();
     
     var konami = new Konami();
@@ -1074,10 +1074,10 @@ function init(){
     
     try
     {
-        renderer = new THREE.WebGLRenderer();
-        renderer.setSize( window.innerWidth, window.innerHeight );
+        window.MazeRenderer = new THREE.WebGLRenderer();
+        window.MazeRenderer.setSize( window.innerWidth, window.innerHeight );
 
-        document.body.appendChild( renderer.domElement );
+        document.body.appendChild( window.MazeRenderer.domElement );
     }
     catch(err)
     {
@@ -1103,7 +1103,7 @@ window.requestAnimFrame = (function(){
 })();
 
 function render(){
-    renderer.render(window.MazeScene, camera);
+    window.MazeRenderer.render(window.MazeScene, camera);
 }
 //init0();
 //////////////////////////////////
