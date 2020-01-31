@@ -336,12 +336,15 @@ function End(Y,X){
                 }
                 else
                 {
-                    if(!$.ended)
-                    {
-                        window.location = "./?w="+(parseInt(window.MazeWidth)+1)+"&h="+(parseInt(window.MazeDepth)+1)+"&c="+$.ceilImage+"&f="+$.floorImage+"&wa="+$.wallImage;
-                        $.ended=1;
-                    }
+                    //if(!$.ended)
+                    //{
+                    //    window.location = "./?w="+(parseInt(window.MazeWidth)+1)+"&h="+(parseInt(window.MazeDepth)+1)+"&c="+$.ceilImage+"&f="+$.floorImage+"&wa="+$.wallImage;
+                    //    $.ended=1;
+                    //}
                     clearInterval(endInterval);
+                    
+                    init();
+                    //clearInterval(updateWorld);
                 }
             },10);
         }
@@ -852,30 +855,30 @@ function MouseUpdate(e){
 };
 
 function UpdateWorld(){
-    if($.ended)
-        {
-            clearInterval(updateWorld);
-        }
-        if (wallsMesh.scale.y < 1)
-        {
-            wallsMesh.scale.y += .01;
-            coolWallsMesh.scale.y += .01;
-        }
-        for(i=0;i<actors.length;++i)
-        {
-            actors[i].tick();
+    //if($.ended)
+    //    {
+    //        clearInterval(updateWorld);
+    //    }
+    if (wallsMesh.scale.y < 1)
+    {
+        wallsMesh.scale.y += .01;
+        coolWallsMesh.scale.y += .01;
+    }
+    for(i=0;i<actors.length;++i)
+    {
+        actors[i].tick();
 
-            //actors[i].mesh.position.z = -( (actors[i].posY*320) + (320)/2 );
-            //actors[i].mesh.position.x = -( (actors[i].posX*320) + (320)/2 );
-            //actors[i].mesh.position.y = 50;
-            
-            if(actors[i].mesh.scale.y < 1)
-            {
-                actors[i].mesh.scale.y += .01;
-            }
+        //actors[i].mesh.position.z = -( (actors[i].posY*320) + (320)/2 );
+        //actors[i].mesh.position.x = -( (actors[i].posX*320) + (320)/2 );
+        //actors[i].mesh.position.y = 50;
+        
+        if(actors[i].mesh.scale.y < 1)
+        {
+            actors[i].mesh.scale.y += .01;
         }
-        pointLight.position.z = -( ($.posY*320) + (320)/2 );
-        pointLight.position.x = -( ($.posX*320) + (320)/2 );
+    }
+    pointLight.position.z = -( ($.posY*320) + (320)/2 );
+    pointLight.position.x = -( ($.posX*320) + (320)/2 );
 };
 //////////////////////////////////
 
@@ -1114,5 +1117,4 @@ window.requestAnimFrame = (function(){
 function render(){
     window.MazeRenderer.render(window.MazeScene, window.MazeCamera);
 }
-//init0();
 //////////////////////////////////
