@@ -240,8 +240,6 @@ function windows95Maze(width,height){
 /////////////Actors///////////////
 function createActors(){
     actors = new Array();
-
-    //Add actors
     createRatActors();
     LoadSignFont();
     createSpinnerActors();
@@ -257,6 +255,7 @@ function createRatActors(){
         actors.push(new Rat(Y,X));
     }
 }
+
 function LoadSignFont(){
     var loader = new THREE.FontLoader();
     loader.load('droid_serif_bold.typeface.json',
@@ -265,6 +264,7 @@ function LoadSignFont(){
         createSignActors();
     });
 }
+
 function createSignActors(){
     for(i=0;i<$.openglsigns;++i)
     {
@@ -619,7 +619,7 @@ function go(d){
                     switch(face)
                     {
                         case 'n':
-                            if($.DEBUG || !$.rows[$.posY][$.posX].up)
+                            if(window.MazeDebug || !$.rows[$.posY][$.posX].up)
                             {    
                                 $.posY--;
                                 goInt = setInterval(function()
@@ -636,7 +636,7 @@ function go(d){
                             }
                             break;
                         case 's':
-                            if($.DEBUG || !$.rows[$.posY][$.posX].down)
+                            if(window.MazeDebug || !$.rows[$.posY][$.posX].down)
                             {
                                 $.posY++;
                                 goInt = setInterval(function()
@@ -653,7 +653,7 @@ function go(d){
                             }
                             break;
                         case 'w':
-                            if($.DEBUG || !$.rows[$.posY][$.posX].left)
+                            if(window.MazeDebug || !$.rows[$.posY][$.posX].left)
                             {
                                 $.posX--;
                                 goInt = setInterval(function()
@@ -670,7 +670,7 @@ function go(d){
                             }
                             break;
                         case 'e':
-                            if($.DEBUG || !$.rows[$.posY][$.posX].right)
+                            if(window.MazeDebug || !$.rows[$.posY][$.posX].right)
                             {
                                 $.posX++;
                                 goInt = setInterval(function()
@@ -696,7 +696,7 @@ function go(d){
                     switch(face)
                     {
                         case 'n':
-                            if($.DEBUG || !$.rows[$.posY][$.posX].down)
+                            if(window.MazeDebug || !$.rows[$.posY][$.posX].down)
                             {    
                                 $.posY++;
                                 goInt = setInterval(function()
@@ -713,7 +713,7 @@ function go(d){
                             }
                             break;
                         case 's':
-                            if($.DEBUG || !$.rows[$.posY][$.posX].up)
+                            if(window.MazeDebug || !$.rows[$.posY][$.posX].up)
                             {
                                 $.posY--;
                                 goInt = setInterval(function()
@@ -730,7 +730,7 @@ function go(d){
                             }
                             break;
                         case 'w':
-                            if($.DEBUG || !$.rows[$.posY][$.posX].right)
+                            if(window.MazeDebug || !$.rows[$.posY][$.posX].right)
                             {
                                 $.posX++;
                                 goInt = setInterval(function()
@@ -747,7 +747,7 @@ function go(d){
                             }
                             break;
                         case 'e':
-                            if($.DEBUG || !$.rows[$.posY][$.posX].left)
+                            if(window.MazeDebug || !$.rows[$.posY][$.posX].left)
                             {
                                 $.posX--;
                                 goInt = setInterval(function()
@@ -816,21 +816,21 @@ function ResizeHandling(){
 }
 
 function KeyHandling(event){
-    try
-    {
+    //try
+    //{
         switch(event.keyCode)
         {
-            case 65: //a
-                turn('l');
-                break;
-            case 68: //d
-                turn('r');
-                break;
             case 87: //w
                 go('f');
                 break;
+            case 65: //a
+                turn('l');
+                break;
             case 83: //s
                 go('b');
+                break;
+            case 68: //d
+                turn('r');
                 break;
             case 38: //Up
                 go('f');
@@ -845,8 +845,8 @@ function KeyHandling(event){
                 turn('r');
                 break;
         }
-    }
-    catch(err){}
+    //}
+    //catch(err){}
 };
 
 function MouseUpdate(e){
@@ -888,7 +888,7 @@ function init(){
 
     $.ajaxSetup({async:false})
 
-    $.DEBUG = 0;
+    window.MazeDebug = 0;
 
     window.MazeWidth = 12;
     window.MazeDepth = 12;
