@@ -245,12 +245,16 @@ function createActors(){
     for(i=0;i<$.rats;++i)
     {
         actors.push(new Rat(randint(0,$.h-2),randint(0,$.w-1)));
+    }
+    
+    for(i=0;i<$.openglsigns;++i)
+    {
         actors.push(new OpenGL(randint(0,$.h-1),randint(0,$.w-1)));
     }
 
     $.takenSpinnerPlaces = new Array();
     
-    for(i=0;i<$.rats;++i)
+    for(i=0;i<$.spinners;++i)
     {
         $.bad=0;
         Y = randint(0,window.MazeDepth-2);
@@ -375,7 +379,7 @@ function Rat(Y,X){
     this.mesh.position.x = -( (this.posX*320) + (320)/2 );
     this.mesh.position.y = 50;
     
-    window.MazeScene.add(this.mesh)
+    window.MazeScene.add(this.mesh);
     this.m=0;
     
     this.tick = function()
@@ -879,6 +883,8 @@ function init(){
     $.ceilImage = "ceiling.png";
     $.floorImage = "floor.png";
     $.rats = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
+    $.openglsigns = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
+    $.spinners = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
     
     //$.rats = Math.ceil((window.MazeWidth*window.MazeDepth));
 
