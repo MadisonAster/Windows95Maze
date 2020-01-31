@@ -242,16 +242,39 @@ function createActors(){
     actors = new Array();
 
     //Add actors
+    createRatActors();
+    LoadSignFont();
+    createSpinnerActors();
+    actors.push(new End(0,0));
+    //alert(actors[1].posY + " " + actors[1].posX + "\n" + actors[2].posY + " " + actors[2].posX)
+}
+
+function createRatActors(){
     for(i=0;i<$.rats;++i)
     {
-        actors.push(new Rat(randint(0,$.h-2),randint(0,$.w-1)));
+        Y = randint(0,window.MazeDepth-1);
+        X = randint(0,window.MazeWidth-1);
+        actors.push(new Rat(Y,X));
     }
-    
+}
+function LoadSignFont(){
+    var loader = new THREE.FontLoader();
+    loader.load('droid_serif_bold.typeface.json',
+    function (font) {
+        window.SignFont = font;
+        createSignActors();
+    });
+}
+function createSignActors(){
     for(i=0;i<$.openglsigns;++i)
     {
-        actors.push(new OpenGL(randint(0,$.h-1),randint(0,$.w-1)));
+        Y = randint(0,window.MazeDepth-1);
+        X = randint(0,window.MazeWidth-1);
+        actors.push(new OpenGL(Y,X));
     }
+}
 
+function createSpinnerActors(){
     $.takenSpinnerPlaces = new Array();
     
     for(i=0;i<$.spinners;++i)
@@ -277,8 +300,6 @@ function createActors(){
             $.takenSpinnerPlaces[$.takenSpinnerPlaces.length-1][1] = X;
         }
     }
-    actors.push(new End(0,0));
-    //alert(actors[1].posY + " " + actors[1].posX + "\n" + actors[2].posY + " " + actors[2].posX)
 }
 
 function End(Y,X){
@@ -317,7 +338,7 @@ function End(Y,X){
                 {
                     if(!$.ended)
                     {
-                        window.location = "./?w="+(parseInt($.w)+1)+"&h="+(parseInt($.h)+1)+"&c="+$.ceilImage+"&f="+$.floorImage+"&wa="+$.wallImage;
+                        window.location = "./?w="+(parseInt(window.MazeWidth)+1)+"&h="+(parseInt(window.MazeDepth)+1)+"&c="+$.ceilImage+"&f="+$.floorImage+"&wa="+$.wallImage;
                         $.ended=1;
                     }
                     clearInterval(endInterval);
@@ -327,10 +348,7 @@ function End(Y,X){
     }
 }
 
-function OpenGL(Y,X){   
-    var loader = new THREE.FontLoader();
-    loader.load('droid_serif_bold.typeface.json',
-    function (font) {
+function OpenGL(Y,X){
     this.mesh = new THREE.Mesh
     (
         new THREE.TextGeometry( "OpenGL",
@@ -339,13 +357,12 @@ function OpenGL(Y,X){
             height: 10,
             curveSegments: 12,
 
-            font: font,
+            font: window.SignFont,
             weight: "bold",
             style: "bold",
         }),
         new THREE.MeshPhongMaterial( { color: 0x00ff00, specular: 0xffffff} )
     )
-    
     this.posY = Y;
     this.posX = X;
     this.mesh.position.z = -( (this.posY*320) + (320)/2 - 50);
@@ -353,13 +370,12 @@ function OpenGL(Y,X){
     this.mesh.position.y = 100;
     //this.mesh.scale.y = 0;
 
-    window.MazeScene.add(this.mesh)
+    window.MazeScene.add(this.mesh);
     
     this.tick = function()
     {
         this.mesh.rotation.y = window.MazeCamera.rotation.y;
     }
-    });
     
 }
 
@@ -384,6 +400,7 @@ function Rat(Y,X){
     
     this.tick = function()
     {
+        //return;
         this.mesh.rotation.y = window.MazeCamera.rotation.y;
         if(!this.m)
         {
@@ -846,26 +863,19 @@ function UpdateWorld(){
         }
         for(i=0;i<actors.length;++i)
         {
-            try
-            {
-                actors[i].tick();
+            actors[i].tick();
 
-                //actors[i].mesh.position.z = -( (actors[i].posY*320) + (320)/2 );
-                //actors[i].mesh.position.x = -( (actors[i].posX*320) + (320)/2 );
-                //actors[i].mesh.position.y = 50;
-                
-                if(actors[i].mesh.scale.y < 1)
-                {
-                    actors[i].mesh.scale.y += .01;
-                }
+            //actors[i].mesh.position.z = -( (actors[i].posY*320) + (320)/2 );
+            //actors[i].mesh.position.x = -( (actors[i].posX*320) + (320)/2 );
+            //actors[i].mesh.position.y = 50;
+            
+            if(actors[i].mesh.scale.y < 1)
+            {
+                actors[i].mesh.scale.y += .01;
             }
-            catch(err){}
         }
-        try
-        {
-            pointLight.position.z = -( ($.posY*320) + (320)/2 );
-            pointLight.position.x = -( ($.posX*320) + (320)/2 );
-        }catch(err){}
+        pointLight.position.z = -( ($.posY*320) + (320)/2 );
+        pointLight.position.x = -( ($.posX*320) + (320)/2 );
 };
 //////////////////////////////////
 
