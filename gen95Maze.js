@@ -840,11 +840,6 @@ function KeyHandling(event){
         }
 };
 
-function MouseUpdate(e){
-    $.mouseX = e.pageX; 
-    $.mouseY = e.pageY;
-};
-
 function UpdateWorld(){
     //if($.ended)
     //    {
@@ -899,9 +894,6 @@ function init(){
     konami.load();
     
     $(window).keydown(KeyHandling);
-    $.mouseX = 0;
-    $.mouseY = 0;
-    $().mousemove(MouseUpdate);
     $.turnInts = new Array();
     $.speed = 4;
     updateWorld = setInterval(UpdateWorld,10);
