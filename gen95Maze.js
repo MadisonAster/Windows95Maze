@@ -15,28 +15,28 @@ function windows95Maze(width,height){
     }
 
     //setup maze full of secluded Cells
-    $.rows = new Array();
+    window.MazeRows = new Array();
     for(y=0;y<height;++y)
     {
-        $.rows[y] = new Array();
+        window.MazeRows[y] = new Array();
         for(x=0;x<width;++x)
         {
-            $.rows[y][x] = new Cell;
+            window.MazeRows[y][x] = new Cell;
             if (!randint(0,10))
             {
                 switch(randint(0,3))
                 {
                     case 0:
-                        $.rows[y][x].up=2;
+                        window.MazeRows[y][x].up=2;
                         break;
                     case 1:
-                        $.rows[y][x].left=2;
+                        window.MazeRows[y][x].left=2;
                         break;
                     case 2:
-                        $.rows[y][x].right=2;
+                        window.MazeRows[y][x].right=2;
                         break;
                     default:
-                        $.rows[y][x].down=2;
+                        window.MazeRows[y][x].down=2;
                         break;
                 }
             }
@@ -49,7 +49,7 @@ function windows95Maze(width,height){
         {
             for(xa=0;xa<width;++xa)
             {
-                if($.rows[ya][xa].secluded())
+                if(window.MazeRows[ya][xa].secluded())
                 {
                     return 0
                 }
@@ -61,27 +61,27 @@ function windows95Maze(width,height){
     function connect_cells(y,x,y2,x2)
     {    try
         {
-            if ($.rows[y2][x2].secluded() /*&& x2>0*/ && x2<$.rows[0].length /*&& y2 > 0*/ && y2 < $.rows.length)
+            if (window.MazeRows[y2][x2].secluded() /*&& x2>0*/ && x2<window.MazeRows[0].length /*&& y2 > 0*/ && y2 < window.MazeRows.length)
             {
                 if (y<y2) //New Cell is below
                 {
-                    $.rows[y2][x2].up=0;
-                    $.rows[y][x].down=0;
+                    window.MazeRows[y2][x2].up=0;
+                    window.MazeRows[y][x].down=0;
                 }
                 else if(y>y2) //New Cell is above
                 {
-                    $.rows[y2][x2].down=0;
-                    $.rows[y][x].up=0;
+                    window.MazeRows[y2][x2].down=0;
+                    window.MazeRows[y][x].up=0;
                 }
                 else if(x<x2) //New Cell is right
                 {
-                    $.rows[y2][x2].left=0;
-                    $.rows[y][x].right=0;
+                    window.MazeRows[y2][x2].left=0;
+                    window.MazeRows[y][x].right=0;
                 }
                 else if(x>x2) //New Cell is left
                 {
-                    $.rows[y2][x2].right=0;
-                    $.rows[y][x].left=0;
+                    window.MazeRows[y2][x2].right=0;
+                    window.MazeRows[y][x].left=0;
                 }
                 return 1
             }
@@ -94,28 +94,28 @@ function windows95Maze(width,height){
     {
         if (yb > 0)
         {
-            if ($.rows[yb-1][xb].secluded())
+            if (window.MazeRows[yb-1][xb].secluded())
             {
                 return 0;
             }
         }
-        if(yb < $.rows.length-1)
+        if(yb < window.MazeRows.length-1)
         {
-            if ($.rows[yb+1][xb].secluded())
+            if (window.MazeRows[yb+1][xb].secluded())
             {
                 return 0;
             }
         }
         if(xb > 0)
         {
-            if ($.rows[yb][xb-1].secluded())
+            if (window.MazeRows[yb][xb-1].secluded())
             {
                 return 0;
             }
         }
-        if( xb < $.rows[0].length-1)
+        if( xb < window.MazeRows[0].length-1)
         {
-            if ($.rows[yb][xb+1].secluded())
+            if (window.MazeRows[yb][xb+1].secluded())
             {
                 return 0;
             }
@@ -218,7 +218,7 @@ function windows95Maze(width,height){
     rax = randint(0,width-1);
     ray = randint(0,height-1);
     
-    switch( $.rows[ray][rax] )
+    switch( window.MazeRows[ray][rax] )
     {
         case this.up:
             this.up = 2;
@@ -414,7 +414,7 @@ function Rat(Y,X){
             switch(randey)
             {
                 case 0:
-                    if(!$.rows[this.posY][this.posX].up)
+                    if(!window.MazeRows[this.posY][this.posX].up)
                     {
                         this.posY--;
                         var that = this;
@@ -431,7 +431,7 @@ function Rat(Y,X){
                     }
                     break;
                 case 1:
-                    if(!$.rows[this.posY][this.posX].down && this.posY>1)
+                    if(!window.MazeRows[this.posY][this.posX].down && this.posY>1)
                     {
                         this.posY++;
                         var that = this;
@@ -448,7 +448,7 @@ function Rat(Y,X){
                     }
                     break;
                 case 2:
-                    if(!$.rows[this.posY][this.posX].right)
+                    if(!window.MazeRows[this.posY][this.posX].right)
                     {
                         this.posX++;
                         var that = this;
@@ -465,7 +465,7 @@ function Rat(Y,X){
                     }
                     break;
                 case 3:
-                    if(!$.rows[this.posY][this.posX].left)
+                    if(!window.MazeRows[this.posY][this.posX].left)
                     {
                         this.posX--;
                         var that = this;
@@ -621,14 +621,14 @@ function go(d){
                     switch(window.MazeOrientation)
                     {
                         case 'n':
-                            if(window.MazeDebug || !$.rows[window.MazePosY][window.MazePosX].up)
+                            if(window.MazeDebug || !window.MazeRows[window.MazePosY][window.MazePosX].up)
                             {    
                                 window.MazePosY--;
                                 goInt = setInterval(function()
                                 {
                                     window.MazeMovement++;
-                                    window.MazeCamera.position.z += $.speed;
-                                    if( window.MazeMovement>=320/$.speed)
+                                    window.MazeCamera.position.z += window.MazeSpeed;
+                                    if( window.MazeMovement>=320/window.MazeSpeed)
                                     {
                                         window.MazeMovement=0;
                                         window.MazeGoQueue = 0;
@@ -638,14 +638,14 @@ function go(d){
                             }
                             break;
                         case 's':
-                            if(window.MazeDebug || !$.rows[window.MazePosY][window.MazePosX].down)
+                            if(window.MazeDebug || !window.MazeRows[window.MazePosY][window.MazePosX].down)
                             {
                                 window.MazePosY++;
                                 goInt = setInterval(function()
                                 {
                                     window.MazeMovement++;
-                                    window.MazeCamera.position.z -= $.speed;
-                                    if( window.MazeMovement>=320/$.speed)
+                                    window.MazeCamera.position.z -= window.MazeSpeed;
+                                    if( window.MazeMovement>=320/window.MazeSpeed)
                                     {
                                         window.MazeMovement=0;
                                         window.MazeGoQueue = 0;
@@ -655,14 +655,14 @@ function go(d){
                             }
                             break;
                         case 'w':
-                            if(window.MazeDebug || !$.rows[window.MazePosY][window.MazePosX].left)
+                            if(window.MazeDebug || !window.MazeRows[window.MazePosY][window.MazePosX].left)
                             {
                                 window.MazePosX--;
                                 goInt = setInterval(function()
                                 {
                                     window.MazeMovement++;
-                                    window.MazeCamera.position.x += $.speed;
-                                    if( window.MazeMovement>=320/$.speed)
+                                    window.MazeCamera.position.x += window.MazeSpeed;
+                                    if( window.MazeMovement>=320/window.MazeSpeed)
                                     {
                                         window.MazeMovement=0;
                                         window.MazeGoQueue = 0;
@@ -672,14 +672,14 @@ function go(d){
                             }
                             break;
                         case 'e':
-                            if(window.MazeDebug || !$.rows[window.MazePosY][window.MazePosX].right)
+                            if(window.MazeDebug || !window.MazeRows[window.MazePosY][window.MazePosX].right)
                             {
                                 window.MazePosX++;
                                 goInt = setInterval(function()
                                 {
                                     window.MazeMovement++;
-                                    window.MazeCamera.position.x -= $.speed;
-                                    if( window.MazeMovement>=320/$.speed)
+                                    window.MazeCamera.position.x -= window.MazeSpeed;
+                                    if( window.MazeMovement>=320/window.MazeSpeed)
                                     {
                                         window.MazeMovement=0;
                                         window.MazeGoQueue = 0;
@@ -699,14 +699,14 @@ function go(d){
                     switch(window.MazeOrientation)
                     {
                         case 'n':
-                            if(window.MazeDebug || !$.rows[window.MazePosY][window.MazePosX].down)
+                            if(window.MazeDebug || !window.MazeRows[window.MazePosY][window.MazePosX].down)
                             {    
                                 window.MazePosY++;
                                 goInt = setInterval(function()
                                 {
                                     window.MazeMovement++;
-                                    window.MazeCamera.position.z -= $.speed;
-                                    if( window.MazeMovement>=320/$.speed)
+                                    window.MazeCamera.position.z -= window.MazeSpeed;
+                                    if( window.MazeMovement>=320/window.MazeSpeed)
                                     {
                                         window.MazeMovement=0;
                                         window.MazeGoQueue = 0;
@@ -716,14 +716,14 @@ function go(d){
                             }
                             break;
                         case 's':
-                            if(window.MazeDebug || !$.rows[window.MazePosY][window.MazePosX].up)
+                            if(window.MazeDebug || !window.MazeRows[window.MazePosY][window.MazePosX].up)
                             {
                                 window.MazePosY--;
                                 goInt = setInterval(function()
                                 {
                                     window.MazeMovement++;
-                                    window.MazeCamera.position.z += $.speed;
-                                    if( window.MazeMovement>=320/$.speed)
+                                    window.MazeCamera.position.z += window.MazeSpeed;
+                                    if( window.MazeMovement>=320/window.MazeSpeed)
                                     {
                                         window.MazeMovement=0;
                                         window.MazeGoQueue = 0;
@@ -733,14 +733,14 @@ function go(d){
                             }
                             break;
                         case 'w':
-                            if(window.MazeDebug || !$.rows[window.MazePosY][window.MazePosX].right)
+                            if(window.MazeDebug || !window.MazeRows[window.MazePosY][window.MazePosX].right)
                             {
                                 window.MazePosX++;
                                 goInt = setInterval(function()
                                 {
                                     window.MazeMovement++;
-                                    window.MazeCamera.position.x -= $.speed;
-                                    if( window.MazeMovement>=320/$.speed)
+                                    window.MazeCamera.position.x -= window.MazeSpeed;
+                                    if( window.MazeMovement>=320/window.MazeSpeed)
                                     {
                                         window.MazeMovement=0;
                                         window.MazeGoQueue = 0;
@@ -750,14 +750,14 @@ function go(d){
                             }
                             break;
                         case 'e':
-                            if(window.MazeDebug || !$.rows[window.MazePosY][window.MazePosX].left)
+                            if(window.MazeDebug || !window.MazeRows[window.MazePosY][window.MazePosX].left)
                             {
                                 window.MazePosX--;
                                 goInt = setInterval(function()
                                 {
                                     window.MazeMovement++;
-                                    window.MazeCamera.position.x += $.speed;
-                                    if( window.MazeMovement>=320/$.speed)
+                                    window.MazeCamera.position.x += window.MazeSpeed;
+                                    if( window.MazeMovement>=320/window.MazeSpeed)
                                     {
                                         window.MazeMovement=0;
                                         window.MazeGoQueue = 0;
@@ -891,7 +891,7 @@ function init(){
     
     $(window).keydown(KeyHandling);
     $.turnInts = new Array();
-    $.speed = 4;
+    window.MazeSpeed = 4;
     updateWorld = setInterval(UpdateWorld,10);
     
     window.MazeTurning = 0; //turning
@@ -902,7 +902,7 @@ function init(){
     window.MazeTurnQueue = 0; //presses for turn()
     window.MazeOrientation = 'n'; //face
     
-    //Creates the variable $.rows which is an array of arrays of cells of the maze
+    //Creates the variable window.MazeRows which is an array of arrays of cells of the maze
     windows95Maze(window.MazeWidth,window.MazeDepth);
     
     window.MazePosX = Math.round(window.MazeWidth/2);
@@ -955,7 +955,7 @@ function init(){
         for(x=0;x<window.MazeWidth;++x)
         {
     
-            if($.rows[y][x].up)
+            if(window.MazeRows[y][x].up)
             {
                 mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
                 mesh.position.x = -((x+1)*320) + (320/2);
@@ -972,7 +972,7 @@ function init(){
                 }
 
             }
-            if($.rows[y][x].left)
+            if(window.MazeRows[y][x].left)
             {
                 mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
                 mesh.position.x = -((x)*320)// - (320/2);
@@ -988,7 +988,7 @@ function init(){
                     THREE.GeometryUtils.merge( coolWalls, mesh );
                 }
             }
-            if($.rows[y][x].down && y==window.MazeDepth-1) //It only does this on the outside so that there aren't cloned walls all over
+            if(window.MazeRows[y][x].down && y==window.MazeDepth-1) //It only does this on the outside so that there aren't cloned walls all over
             {
                 mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
                 mesh.position.x = -(((x+1)*320) - (320/2));
@@ -1004,7 +1004,7 @@ function init(){
                     THREE.GeometryUtils.merge( coolWalls, mesh );
                 }
             }
-            if($.rows[y][x].right && x==window.MazeWidth-1) //Ditto
+            if(window.MazeRows[y][x].right && x==window.MazeWidth-1) //Ditto
             {
                 mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
                 mesh.position.x = -((x+1)*320)// - (320/2);
