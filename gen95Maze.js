@@ -889,10 +889,6 @@ function init(){
 
     $(window).resize(ResizeHandling);
     
-    var konami = new Konami();
-    konami.code = flip;
-    konami.load();
-    
     $(window).keydown(KeyHandling);
     $.turnInts = new Array();
     $.speed = 4;
