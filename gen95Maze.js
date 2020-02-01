@@ -815,6 +815,7 @@ function getImgSize(imgSrc){
 //////////////Unsorted////////////
 function ResizeHandling(){
     window.MazeRenderer.setSize( window.innerWidth, window.innerHeight );
+    console.log('resize event!');
     //init();animate();
 }
 
@@ -877,8 +878,8 @@ function init(){
     window.MazeSpeed = 4;
 
     createActors();
-    $(window).resize(ResizeHandling);
-    $(window).keydown(KeyHandling);
+    window.addEventListener('resize', ResizeHandling);
+    window.addEventListener('keydown', KeyHandling);
     updateWorld = setInterval(UpdateWorld,10);
     
     window.MazeTurning = 0; //turning
