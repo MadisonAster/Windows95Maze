@@ -542,8 +542,8 @@ function flip(){
 function turn(d){
     if(!$.t)
     {
-        $.p2++;
-        //if($.p2<2) this fixes the infinite spin bug but makes the controls suck
+        window.MazeTurnQueue++;
+        //if(window.MazeTurnQueue<2) this fixes the infinite spin bug but makes the controls suck
         {
             if (d == 'l' && window.MazeFlipped || d == 'r' && !window.MazeFlipped)
             {
@@ -602,7 +602,7 @@ function turn(d){
         }
         //else
         {
-            $.p2=0;
+            window.MazeTurnQueue=0;
         }
     }
 }
@@ -611,8 +611,8 @@ function go(d){
     //I have a feeling this might be able to be simplified a bit 
     if(!$.g)
     {
-        $.p++;
-        //if($.p<2)
+        window.MazeGoQueue++;
+        //if(window.MazeGoQueue<2)
         {
             switch(d)
             {
@@ -631,7 +631,7 @@ function go(d){
                                     if( $.g>=320/$.speed)
                                     {
                                         $.g=0;
-                                        $.p=0;
+                                        window.MazeGoQueue = 0;
                                         clearInterval(goInt);
                                     }
                                 },1);
@@ -648,7 +648,7 @@ function go(d){
                                     if( $.g>=320/$.speed)
                                     {
                                         $.g=0;
-                                        $.p=0;
+                                        window.MazeGoQueue = 0;
                                         clearInterval(goInt);
                                     }
                                 },1);
@@ -665,7 +665,7 @@ function go(d){
                                     if( $.g>=320/$.speed)
                                     {
                                         $.g=0;
-                                        $.p=0;
+                                        window.MazeGoQueue = 0;
                                         clearInterval(goInt);
                                     }
                                 },1);
@@ -682,14 +682,15 @@ function go(d){
                                     if( $.g>=320/$.speed)
                                     {
                                         $.g=0;
-                                        $.p=0;
+                                        window.MazeGoQueue = 0;
                                         clearInterval(goInt);
                                     }
                                 },1);
                             }
                             break;
                         default:
-                            $.g=0;$.p=0;
+                            $.g=0;
+                            window.MazeGoQueue = 0;
                     }
                     break;
                 }
@@ -708,7 +709,7 @@ function go(d){
                                     if( $.g>=320/$.speed)
                                     {
                                         $.g=0;
-                                        $.p=0;
+                                        window.MazeGoQueue = 0;
                                         clearInterval(goInt);
                                     }
                                 },1);
@@ -725,7 +726,7 @@ function go(d){
                                     if( $.g>=320/$.speed)
                                     {
                                         $.g=0;
-                                        $.p=0;
+                                        window.MazeGoQueue = 0;
                                         clearInterval(goInt);
                                     }
                                 },1);
@@ -742,7 +743,7 @@ function go(d){
                                     if( $.g>=320/$.speed)
                                     {
                                         $.g=0;
-                                        $.p=0;
+                                        window.MazeGoQueue = 0;
                                         clearInterval(goInt);
                                     }
                                 },1);
@@ -759,7 +760,7 @@ function go(d){
                                     if( $.g>=320/$.speed)
                                     {
                                         $.g=0;
-                                        $.p=0;
+                                        window.MazeGoQueue = 0;
                                         clearInterval(goInt);
                                     }
                                 },1);
@@ -771,7 +772,7 @@ function go(d){
         }
         //else
         {
-            $.p=0;
+            window.MazeGoQueue = 0;
         }
     }
 }
@@ -907,12 +908,10 @@ function init(){
     
     $.t=0; //turning
     $.g=0; //going
-    //$.f=0; //flipping
     window.MazeFlipping = 0; //flipping
-    window.MazeFlipped = 0; //flipping
-    $.i=0; //temporary invincibility to $.rats
-    $.p=0; //presses for go()
-    $.p2=0; //presses for turn()
+    window.MazeFlipped = 0; //flipped
+    window.MazeGoQueue = 0; //presses for go()
+    window.MazeTurnQueue = 0; //presses for turn()
     window.MazeOrientation = 'n'; //face
     
     //Creates the variable $.rows which is an array of arrays of cells of the maze
