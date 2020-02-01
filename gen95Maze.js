@@ -540,7 +540,7 @@ function flip(){
 }
 
 function turn(d){
-    if(!$.t)
+    if(!window.MazeTurning)
     {
         window.MazeTurnQueue++;
         //if(window.MazeTurnQueue<2) this fixes the infinite spin bug but makes the controls suck
@@ -564,11 +564,11 @@ function turn(d){
                 }
                 turnInt = setInterval(function()
                 {
-                    $.t++;
+                    window.MazeTurning++;
                     window.MazeCamera.rotation.y -= rad(1);
-                    if($.t==90)
+                    if(window.MazeTurning==90)
                     {
-                        $.t=0;
+                        window.MazeTurning=0;
                         clearInterval(turnInt);
                     }
                 },1);
@@ -590,11 +590,11 @@ function turn(d){
                 }
                 turnInt = setInterval(function()
                 {
-                    $.t++;
+                    window.MazeTurning++;
                     window.MazeCamera.rotation.y += rad(1);
-                    if($.t==90)
+                    if(window.MazeTurning==90)
                     {
-                        $.t=0;
+                        window.MazeTurning=0;
                         clearInterval(turnInt);
                     }
                 },5);
@@ -609,7 +609,7 @@ function turn(d){
 
 function go(d){
     //I have a feeling this might be able to be simplified a bit 
-    if(!$.g)
+    if(!window.MazeMovement)
     {
         window.MazeGoQueue++;
         //if(window.MazeGoQueue<2)
@@ -626,11 +626,11 @@ function go(d){
                                 $.posY--;
                                 goInt = setInterval(function()
                                 {
-                                    $.g++;
+                                    window.MazeMovement++;
                                     window.MazeCamera.position.z += $.speed;
-                                    if( $.g>=320/$.speed)
+                                    if( window.MazeMovement>=320/$.speed)
                                     {
-                                        $.g=0;
+                                        window.MazeMovement=0;
                                         window.MazeGoQueue = 0;
                                         clearInterval(goInt);
                                     }
@@ -643,11 +643,11 @@ function go(d){
                                 $.posY++;
                                 goInt = setInterval(function()
                                 {
-                                    $.g++;
+                                    window.MazeMovement++;
                                     window.MazeCamera.position.z -= $.speed;
-                                    if( $.g>=320/$.speed)
+                                    if( window.MazeMovement>=320/$.speed)
                                     {
-                                        $.g=0;
+                                        window.MazeMovement=0;
                                         window.MazeGoQueue = 0;
                                         clearInterval(goInt);
                                     }
@@ -660,11 +660,11 @@ function go(d){
                                 $.posX--;
                                 goInt = setInterval(function()
                                 {
-                                    $.g++;
+                                    window.MazeMovement++;
                                     window.MazeCamera.position.x += $.speed;
-                                    if( $.g>=320/$.speed)
+                                    if( window.MazeMovement>=320/$.speed)
                                     {
-                                        $.g=0;
+                                        window.MazeMovement=0;
                                         window.MazeGoQueue = 0;
                                         clearInterval(goInt);
                                     }
@@ -677,11 +677,11 @@ function go(d){
                                 $.posX++;
                                 goInt = setInterval(function()
                                 {
-                                    $.g++;
+                                    window.MazeMovement++;
                                     window.MazeCamera.position.x -= $.speed;
-                                    if( $.g>=320/$.speed)
+                                    if( window.MazeMovement>=320/$.speed)
                                     {
-                                        $.g=0;
+                                        window.MazeMovement=0;
                                         window.MazeGoQueue = 0;
                                         clearInterval(goInt);
                                     }
@@ -689,7 +689,7 @@ function go(d){
                             }
                             break;
                         default:
-                            $.g=0;
+                            window.MazeMovement=0;
                             window.MazeGoQueue = 0;
                     }
                     break;
@@ -704,11 +704,11 @@ function go(d){
                                 $.posY++;
                                 goInt = setInterval(function()
                                 {
-                                    $.g++;
+                                    window.MazeMovement++;
                                     window.MazeCamera.position.z -= $.speed;
-                                    if( $.g>=320/$.speed)
+                                    if( window.MazeMovement>=320/$.speed)
                                     {
-                                        $.g=0;
+                                        window.MazeMovement=0;
                                         window.MazeGoQueue = 0;
                                         clearInterval(goInt);
                                     }
@@ -721,11 +721,11 @@ function go(d){
                                 $.posY--;
                                 goInt = setInterval(function()
                                 {
-                                    $.g++;
+                                    window.MazeMovement++;
                                     window.MazeCamera.position.z += $.speed;
-                                    if( $.g>=320/$.speed)
+                                    if( window.MazeMovement>=320/$.speed)
                                     {
-                                        $.g=0;
+                                        window.MazeMovement=0;
                                         window.MazeGoQueue = 0;
                                         clearInterval(goInt);
                                     }
@@ -738,11 +738,11 @@ function go(d){
                                 $.posX++;
                                 goInt = setInterval(function()
                                 {
-                                    $.g++;
+                                    window.MazeMovement++;
                                     window.MazeCamera.position.x -= $.speed;
-                                    if( $.g>=320/$.speed)
+                                    if( window.MazeMovement>=320/$.speed)
                                     {
-                                        $.g=0;
+                                        window.MazeMovement=0;
                                         window.MazeGoQueue = 0;
                                         clearInterval(goInt);
                                     }
@@ -755,11 +755,11 @@ function go(d){
                                 $.posX--;
                                 goInt = setInterval(function()
                                 {
-                                    $.g++;
+                                    window.MazeMovement++;
                                     window.MazeCamera.position.x += $.speed;
-                                    if( $.g>=320/$.speed)
+                                    if( window.MazeMovement>=320/$.speed)
                                     {
-                                        $.g=0;
+                                        window.MazeMovement=0;
                                         window.MazeGoQueue = 0;
                                         clearInterval(goInt);
                                     }
@@ -898,8 +898,8 @@ function init(){
     $.speed = 4;
     updateWorld = setInterval(UpdateWorld,10);
     
-    $.t=0; //turning
-    $.g=0; //going
+    window.MazeTurning = 0; //turning
+    window.MazeMovement = 0; //going
     window.MazeFlipping = 0; //flipping
     window.MazeFlipped = 0; //flipped
     window.MazeGoQueue = 0; //presses for go()
@@ -911,9 +911,6 @@ function init(){
     
     $.posX = Math.round(window.MazeWidth/2);
     $.posY = window.MazeDepth-1;
-    
-    //var ambient = new THREE.AmbientLight( 0xFFFFFF );
-    //window.MazeScene.add( ambient );
     
     window.MazeCamera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
     window.MazeCamera.position.z = -( ($.posY*320) + (320)/2 ) //+ (320/2);
