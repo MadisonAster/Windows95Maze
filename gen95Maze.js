@@ -621,9 +621,9 @@ function go(d){
                     switch(window.MazeOrientation)
                     {
                         case 'n':
-                            if(window.MazeDebug || !$.rows[$.posY][$.posX].up)
+                            if(window.MazeDebug || !$.rows[window.MazePosY][window.MazePosX].up)
                             {    
-                                $.posY--;
+                                window.MazePosY--;
                                 goInt = setInterval(function()
                                 {
                                     window.MazeMovement++;
@@ -638,9 +638,9 @@ function go(d){
                             }
                             break;
                         case 's':
-                            if(window.MazeDebug || !$.rows[$.posY][$.posX].down)
+                            if(window.MazeDebug || !$.rows[window.MazePosY][window.MazePosX].down)
                             {
-                                $.posY++;
+                                window.MazePosY++;
                                 goInt = setInterval(function()
                                 {
                                     window.MazeMovement++;
@@ -655,9 +655,9 @@ function go(d){
                             }
                             break;
                         case 'w':
-                            if(window.MazeDebug || !$.rows[$.posY][$.posX].left)
+                            if(window.MazeDebug || !$.rows[window.MazePosY][window.MazePosX].left)
                             {
-                                $.posX--;
+                                window.MazePosX--;
                                 goInt = setInterval(function()
                                 {
                                     window.MazeMovement++;
@@ -672,9 +672,9 @@ function go(d){
                             }
                             break;
                         case 'e':
-                            if(window.MazeDebug || !$.rows[$.posY][$.posX].right)
+                            if(window.MazeDebug || !$.rows[window.MazePosY][window.MazePosX].right)
                             {
-                                $.posX++;
+                                window.MazePosX++;
                                 goInt = setInterval(function()
                                 {
                                     window.MazeMovement++;
@@ -699,9 +699,9 @@ function go(d){
                     switch(window.MazeOrientation)
                     {
                         case 'n':
-                            if(window.MazeDebug || !$.rows[$.posY][$.posX].down)
+                            if(window.MazeDebug || !$.rows[window.MazePosY][window.MazePosX].down)
                             {    
-                                $.posY++;
+                                window.MazePosY++;
                                 goInt = setInterval(function()
                                 {
                                     window.MazeMovement++;
@@ -716,9 +716,9 @@ function go(d){
                             }
                             break;
                         case 's':
-                            if(window.MazeDebug || !$.rows[$.posY][$.posX].up)
+                            if(window.MazeDebug || !$.rows[window.MazePosY][window.MazePosX].up)
                             {
-                                $.posY--;
+                                window.MazePosY--;
                                 goInt = setInterval(function()
                                 {
                                     window.MazeMovement++;
@@ -733,9 +733,9 @@ function go(d){
                             }
                             break;
                         case 'w':
-                            if(window.MazeDebug || !$.rows[$.posY][$.posX].right)
+                            if(window.MazeDebug || !$.rows[window.MazePosY][window.MazePosX].right)
                             {
-                                $.posX++;
+                                window.MazePosX++;
                                 goInt = setInterval(function()
                                 {
                                     window.MazeMovement++;
@@ -750,9 +750,9 @@ function go(d){
                             }
                             break;
                         case 'e':
-                            if(window.MazeDebug || !$.rows[$.posY][$.posX].left)
+                            if(window.MazeDebug || !$.rows[window.MazePosY][window.MazePosX].left)
                             {
-                                $.posX--;
+                                window.MazePosX--;
                                 goInt = setInterval(function()
                                 {
                                     window.MazeMovement++;
@@ -858,8 +858,8 @@ function UpdateWorld(){
             actors[i].mesh.scale.y += actors[i].sizeY/100;
         }
     }
-    pointLight.position.z = -( ($.posY*320) + (320)/2 );
-    pointLight.position.x = -( ($.posX*320) + (320)/2 );
+    pointLight.position.z = -( (window.MazePosY*320) + (320)/2 );
+    pointLight.position.x = -( (window.MazePosX*320) + (320)/2 );
 };
 //////////////////////////////////
 
@@ -905,21 +905,21 @@ function init(){
     //Creates the variable $.rows which is an array of arrays of cells of the maze
     windows95Maze(window.MazeWidth,window.MazeDepth);
     
-    $.posX = Math.round(window.MazeWidth/2);
-    $.posY = window.MazeDepth-1;
+    window.MazePosX = Math.round(window.MazeWidth/2);
+    window.MazePosY = window.MazeDepth-1;
     
     window.MazeCamera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
-    window.MazeCamera.position.z = -( ($.posY*320) + (320)/2 ) //+ (320/2);
+    window.MazeCamera.position.z = -( (window.MazePosY*320) + (320)/2 ) //+ (320/2);
     window.MazeCamera.position.y = 100;
-    window.MazeCamera.position.x = -( $.posX*320 + (320/2));//-(window.MazeWidth*320)/2 - (320/2);
+    window.MazeCamera.position.x = -( window.MazePosX*320 + (320/2));//-(window.MazeWidth*320)/2 - (320/2);
     window.MazeCamera.rotation.y = rad(180);
     window.MazeCamera.far = 100;// greater(window.MazeWidth,window.MazeDepth)*320;
 
     window.MazeScene.add( window.MazeCamera );
     
     pointLight = new THREE.PointLight( 0xFFFFFF );
-    pointLight.position.z = -( ($.posY*320) + (320)/2 );
-    pointLight.position.x = -( ($.posX*320) + (320)/2 );
+    pointLight.position.z = -( (window.MazePosY*320) + (320)/2 );
+    pointLight.position.x = -( (window.MazePosX*320) + (320)/2 );
 
     window.MazeScene.add(pointLight)
     
