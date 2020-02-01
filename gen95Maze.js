@@ -248,7 +248,7 @@ function createActors(){
 }
 
 function createRatActors(){
-    for(i=0;i<$.rats;++i)
+    for(i=0;i<window.MazeRats;++i)
     {
         Y = randint(0,window.MazeDepth-1);
         X = randint(0,window.MazeWidth-1);
@@ -266,7 +266,7 @@ function LoadSignFont(){
 }
 
 function createSignActors(){
-    for(i=0;i<$.openglsigns;++i)
+    for(i=0;i<window.MazeSigns;++i)
     {
         Y = randint(0,window.MazeDepth-1);
         X = randint(0,window.MazeWidth-1);
@@ -277,7 +277,7 @@ function createSignActors(){
 function createSpinnerActors(){
     $.takenSpinnerPlaces = new Array();
     
-    for(i=0;i<$.spinners;++i)
+    for(i=0;i<window.MazeSpinners;++i)
     {
         $.bad=0;
         Y = randint(0,window.MazeDepth-2);
@@ -876,11 +876,11 @@ function init(){
     $.wallImage = "wall.png";
     $.ceilImage = "ceiling.png";
     $.floorImage = "floor.png";
-    $.rats = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
-    $.openglsigns = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
-    $.spinners = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
+    window.MazeRats = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
+    window.MazeSigns = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
+    window.MazeSpinners = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
     
-    //$.rats = Math.ceil((window.MazeWidth*window.MazeDepth));
+    //window.MazeRats = Math.ceil((window.MazeWidth*window.MazeDepth));
 
     //$.autopilot = $.getUrlVar('a');
     //$.autopilot = true;
