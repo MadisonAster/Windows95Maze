@@ -275,29 +275,29 @@ function createSignActors(){
 }
 
 function createSpinnerActors(){
-    $.takenSpinnerPlaces = new Array();
+    takenSpinnerPlaces = new Array();
     
     for(i=0;i<window.MazeSpinners;++i)
     {
-        $.bad=0;
+        bad=0;
         Y = randint(0,window.MazeDepth-2);
         X = randint(0,window.MazeWidth-1);
         
-        for(q=0;q<$.takenSpinnerPlaces.length;++q)
+        for(q=0;q<takenSpinnerPlaces.length;++q)
         {
-            //alert($.takenSpinnerPlaces[q][0] + " " + $.takenSpinnerPlaces[q][1] + "\n" + Y + " " + X)
-            if($.takenSpinnerPlaces[q][0]==Y && $.takenSpinnerPlaces[q][1]==X)
+            //alert(takenSpinnerPlaces[q][0] + " " + takenSpinnerPlaces[q][1] + "\n" + Y + " " + X)
+            if(takenSpinnerPlaces[q][0]==Y && takenSpinnerPlaces[q][1]==X)
             {
-                $.bad=1;
+                bad=1;
                 //i--;
             }
         }
-        if(!$.bad)
+        if(!bad)
         {
             actors.push(new Spinner(Y,X));
-            $.takenSpinnerPlaces.push(new Array);
-            $.takenSpinnerPlaces[$.takenSpinnerPlaces.length-1][0] = Y;
-            $.takenSpinnerPlaces[$.takenSpinnerPlaces.length-1][1] = X;
+            takenSpinnerPlaces.push(new Array);
+            takenSpinnerPlaces[takenSpinnerPlaces.length-1][0] = Y;
+            takenSpinnerPlaces[takenSpinnerPlaces.length-1][1] = X;
         }
     }
 }
@@ -337,10 +337,10 @@ function End(Y,X){
                 }
                 else
                 {
-                    //if(!$.ended)
+                    //if(!window.MazeEnded)
                     //{
                     //    window.location = "./?w="+(parseInt(window.MazeWidth)+1)+"&h="+(parseInt(window.MazeDepth)+1)+"&c="+window.MazeCeilImage+"&f="+window.MazeFloorImage+"&wa="+window.MazeWallImage;
-                    //    $.ended=1;
+                    //    window.MazeEnded = 1;
                     //}
                     clearInterval(endInterval);
                     
@@ -841,10 +841,6 @@ function KeyHandling(event){
 };
 
 function UpdateWorld(){
-    //if($.ended)
-    //    {
-    //        clearInterval(updateWorld);
-    //    }
     if (wallsMesh.scale.y < 1)
     {
         wallsMesh.scale.y += .01;
@@ -867,9 +863,8 @@ function UpdateWorld(){
 function init(){
     window.MazeScene = new THREE.Scene();
 
-    $.ajaxSetup({async:false})
-
     window.MazeDebug = 0;
+    window.MazeAutopilot = true;
 
     window.MazeWidth = 12;
     window.MazeDepth = 12;
@@ -879,19 +874,11 @@ function init(){
     window.MazeRats = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
     window.MazeSigns = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
     window.MazeSpinners = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
-    
-    //window.MazeRats = Math.ceil((window.MazeWidth*window.MazeDepth));
-
-    //$.autopilot = $.getUrlVar('a');
-    //$.autopilot = true;
+    window.MazeSpeed = 4;
 
     createActors();
-
     $(window).resize(ResizeHandling);
-    
     $(window).keydown(KeyHandling);
-    $.turnInts = new Array();
-    window.MazeSpeed = 4;
     updateWorld = setInterval(UpdateWorld,10);
     
     window.MazeTurning = 0; //turning
