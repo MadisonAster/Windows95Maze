@@ -339,7 +339,7 @@ function End(Y,X){
                 {
                     //if(!$.ended)
                     //{
-                    //    window.location = "./?w="+(parseInt(window.MazeWidth)+1)+"&h="+(parseInt(window.MazeDepth)+1)+"&c="+$.ceilImage+"&f="+$.floorImage+"&wa="+$.wallImage;
+                    //    window.location = "./?w="+(parseInt(window.MazeWidth)+1)+"&h="+(parseInt(window.MazeDepth)+1)+"&c="+window.MazeCeilImage+"&f="+window.MazeFloorImage+"&wa="+window.MazeWallImage;
                     //    $.ended=1;
                     //}
                     clearInterval(endInterval);
@@ -873,9 +873,9 @@ function init(){
 
     window.MazeWidth = 12;
     window.MazeDepth = 12;
-    $.wallImage = "wall.png";
-    $.ceilImage = "ceiling.png";
-    $.floorImage = "floor.png";
+    window.MazeWallImage = "wall.png";
+    window.MazeCeilImage = "ceiling.png";
+    window.MazeFloorImage = "floor.png";
     window.MazeRats = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
     window.MazeSigns = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
     window.MazeSpinners = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
@@ -929,12 +929,12 @@ function init(){
     
     
     var floorImg = new Image();
-    floorImg.src = $.floorImage;
+    floorImg.src = window.MazeFloorImage;
 
     floorImg.onload = function()
     {
         var floorGeometry = new THREE.CubeGeometry( 320*window.MazeWidth, 0, 320*window.MazeDepth, 1, 1, 1, null);
-        var floorTexture = THREE.ImageUtils.loadTexture($.floorImage);
+        var floorTexture = THREE.ImageUtils.loadTexture(window.MazeFloorImage);
         floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
         floorTexture.offset.x = 0;
         floorTexture.offset.y = 0;
@@ -1027,7 +1027,7 @@ function init(){
         }
     }
     
-    wallsMesh = new THREE.Mesh(combinedWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture($.wallImage)}));
+    wallsMesh = new THREE.Mesh(combinedWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture(window.MazeWallImage)}));
     
     wallsMesh.scale.y = .05;
     
@@ -1040,12 +1040,12 @@ function init(){
     window.MazeScene.add( coolWallsMesh );
     
     var ceilImg = new Image();
-    ceilImg.src = $.ceilImage;
+    ceilImg.src = window.MazeCeilImage;
 
     ceilImg.onload = function()
     {
         var ceilGeometry = new THREE.CubeGeometry( 320*window.MazeWidth, 0, 320*window.MazeDepth, 1, 1, 1, null);
-        var ceilTexture = THREE.ImageUtils.loadTexture($.ceilImage);
+        var ceilTexture = THREE.ImageUtils.loadTexture(window.MazeCeilImage);
         ceilTexture.wrapS = ceilTexture.wrapT = THREE.RepeatWrapping;
         ceilTexture.offset.x = 0;
         ceilTexture.offset.y = 0;
