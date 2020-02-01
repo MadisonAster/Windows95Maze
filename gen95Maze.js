@@ -519,15 +519,16 @@ function Spinner(Y,X){
 
 /////////////Animation////////////
 function flip(){
-    if(!$.f)
+    if(!window.MazeFlipping)
     {
         flipInt = setInterval(function()
         {
-            $.f++;
+            window.MazeFlipping++;
             window.MazeCamera.rotation.z -= rad(1);
-            if($.f==180)
+            if(window.MazeFlipping==180)
             {
-                $.f=0;
+                window.MazeFlipping = 0;
+                window.MazeFlipped = !window.MazeFlipped;
                 clearInterval(flipInt);
             }
         },5);
@@ -540,62 +541,59 @@ function turn(d){
         $.p2++;
         //if($.p2<2) this fixes the infinite spin bug but makes the controls suck
         {
-            switch(d)
+            if (d == 'l' && window.MazeFlipped || d == 'r' && !window.MazeFlipped)
             {
-                case 'l':
-                    switch(face)
+                switch(window.MazeOrientation)
+                {
+                    case 'n':
+                        window.MazeOrientation = 'e';
+                        break;
+                    case 'e':
+                        window.MazeOrientation = 's';
+                        break;
+                    case 's':
+                        window.MazeOrientation = 'w';
+                        break;
+                    case 'w':
+                        window.MazeOrientation = 'n';
+                        break;
+                }
+                turnInt = setInterval(function()
+                {
+                    $.t++;
+                    window.MazeCamera.rotation.y -= rad(1);
+                    if($.t==90)
                     {
-                        case 'n':
-                            face = 'w';
-                            break;
-                        case 'w':
-                            face = 's';
-                            break;
-                        case 's':
-                            face = 'e';
-                            break;
-                        case 'e':
-                            face = 'n';
-                            break;
+                        $.t=0;
+                        clearInterval(turnInt);
                     }
-                    turnInt = setInterval(function()
+                },1);
+            } else {
+                switch(window.MazeOrientation)
+                {
+                    case 'n':
+                        window.MazeOrientation = 'w';
+                        break;
+                    case 'w':
+                        window.MazeOrientation = 's';
+                        break;
+                    case 's':
+                        window.MazeOrientation = 'e';
+                        break;
+                    case 'e':
+                        window.MazeOrientation = 'n';
+                        break;
+                }
+                turnInt = setInterval(function()
+                {
+                    $.t++;
+                    window.MazeCamera.rotation.y += rad(1);
+                    if($.t==90)
                     {
-                        $.t++;
-                        window.MazeCamera.rotation.y += rad(1);
-                        if($.t==90)
-                        {
-                            $.t=0;
-                            clearInterval(turnInt);
-                        }
-                    },1);
-                    break;
-                case 'r':
-                    switch(face)
-                    {
-                        case 'n':
-                            face = 'e';
-                            break;
-                        case 'e':
-                            face = 's';
-                            break;
-                        case 's':
-                            face = 'w';
-                            break;
-                        case 'w':
-                            face = 'n';
-                            break;
+                        $.t=0;
+                        clearInterval(turnInt);
                     }
-                    turnInt = setInterval(function()
-                    {
-                        $.t++;
-                        window.MazeCamera.rotation.y -= rad(1);
-                        if($.t==90)
-                        {
-                            $.t=0;
-                            clearInterval(turnInt);
-                        }
-                    },5);
-                    break;
+                },5);
             }
         }
         //else
@@ -616,7 +614,7 @@ function go(d){
             {
                 case 'f':
                 {
-                    switch(face)
+                    switch(window.MazeOrientation)
                     {
                         case 'n':
                             if(window.MazeDebug || !$.rows[$.posY][$.posX].up)
@@ -693,7 +691,7 @@ function go(d){
                 }
                 case 'b':
                 {
-                    switch(face)
+                    switch(window.MazeOrientation)
                     {
                         case 'n':
                             if(window.MazeDebug || !$.rows[$.posY][$.posX].down)
@@ -922,11 +920,13 @@ function init(){
     
     $.t=0; //turning
     $.g=0; //going
-    $.f=0; //flipping
+    //$.f=0; //flipping
+    window.MazeFlipping = 0; //flipping
+    window.MazeFlipped = 0; //flipping
     $.i=0; //temporary invincibility to $.rats
     $.p=0; //presses for go()
     $.p2=0; //presses for turn()
-    face = 'n';
+    window.MazeOrientation = 'n'; //face
     
     //Creates the variable $.rows which is an array of arrays of cells of the maze
     windows95Maze(window.MazeWidth,window.MazeDepth);
