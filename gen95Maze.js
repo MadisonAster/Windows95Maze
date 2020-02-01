@@ -316,6 +316,7 @@ function End(Y,X){
     this.mesh.position.x = -( (this.posX*320) + (320)/2 );
     this.mesh.position.y = 50;
     this.mesh.scale.y = 0;
+    this.sizeY = 1;
     window.MazeScene.add(this.mesh)
     this.tick = function()
     {
@@ -371,7 +372,8 @@ function OpenGL(Y,X){
     this.mesh.position.z = -( (this.posY*320) + (320)/2 - 50);
     this.mesh.position.x = -( (this.posX*320) + (320)/2 + 50);
     this.mesh.position.y = 100;
-    //this.mesh.scale.y = 0;
+    this.mesh.scale.y = 0;
+    this.sizeY = 1;
 
     window.MazeScene.add(this.mesh);
     
@@ -392,6 +394,7 @@ function Rat(Y,X){
     
     this.mesh.material.transparent=true;
     this.mesh.scale.y = 0;
+    this.sizeY = 1;
     this.posY = Y;
     this.posX = X;
     this.mesh.position.z = -( (this.posY*320) + (320)/2 );
@@ -492,7 +495,8 @@ function Spinner(Y,X){
         new THREE.MeshPhongMaterial({ color: 0xcccccc, specular: 0xffffff})
     )
     this.mesh.scale.x=50;
-    this.mesh.scale.y=50;
+    this.mesh.scale.y=0;
+    this.sizeY=50;
     this.mesh.scale.z=50;
     this.posY = Y;
     this.posX = X;
@@ -853,14 +857,9 @@ function UpdateWorld(){
     for(i=0;i<actors.length;++i)
     {
         actors[i].tick();
-
-        //actors[i].mesh.position.z = -( (actors[i].posY*320) + (320)/2 );
-        //actors[i].mesh.position.x = -( (actors[i].posX*320) + (320)/2 );
-        //actors[i].mesh.position.y = 50;
-        
-        if(actors[i].mesh.scale.y < 1)
+        if(actors[i].mesh.scale.y < actors[i].sizeY)
         {
-            actors[i].mesh.scale.y += .01;
+            actors[i].mesh.scale.y += actors[i].sizeY/100;
         }
     }
     pointLight.position.z = -( ($.posY*320) + (320)/2 );
