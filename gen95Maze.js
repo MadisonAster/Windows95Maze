@@ -814,37 +814,25 @@ function ResizeHandling(){
 }
 
 function KeyHandling(event){
-    //try
-    //{
         switch(event.keyCode)
         {
             case 87: //w
-                go('f');
-                break;
-            case 65: //a
-                turn('l');
-                break;
-            case 83: //s
-                go('b');
-                break;
-            case 68: //d
-                turn('r');
-                break;
             case 38: //Up
                 go('f');
                 break;
+            case 65: //a
             case 37: //Left
                 turn('l');
                 break;
+            case 83: //s
             case 40: //Down
                 go('b');
                 break;
+            case 68: //d
             case 39: //Right
                 turn('r');
                 break;
         }
-    //}
-    //catch(err){}
 };
 
 function MouseUpdate(e){
