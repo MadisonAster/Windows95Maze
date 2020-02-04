@@ -1043,17 +1043,12 @@ function init(){
         window.MazeScene.add(ceilMesh);
     }
     
-    try
-    {
-        window.MazeRenderer = new THREE.WebGLRenderer();
-        window.MazeRenderer.setSize( window.innerWidth, window.innerHeight );
+    window.MazeCanvas = document.createElement('canvas');
+    window.MazeContext = window.MazeCanvas.getContext('webgl2', {alpha:false});
+    window.MazeRenderer = new THREE.WebGLRenderer({canvas: window.MazeCanvas, context: window.MazeContext});
+    window.MazeRenderer.setSize(window.innerWidth, window.innerHeight);
 
-        document.body.appendChild( window.MazeRenderer.domElement );
-    }
-    catch(err)
-    {
-        alert("WebGL couldn't start! Make sure you're using a supported browser and graphics card and that your graphics card's drivers are up to date.");
-    }
+    document.body.appendChild(window.MazeRenderer.domElement);
 
 }
 
