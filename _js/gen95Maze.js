@@ -258,7 +258,7 @@ function createRatActors(){
 
 function LoadSignFont(){
     var loader = new THREE.FontLoader();
-    loader.load('droid_serif_bold.typeface.json',
+    loader.load('./_Assets/droid_serif_bold.typeface.json',
     function (font) {
         window.SignFont = font;
         createSignActors();
@@ -307,7 +307,7 @@ function End(Y,X){
     this.mesh = new THREE.Mesh
     (
         new THREE.CubeGeometry( 100, 100, 0, 1, 1, 1, null),
-        new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture("cool.png") })
+        new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture("./_Assets/cool.png") })
     )
     this.mesh.material.transparent=true;
     this.posY = Y;
@@ -389,7 +389,7 @@ function Rat(Y,X){
     this.mesh = new THREE.Mesh
     (
         new THREE.CubeGeometry( 100, 50, 0, 1, 1, 1, null),
-        new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture("rat2.png") })
+        new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture("./_Assets/rat2.png") })
     )
     
     this.mesh.material.transparent=true;
@@ -869,9 +869,9 @@ function init(){
 
     window.MazeWidth = 12;
     window.MazeDepth = 12;
-    window.MazeWallImage = "wall.png";
-    window.MazeCeilImage = "ceiling.png";
-    window.MazeFloorImage = "floor.png";
+    window.MazeWallImage = "./_Assets/wall.png";
+    window.MazeCeilImage = "./_Assets/ceiling.png";
+    window.MazeFloorImage = "./_Assets/floor.png";
     window.MazeRats = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
     window.MazeSigns = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
     window.MazeSpinners = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
@@ -1017,7 +1017,7 @@ function init(){
     
     window.MazeScene.add(wallsMesh);
     
-    coolWallsMesh = new THREE.Mesh( coolWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture("globe.png")}));
+    coolWallsMesh = new THREE.Mesh( coolWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture("./_Assets/globe.png")}));
     
     coolWallsMesh.scale.y = .05;
     
