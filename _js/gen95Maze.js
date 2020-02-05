@@ -1,5 +1,5 @@
 ///////////Maze Generation////////
-function windows95Maze(width,height){
+function Windows95Maze(width,height){
     function Cell()
     {
         //Walls: 0: Nothing, 1: Brick, 2: Lego Globe Thing
@@ -22,9 +22,9 @@ function windows95Maze(width,height){
         for(x=0;x<width;++x)
         {
             window.MazeRows[y][x] = new Cell;
-            if (!randint(0,10))
+            if (!Math.randomint(0,10))
             {
-                switch(randint(0,3))
+                switch(Math.randomint(0,3))
                 {
                     case 0:
                         window.MazeRows[y][x].up=2;
@@ -140,7 +140,7 @@ function windows95Maze(width,height){
         }
         else
         {
-            var d = randint(1,4);
+            var d = Math.randomint(1,4);
             switch(d) 
             {
                 case 1: //left
@@ -215,8 +215,8 @@ function windows95Maze(width,height){
     }
     //random lego globe thing wall
     /*
-    rax = randint(0,width-1);
-    ray = randint(0,height-1);
+    rax = Math.randomint(0,width-1);
+    ray = Math.randomint(0,height-1);
     
     switch( window.MazeRows[ray][rax] )
     {
@@ -238,20 +238,20 @@ function windows95Maze(width,height){
 //////////////////////////////////
 
 /////////////Actors///////////////
-function createActors(){
+function CreateActors(){
     actors = new Array();
-    createRatActors();
+    CreateRatActors();
     LoadSignFont();
-    createSpinnerActors();
+    CreateSpinnerActors();
     actors.push(new End(0,0));
     //alert(actors[1].posY + " " + actors[1].posX + "\n" + actors[2].posY + " " + actors[2].posX)
 }
 
-function createRatActors(){
+function CreateRatActors(){
     for(i=0;i<window.MazeRats;++i)
     {
-        Y = randint(0,window.MazeDepth-1);
-        X = randint(0,window.MazeWidth-1);
+        Y = Math.randomint(0,window.MazeDepth-1);
+        X = Math.randomint(0,window.MazeWidth-1);
         actors.push(new Rat(Y,X));
     }
 }
@@ -261,27 +261,27 @@ function LoadSignFont(){
     loader.load('./_Assets/droid_serif_bold.typeface.json',
     function (font) {
         window.SignFont = font;
-        createSignActors();
+        CreateSignActors();
     });
 }
 
-function createSignActors(){
+function CreateSignActors(){
     for(i=0;i<window.MazeSigns;++i)
     {
-        Y = randint(0,window.MazeDepth-1);
-        X = randint(0,window.MazeWidth-1);
+        Y = Math.randomint(0,window.MazeDepth-1);
+        X = Math.randomint(0,window.MazeWidth-1);
         actors.push(new OpenGL(Y,X));
     }
 }
 
-function createSpinnerActors(){
+function CreateSpinnerActors(){
     takenSpinnerPlaces = new Array();
     
     for(i=0;i<window.MazeSpinners;++i)
     {
         bad=0;
-        Y = randint(0,window.MazeDepth-2);
-        X = randint(0,window.MazeWidth-1);
+        Y = Math.randomint(0,window.MazeDepth-2);
+        X = Math.randomint(0,window.MazeWidth-1);
         
         for(q=0;q<takenSpinnerPlaces.length;++q)
         {
@@ -321,7 +321,7 @@ function End(Y,X){
     this.tick = function()
     {
         this.mesh.rotation.y = window.MazeCamera.rotation.y;
-        if(difference(this.mesh.position.z,window.MazeCamera.position.z) < 10 && difference(this.mesh.position.x,window.MazeCamera.position.x) < 10)
+        if(Math.abs(this.mesh.position.z - window.MazeCamera.position.z) < 10 && Math.abs(this.mesh.position.x - window.MazeCamera.position.x) < 10)
         {
             that=this;
             endInterval = setInterval(function()
@@ -344,7 +344,7 @@ function End(Y,X){
                     //}
                     clearInterval(endInterval);
                     
-                    init();
+                    Init();
                     //clearInterval(updateWorld);
                 }
             },10);
@@ -410,7 +410,7 @@ function Rat(Y,X){
         this.mesh.rotation.y = window.MazeCamera.rotation.y;
         if(!this.m)
         {
-            var randey = randint(0,3);
+            var randey = Math.randomint(0,3);
             switch(randey)
             {
                 case 0:
@@ -508,10 +508,10 @@ function Spinner(Y,X){
     window.MazeScene.add(this.mesh)
     this.tick = function()
     {
-        this.mesh.rotation.y += rad(1);
-        if(difference(this.mesh.position.z,window.MazeCamera.position.z) < 10 && difference(this.mesh.position.x,window.MazeCamera.position.x) < 10)
+        this.mesh.rotation.y += Math.radians(1);
+        if(Math.abs(this.mesh.position.z - window.MazeCamera.position.z) < 10 && Math.abs(this.mesh.position.x - window.MazeCamera.position.x) < 10)
         {
-            flip();
+            Flip();
             this.mesh.scale.x=0;
             this.mesh.scale.y=0;
             this.mesh.scale.z=0;
@@ -522,13 +522,13 @@ function Spinner(Y,X){
 //////////////////////////////////
 
 /////////////Animation////////////
-function flip(){
+function Flip(){
     if(!window.MazeFlipping)
     {
         flipInt = setInterval(function()
         {
             window.MazeFlipping++;
-            window.MazeCamera.rotation.z -= rad(1);
+            window.MazeCamera.rotation.z -= Math.radians(1);
             if(window.MazeFlipping==180)
             {
                 window.MazeFlipping = 0;
@@ -539,7 +539,7 @@ function flip(){
     }
 }
 
-function turn(d){
+function Turn(d){
     if(!window.MazeTurning)
     {
         window.MazeTurnQueue++;
@@ -565,7 +565,7 @@ function turn(d){
                 turnInt = setInterval(function()
                 {
                     window.MazeTurning++;
-                    window.MazeCamera.rotation.y -= rad(1);
+                    window.MazeCamera.rotation.y -= Math.radians(1);
                     if(window.MazeTurning==90)
                     {
                         window.MazeTurning=0;
@@ -591,7 +591,7 @@ function turn(d){
                 turnInt = setInterval(function()
                 {
                     window.MazeTurning++;
-                    window.MazeCamera.rotation.y += rad(1);
+                    window.MazeCamera.rotation.y += Math.radians(1);
                     if(window.MazeTurning==90)
                     {
                         window.MazeTurning=0;
@@ -607,7 +607,7 @@ function turn(d){
     }
 }
 
-function go(d){
+function Go(d){
     //I have a feeling this might be able to be simplified a bit 
     if(!window.MazeMovement)
     {
@@ -779,36 +779,12 @@ function go(d){
 //////////////////////////////////
 
 ///////////Generic Stuff//////////
-function randint(min,max){ 
+Math.randomint = function(min,max){ 
     return Math.floor(Math.random()*(max-min+1))+min
 }
 
-function forInRange(start,end,variable,code){
-    eval(variable+"="+start+";for("+variable+"=start;"+variable+"<end;"+variable+"++){code()}");
-}
-
-function greater(a,b){
-    (a>b) ? c=a : c=b;
-    return c;
-}
-
-function lesser(a,b){
-    (a<b) ? c=a : c=b;
-    return c;
-}
-
-function difference(a,b){
-    return greater(a,b) - lesser(a,b);
-}
-
-function rad(n){
+Math.radians = function(n){
     return n*(Math.PI/180);
-}
-
-function getImgSize(imgSrc){
-    var newImg = new Image();
-    newImg.src = imgSrc;
-    return[newImg.width,newImg.height];
 }
 //////////////////////////////////
 
@@ -816,7 +792,7 @@ function getImgSize(imgSrc){
 function ResizeHandling(){
     window.MazeRenderer.setSize( window.innerWidth, window.innerHeight );
     console.log('resize event!');
-    //init();animate();
+    //Init();Animate();
 }
 
 function KeyHandling(event){
@@ -824,19 +800,19 @@ function KeyHandling(event){
         {
             case 87: //w
             case 38: //Up
-                go('f');
+                Go('f');
                 break;
             case 65: //a
             case 37: //Left
-                turn('l');
+                Turn('l');
                 break;
             case 83: //s
             case 40: //Down
-                go('b');
+                Go('b');
                 break;
             case 68: //d
             case 39: //Right
-                turn('r');
+                Turn('r');
                 break;
         }
 };
@@ -861,7 +837,7 @@ function UpdateWorld(){
 //////////////////////////////////
 
 //////////////Main()//////////////
-function init(){
+function Init(){
     window.MazeScene = new THREE.Scene();
 
     window.MazeDebug = 0;
@@ -877,7 +853,7 @@ function init(){
     window.MazeSpinners = Math.ceil((window.MazeWidth*window.MazeDepth)/50);
     window.MazeSpeed = 4;
 
-    createActors();
+    CreateActors();
     window.addEventListener('resize', ResizeHandling);
     window.addEventListener('keydown', KeyHandling);
     updateWorld = setInterval(UpdateWorld,10);
@@ -886,12 +862,12 @@ function init(){
     window.MazeMovement = 0; //going
     window.MazeFlipping = 0; //flipping
     window.MazeFlipped = 0; //flipped
-    window.MazeGoQueue = 0; //presses for go()
-    window.MazeTurnQueue = 0; //presses for turn()
+    window.MazeGoQueue = 0; //presses for Go()
+    window.MazeTurnQueue = 0; //presses for Turn()
     window.MazeOrientation = 'n'; //face
     
     //Creates the variable window.MazeRows which is an array of arrays of cells of the maze
-    windows95Maze(window.MazeWidth,window.MazeDepth);
+    Windows95Maze(window.MazeWidth,window.MazeDepth);
     
     window.MazePosX = Math.round(window.MazeWidth/2);
     window.MazePosY = window.MazeDepth-1;
@@ -900,8 +876,8 @@ function init(){
     window.MazeCamera.position.z = -( (window.MazePosY*320) + (320)/2 ) //+ (320/2);
     window.MazeCamera.position.y = 100;
     window.MazeCamera.position.x = -( window.MazePosX*320 + (320/2));//-(window.MazeWidth*320)/2 - (320/2);
-    window.MazeCamera.rotation.y = rad(180);
-    window.MazeCamera.far = 100;// greater(window.MazeWidth,window.MazeDepth)*320;
+    window.MazeCamera.rotation.y = Math.radians(180);
+    window.MazeCamera.far = 100;// Math.max(window.MazeWidth,window.MazeDepth)*320;
 
     window.MazeScene.add( window.MazeCamera );
     
@@ -950,7 +926,7 @@ function init(){
                 mesh.position.y = 100;
                 mesh.position.z = -( y*320 )//(window.MazeDepth*320) - y;
 
-                if(randint(0,window.MazeWidth*window.MazeDepth))
+                if(Math.randomint(0,window.MazeWidth*window.MazeDepth))
                 {
                     THREE.GeometryUtils.merge( combinedWalls, mesh );
                 }
@@ -967,7 +943,7 @@ function init(){
                 mesh.position.y = 100;
                 mesh.position.z = -( ((y+1)*320) - (320/2) );//(window.MazeDepth*320) - y;
                 
-                if(randint(0,window.MazeWidth*window.MazeDepth))
+                if(Math.randomint(0,window.MazeWidth*window.MazeDepth))
                 {
                     THREE.GeometryUtils.merge( combinedWalls, mesh );
                 }
@@ -983,7 +959,7 @@ function init(){
                 mesh.position.y = 100;
                 mesh.position.z = -( (y+1)*320 );//(window.MazeDepth*320) - y;
 
-                if(randint(0,window.MazeWidth*window.MazeDepth))
+                if(Math.randomint(0,window.MazeWidth*window.MazeDepth))
                 {
                     THREE.GeometryUtils.merge( combinedWalls, mesh );
                 }
@@ -999,7 +975,7 @@ function init(){
                 mesh.position.y = 100;
                 mesh.position.z = - ( ((y+1)*320) - (320/2) );//(window.MazeDepth*320) - y;
 
-                if(randint(0,window.MazeWidth*window.MazeDepth))
+                if(Math.randomint(0,window.MazeWidth*window.MazeDepth))
                 {
                     THREE.GeometryUtils.merge( combinedWalls, mesh );
                 }
@@ -1052,9 +1028,9 @@ function init(){
 
 }
 
-function animate(){
-    requestAnimationFrame(animate);
-    render();
+function Animate(){
+    requestAnimationFrame(Animate);
+    Render();
 }
 
 window.requestAnimFrame = (function(){
@@ -1068,7 +1044,7 @@ window.requestAnimFrame = (function(){
     };
 })();
 
-function render(){
+function Render(){
     window.MazeRenderer.render(window.MazeScene, window.MazeCamera);
 }
 //////////////////////////////////
