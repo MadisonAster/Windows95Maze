@@ -54,9 +54,7 @@ class Windows95Maze{
         this.MazeSpinners = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
         this.MazeSpeed = 4;
         
-        
         this.CreateActors();
-        //this.UpdateWorldInterval = setInterval(this.UpdateWorld,10);
         
         this.MazeTurning = 0; //turning
         this.MazeMovement = 0; //going
@@ -174,8 +172,7 @@ class Windows95Maze{
         this.MazeCoolWallsMesh.scale.y = .05;
         this.MazeScene.add(this.MazeCoolWallsMesh);
         
-        this.CreateFloor();
-        this.CreateCeiling();
+        
     
         this.UpdateWorldInterval = setInterval(this.UpdateWorld.bind(this),10);
         this.Animate();
@@ -759,6 +756,10 @@ class Windows95Maze{
     
     CreateActors(){
         this.MazeActors = new Array();
+        
+        this.CreateFloor();
+        this.CreateCeiling();
+
         this.CreateRatActors();
         this.LoadSignFont();
         this.CreateSpinnerActors();
