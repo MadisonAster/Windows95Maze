@@ -1,6 +1,29 @@
 ///////////////Main///////////////
 class Windows95Maze{
     constructor(width,depth,resX,resY){
+        this.MazeWidth = width;
+        this.MazeDepth = depth;
+        this.MazeResX = resX;
+        this.MazeResY = resY;
+        
+        this.MazeCanvas = document.createElement('canvas');
+        this.MazeContext = this.MazeCanvas.getContext('webgl2', {alpha:false});
+        this.MazeRenderer = new THREE.WebGLRenderer({canvas: this.MazeCanvas, context: this.MazeContext});
+        this.MazeRenderer.setSize(this.MazeResX, this.MazeResY);
+        
+        //Continue construction after all assets have loaded
+        this.LoadAssets().then(
+            function(){
+                console.log('Maze textures loaded!');
+                this.constructor2();
+            }.bind(this),
+            function(error){
+                console.error('Could not load all textures! Aborting maze!');
+            }
+        );
+    }
+    
+    LoadAssets(){
         this.MazeWallImagePath = './_Assets/wall.png';
         this.MazeCeilImagePath = './_Assets/ceiling.png';
         this.MazeFloorImagePath = './_Assets/floor.png';
@@ -9,11 +32,19 @@ class Windows95Maze{
         this.MazeRatImagePath = './_Assets/rat2.png';
         this.MazeOpenGLFontPath = './_Assets/droid_serif_bold.typeface.json';
         
-        this.MazeWidth = width;
-        this.MazeDepth = depth;
-        this.MazeResX = resX;
-        this.MazeResY = resY;
+        this.AllPromises = [];
+        this.CreateTexturePromise(this.MazeWallImagePath).then(function(texture){this.MazeWallTexture = texture}.bind(this));
+        this.CreateTexturePromise(this.MazeCeilImagePath).then(function(texture){this.MazeCeilTexture = texture}.bind(this));
+        this.CreateTexturePromise(this.MazeFloorImagePath).then(function(texture){this.MazeFloorTexture = texture}.bind(this));
+        this.CreateTexturePromise(this.MazeGlobeImagePath).then(function(texture){this.MazeGlobeTexture = texture}.bind(this));
+        this.CreateTexturePromise(this.MazeEndImagePath).then(function(texture){this.MazeEndTexture = texture}.bind(this));
+        this.CreateTexturePromise(this.MazeRatImagePath).then(function(texture){this.MazeRatTexture = texture}.bind(this));
         
+        var promise = Promise.all(this.AllPromises)
+        return promise
+    }
+    
+    constructor2(){
         this.MazeScene = new THREE.Scene();
         this.MazeDebug = 0;
         this.MazeAutopilot = true;
@@ -57,28 +88,6 @@ class Windows95Maze{
         this.MazeScene.add(this.PointLight);
         ///////////////
         
-        
-        //Load Images//
-        var floorImg = new Image();
-        floorImg.src = this.MazeFloorImagePath;
-
-        floorImg.onload = function()
-        {
-            var floorGeometry = new THREE.CubeGeometry( 320*this.MazeWidth, 0, 320*this.MazeDepth, 1, 1, 1, null);
-            var floorTexture = THREE.ImageUtils.loadTexture(this.MazeFloorImagePath);
-            floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-            floorTexture.offset.x = 0;
-            floorTexture.offset.y = 0;
-            floorTexture.repeat.x = (this.MazeWidth*320)/this.width;
-            floorTexture.repeat.y = (this.MazeDepth*320)/this.height;
-            var floorMaterial = new THREE.MeshBasicMaterial({map: floorTexture });
-            var floorMesh = new THREE.Mesh( floorGeometry, floorMaterial );
-            floorMesh.position.z = -( 320*this.MazeDepth / 2 );
-            floorMesh.position.y = 0;
-            floorMesh.position.x = -320*this.MazeWidth / 2;
-            
-            this.MazeScene.add(floorMesh);
-        }.bind(this);
         
         //Crazy wall generation shenanigans
         var combinedWalls = new THREE.Geometry();
@@ -158,39 +167,18 @@ class Windows95Maze{
             }
         }
         
-        this.MazeWallsMesh = new THREE.Mesh(combinedWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture(this.MazeWallImagePath)}));
+        this.MazeWallsMesh = new THREE.Mesh(combinedWalls, new THREE.MeshBasicMaterial({map: this.MazeWallTexture}));
         this.MazeWallsMesh.scale.y = .05;
         this.MazeScene.add(this.MazeWallsMesh);
-        this.MazeCoolWallsMesh = new THREE.Mesh( coolWalls, new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture(this.MazeGlobeImagePath)}));
+        this.MazeCoolWallsMesh = new THREE.Mesh( coolWalls, new THREE.MeshBasicMaterial({map: this.MazeGlobeTexture}));
         this.MazeCoolWallsMesh.scale.y = .05;
         this.MazeScene.add(this.MazeCoolWallsMesh);
         
-        var ceilImg = new Image();
-        ceilImg.src = this.MazeCeilImagePath;
-
-        ceilImg.onload = function()
-        {
-            var ceilGeometry = new THREE.CubeGeometry( 320*this.MazeWidth, 0, 320*this.MazeDepth, 1, 1, 1, null);
-            var ceilTexture = THREE.ImageUtils.loadTexture(this.MazeCeilImagePath);
-            ceilTexture.wrapS = ceilTexture.wrapT = THREE.RepeatWrapping;
-            ceilTexture.offset.x = 0;
-            ceilTexture.offset.y = 0;
-            ceilTexture.repeat.x = (this.MazeWidth*320)/this.width;
-            ceilTexture.repeat.y = (this.MazeDepth*320)/this.height;
-            var ceilMaterial = new THREE.MeshBasicMaterial({map: ceilTexture});
-            var ceilMesh = new THREE.Mesh( ceilGeometry, ceilMaterial );
-            ceilMesh.position.z = -( 320*this.MazeDepth / 2 );
-            ceilMesh.position.y = 200;
-            ceilMesh.position.x = -320*this.MazeWidth / 2;
-            this.MazeScene.add(ceilMesh);
-        }.bind(this);
-        
-        this.MazeCanvas = document.createElement('canvas');
-        this.MazeContext = this.MazeCanvas.getContext('webgl2', {alpha:false});
-        this.MazeRenderer = new THREE.WebGLRenderer({canvas: this.MazeCanvas, context: this.MazeContext});
-        this.MazeRenderer.setSize(this.MazeResX, this.MazeResY);
+        this.CreateFloor();
+        this.CreateCeiling();
     
         this.UpdateWorldInterval = setInterval(this.UpdateWorld.bind(this),10);
+        this.Animate();
     }
     
     
@@ -462,8 +450,19 @@ class Windows95Maze{
     ResetMaze(){
     }
     
-    LoadAssets(){
-        
+    CreateTexturePromise(ImagePath){
+        var promise = new Promise(function(resolve,reject){
+            var loader = new THREE.TextureLoader();
+            loader.load(
+                ImagePath,
+                function(texture){
+                    //return texture;
+                    resolve(texture);
+                }.bind(this)
+            )
+        }.bind(this));
+        this.AllPromises.push(promise);
+        return promise;
     }
     //////////////////////////////////
     
@@ -727,6 +726,37 @@ class Windows95Maze{
     //////////////////////////////////
     
     /////////////Actors///////////////
+    CreateFloor(){
+        this.MazeFloorGeometry = new THREE.CubeGeometry(320*this.MazeWidth, 0, 320*this.MazeDepth, 1, 1, 1, null);
+        this.MazeFloorTexture.wrapS = THREE.RepeatWrapping;
+        this.MazeFloorTexture.wrapT = THREE.RepeatWrapping;
+        this.MazeFloorTexture.offset.x = 0;
+        this.MazeFloorTexture.offset.y = 0;
+        this.MazeFloorTexture.repeat.x = (this.MazeWidth*320)/this.MazeFloorTexture.image.width;
+        this.MazeFloorTexture.repeat.y = (this.MazeDepth*320)/this.MazeFloorTexture.image.height;
+        this.MazeFloorMaterial = new THREE.MeshBasicMaterial({map: this.MazeFloorTexture});
+        this.MazeFloorMesh = new THREE.Mesh(this.MazeFloorGeometry, this.MazeFloorMaterial);
+        this.MazeFloorMesh.position.z = -(320*this.MazeDepth / 2);
+        this.MazeFloorMesh.position.y = 0;
+        this.MazeFloorMesh.position.x = -320*this.MazeWidth / 2;
+        this.MazeScene.add(this.MazeFloorMesh);
+    }
+    
+    CreateCeiling(){
+        this.MazeCeilGeometry = new THREE.CubeGeometry(320*this.MazeWidth, 0, 320*this.MazeDepth, 1, 1, 1, null);
+        this.MazeCeilTexture.wrapS = this.MazeCeilTexture.wrapT = THREE.RepeatWrapping;
+        this.MazeCeilTexture.offset.x = 0;
+        this.MazeCeilTexture.offset.y = 0;
+        this.MazeCeilTexture.repeat.x = (this.MazeWidth*320)/this.MazeCeilTexture.image.width;
+        this.MazeCeilTexture.repeat.y = (this.MazeDepth*320)/this.MazeCeilTexture.image.height;
+        this.MazeCeilMaterial = new THREE.MeshBasicMaterial({map: this.MazeCeilTexture});
+        this.MazeCeilMesh = new THREE.Mesh(this.MazeCeilGeometry, this.MazeCeilMaterial);
+        this.MazeCeilMesh.position.z = -(320*this.MazeDepth / 2);
+        this.MazeCeilMesh.position.y = 200;
+        this.MazeCeilMesh.position.x = -320*this.MazeWidth / 2;
+        this.MazeScene.add(this.MazeCeilMesh);
+    }
+    
     CreateActors(){
         this.MazeActors = new Array();
         this.CreateRatActors();
@@ -797,7 +827,7 @@ class Windows95Maze{
         EndActor.mesh = new THREE.Mesh
         (
             new THREE.CubeGeometry( 100, 100, 0, 1, 1, 1, null),
-            new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture(this.MazeEndImagePath) })
+            new THREE.MeshBasicMaterial({map: this.MazeEndTexture})
         )
         EndActor.mesh.material.transparent=true;
         //EndActor.posY = Y;
@@ -880,7 +910,7 @@ class Windows95Maze{
         RatActor.mesh = new THREE.Mesh
         (
             new THREE.CubeGeometry( 100, 50, 0, 1, 1, 1, null),
-            new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture(this.MazeRatImagePath) })
+            new THREE.MeshBasicMaterial({map: this.MazeRatTexture})
         )
         
         RatActor.mesh.material.transparent=true;

@@ -4,7 +4,6 @@ function Init(){
     window.addEventListener('resize', ResizeHandling);
     window.addEventListener('keydown', KeyHandling);
     document.body.appendChild(window.DemoMaze.MazeRenderer.domElement);
-    window.DemoMaze.Animate();
 }
 
 function ResizeHandling(){
