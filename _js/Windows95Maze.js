@@ -836,7 +836,7 @@ class Windows95Maze{
         EndActor.mesh.position.z = -( (EndActor.posY*320) + (320)/2 );
         EndActor.mesh.position.x = -( (EndActor.posX*320) + (320)/2 );
         EndActor.mesh.position.y = 50;
-        EndActor.mesh.scale.y = 0;
+        EndActor.mesh.scale.y = 0.05;
         EndActor.sizeY = 1;
         this.MazeScene.add(EndActor.mesh)
         EndActor.tick = function()
@@ -895,7 +895,7 @@ class Windows95Maze{
         SignActor.mesh.position.z = -( (SignActor.posY*320) + (320)/2 - 50);
         SignActor.mesh.position.x = -( (SignActor.posX*320) + (320)/2 + 50);
         SignActor.mesh.position.y = 100;
-        SignActor.mesh.scale.y = 0;
+        SignActor.mesh.scale.y = 0.05;
         SignActor.sizeY = 1;
 
         this.MazeScene.add(SignActor.mesh);
@@ -917,7 +917,7 @@ class Windows95Maze{
         )
         
         RatActor.mesh.material.transparent=true;
-        RatActor.mesh.scale.y = 0;
+        RatActor.mesh.scale.y = 0.05;
         RatActor.sizeY = 1;
         //RatActor.posY = Y;
         //RatActor.posX = X;
@@ -1021,7 +1021,7 @@ class Windows95Maze{
             new THREE.MeshPhongMaterial({ color: 0xcccccc, specular: 0xffffff})
         )
         SpinnerActor.mesh.scale.x=50;
-        SpinnerActor.mesh.scale.y=0;
+        SpinnerActor.mesh.scale.y=0.05;
         SpinnerActor.sizeY=50;
         SpinnerActor.mesh.scale.z=50;
         //SpinnerActor.posY = Y;
