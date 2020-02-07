@@ -88,9 +88,9 @@ class Windows95Maze{
         
         
         //Crazy wall generation shenanigans
-        var combinedWalls = new THREE.Geometry();
+        this.MazeCombinedWalls = new THREE.Geometry();
         
-        var coolWalls = new THREE.Geometry();
+        this.MazeCoolWalls = new THREE.Geometry();
         
         for(var y=0;y<this.MazeDepth;++y)
         {
@@ -103,14 +103,14 @@ class Windows95Maze{
                     mesh.position.x = -((x+1)*320) + (320/2);
                     mesh.position.y = 100;
                     mesh.position.z = -( y*320 )//(this.MazeDepth*320) - y;
-
+                    mesh.updateMatrix();
                     if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
                     {
-                        THREE.GeometryUtils.merge( combinedWalls, mesh );
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
                     }
                     else
                     {
-                        THREE.GeometryUtils.merge( coolWalls, mesh );
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                     }
 
                 }
@@ -120,14 +120,14 @@ class Windows95Maze{
                     mesh.position.x = -((x)*320)// - (320/2);
                     mesh.position.y = 100;
                     mesh.position.z = -( ((y+1)*320) - (320/2) );//(this.MazeDepth*320) - y;
-                    
+                    mesh.updateMatrix();
                     if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
                     {
-                        THREE.GeometryUtils.merge( combinedWalls, mesh );
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
                     }
                     else
                     {
-                        THREE.GeometryUtils.merge( coolWalls, mesh );
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                     }
                 }
                 if(this.MazeRows[y][x].down && y==this.MazeDepth-1) //It only does this on the outside so that there aren't cloned walls all over
@@ -136,14 +136,14 @@ class Windows95Maze{
                     mesh.position.x = -(((x+1)*320) - (320/2));
                     mesh.position.y = 100;
                     mesh.position.z = -( (y+1)*320 );//(this.MazeDepth*320) - y;
-
+                    mesh.updateMatrix();
                     if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
                     {
-                        THREE.GeometryUtils.merge( combinedWalls, mesh );
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
                     }
                     else
                     {
-                        THREE.GeometryUtils.merge( coolWalls, mesh );
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                     }
                 }
                 if(this.MazeRows[y][x].right && x==this.MazeWidth-1) //Ditto
@@ -152,23 +152,23 @@ class Windows95Maze{
                     mesh.position.x = -((x+1)*320)// - (320/2);
                     mesh.position.y = 100;
                     mesh.position.z = - ( ((y+1)*320) - (320/2) );//(this.MazeDepth*320) - y;
-
+                    mesh.updateMatrix();
                     if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
                     {
-                        THREE.GeometryUtils.merge( combinedWalls, mesh );
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
                     }
                     else
                     {
-                        THREE.GeometryUtils.merge( coolWalls, mesh );
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                     }
                 }    
             }
         }
         
-        this.MazeWallsMesh = new THREE.Mesh(combinedWalls, new THREE.MeshBasicMaterial({map: this.MazeWallTexture}));
+        this.MazeWallsMesh = new THREE.Mesh(this.MazeCombinedWalls, new THREE.MeshBasicMaterial({map: this.MazeWallTexture}));
         this.MazeWallsMesh.scale.y = .05;
         this.MazeScene.add(this.MazeWallsMesh);
-        this.MazeCoolWallsMesh = new THREE.Mesh( coolWalls, new THREE.MeshBasicMaterial({map: this.MazeGlobeTexture}));
+        this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, new THREE.MeshBasicMaterial({map: this.MazeGlobeTexture}));
         this.MazeCoolWallsMesh.scale.y = .05;
         this.MazeScene.add(this.MazeCoolWallsMesh);
         
@@ -723,6 +723,18 @@ class Windows95Maze{
     //////////////////////////////////
     
     /////////////Actors///////////////
+    CreateActors(){
+        this.MazeActors = new Array();
+        
+        this.CreateFloor();
+        this.CreateCeiling();
+
+        this.CreateRatActors();
+        this.LoadSignFont();
+        this.CreateSpinnerActors();
+        this.MazeActors.push(this.End(0,0));
+    }
+    
     CreateFloor(){
         this.MazeFloorGeometry = new THREE.CubeGeometry(320*this.MazeWidth, 0, 320*this.MazeDepth, 1, 1, 1, null);
         this.MazeFloorTexture.wrapS = THREE.RepeatWrapping;
@@ -754,18 +766,6 @@ class Windows95Maze{
         this.MazeScene.add(this.MazeCeilMesh);
     }
     
-    CreateActors(){
-        this.MazeActors = new Array();
-        
-        this.CreateFloor();
-        this.CreateCeiling();
-
-        this.CreateRatActors();
-        this.LoadSignFont();
-        this.CreateSpinnerActors();
-        this.MazeActors.push(this.End(0,0));
-    }
-
     CreateRatActors(){
         console.log(this.MazeRats);
         for(var i=0;i<this.MazeRats;++i)
@@ -844,6 +844,7 @@ class Windows95Maze{
             EndActor.mesh.rotation.y = this.MazeCamera.rotation.y;
             if(Math.abs(EndActor.mesh.position.z - this.MazeCamera.position.z) < 10 && Math.abs(EndActor.mesh.position.x - this.MazeCamera.position.x) < 10)
             {
+                /*
                 endInterval = setInterval(function()
                 {
                     if (this.MazeWallsMesh.scale.y > 0)
@@ -867,6 +868,7 @@ class Windows95Maze{
                         //clearInterval(updateWorld);
                     }
                 },10);
+                */
             }
         }.bind(this);
         return EndActor;
