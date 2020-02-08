@@ -14,14 +14,16 @@ class Windows95Maze{
         this.MazeStartImagePath = './_Assets/start.png';
         this.MazeEndImagePath = './_Assets/end.png';
         this.MazeRatImagePath = './_Assets/rat.png';
+        this.MazeOpenGLImagePath = './_Assets/OpenGL.png';
         this.MazeOpenGLFontPath = './_Assets/droid_serif_bold.typeface.json';
         
-        this.MazeDebug = 1;
+        this.MazeDebug = 0;
         this.MazeAutopilot = true;
         this.MazeRats = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
         this.MazeSigns = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
         this.MazeSpinners = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
         this.MazeSpeed = 4;
+        this.TickDelta = 10;
         //////////////////////////
         
         ////Private variables/////
@@ -52,7 +54,7 @@ class Windows95Maze{
         this.LoadAssets().then(
             function(){
                 this.CreateActors();
-                this.UpdateWorldInterval = setInterval(this.UpdateWorld.bind(this),10);
+                this.TickInterval = setInterval(this.Tick.bind(this),this.TickDelta);
                 this.Animate();
             }.bind(this),
             function(error){
@@ -71,18 +73,14 @@ class Windows95Maze{
         this.CreateTexturePromise(this.MazeStartImagePath).then(function(texture){this.MazeStartTexture = texture}.bind(this));
         this.CreateTexturePromise(this.MazeEndImagePath).then(function(texture){this.MazeEndTexture = texture}.bind(this));
         this.CreateTexturePromise(this.MazeRatImagePath).then(function(texture){this.MazeRatTexture = texture}.bind(this));
+        this.CreateTexturePromise(this.MazeOpenGLImagePath).then(function(texture){this.MazeOpenGLTexture = texture}.bind(this));
         
         var promise = Promise.all(this.AllPromises)
         return promise
     }
     
     //////////////Setup///////////////
-    UpdateWorld(){
-        if (this.MazeWallsMesh.scale.y < 1)
-        {
-            this.MazeWallsMesh.scale.y += .01;
-            this.MazeCoolWallsMesh.scale.y += .01;
-        }
+    Tick(){
         for(var i=0;i<this.MazeActors.length;++i)
         {
             this.MazeActors[i].tick();
@@ -94,8 +92,6 @@ class Windows95Maze{
                 }
             }
         }
-        //this.PointLight.position.z = -( (this.MazePosY*320) + (320)/2 );
-        //this.PointLight.position.x = -( (this.MazePosX*320) + (320)/2 );
     }
     
     Animate(){
@@ -635,10 +631,14 @@ class Windows95Maze{
         this.CreateRatActors();
         this.LoadSignFont();
         this.CreateSpinnerActors();
+        this.MazeActors.push(this.Start(this.MazePosX,this.MazePosY));
+        //this.MazeActors.push(this.Start(0,0));
         this.MazeActors.push(this.End(0,0));
     }
     
     CreateWalls(){
+        
+        
         this.MazeCombinedWalls = new THREE.Geometry();
         this.MazeCoolWalls = new THREE.Geometry();
         
@@ -715,12 +715,28 @@ class Windows95Maze{
             }
         }
         
+        var MazeWallsActor = new Actor(0,0);
+        var MazeCoolWallsActor = new Actor(0,0);
+        MazeWallsActor.tick = function(){}.bind(this);
+        MazeCoolWallsActor.tick = function(){}.bind(this);
+        
         this.MazeWallsMesh = new THREE.Mesh(this.MazeCombinedWalls, new THREE.MeshBasicMaterial({map: this.MazeWallTexture}));
-        this.MazeWallsMesh.scale.y = .05;
-        this.MazeScene.add(this.MazeWallsMesh);
         this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, new THREE.MeshBasicMaterial({map: this.MazeGlobeTexture}));
+        
+        MazeWallsActor.sizeY = 1;
+        MazeCoolWallsActor.sizeY = 1;
+        this.MazeWallsMesh.scale.y = .05;
         this.MazeCoolWallsMesh.scale.y = .05;
+        
+        MazeWallsActor.mesh = this.MazeWallsMesh;
+        MazeCoolWallsActor.mesh = this.MazeCoolWallsMesh;
+        
+        this.MazeScene.add(this.MazeWallsMesh);
         this.MazeScene.add(this.MazeCoolWallsMesh);
+        
+        this.MazeActors.push(MazeWallsActor);
+        this.MazeActors.push(MazeCoolWallsActor);
+        
     }
     
     CreateLights(){
@@ -836,6 +852,34 @@ class Windows95Maze{
         }
     }
 
+    Start(X,Y){
+        var StartActor = new Actor(X,Y);
+        StartActor.name="start";
+        StartActor.mesh = new THREE.Mesh
+        (
+            new THREE.CubeGeometry( 100, 100, 0, 1, 1, 1, null),
+            new THREE.MeshBasicMaterial({map: this.MazeStartTexture})
+        )
+        StartActor.mesh.material.transparent=true;
+        StartActor.mesh.material.opacity=0.5;
+        //StartActor.posY = Y;
+        //StartActor.posX = X;
+        //StartActor.mesh.position.z = -( (StartActor.posY*320) + (320)/2 );
+        //StartActor.mesh.position.x = -( (StartActor.posX*320) + (320)/2 );
+        StartActor.mesh.position.z = this.MazeCamera.position.z+100;
+        StartActor.mesh.position.x = this.MazeCamera.position.x;
+        StartActor.mesh.position.y = 100;
+        StartActor.mesh.scale.x = 1.25;
+        StartActor.mesh.scale.y = 0.05;
+        StartActor.sizeY = 2;
+        this.MazeScene.add(StartActor.mesh)
+        StartActor.tick = function()
+        {
+            StartActor.mesh.rotation.y = this.MazeCamera.rotation.y;
+        }.bind(this);
+        return StartActor;
+    }
+    
     End(X,Y){
         var EndActor = new Actor(X,Y);
         EndActor.name="end";
@@ -845,6 +889,7 @@ class Windows95Maze{
             new THREE.MeshBasicMaterial({map: this.MazeEndTexture})
         )
         EndActor.mesh.material.transparent=true;
+        EndActor.mesh.material.opacity=0.5;
         //EndActor.posY = Y;
         //EndActor.posX = X;
         EndActor.mesh.position.z = -( (EndActor.posY*320) + (320)/2 );
