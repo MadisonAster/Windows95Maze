@@ -2,9 +2,14 @@
 class Windows95Maze{
     constructor(width,depth,resX,resY){
         ///////User Settings//////
+        this.MazeWidth = width;
+        this.MazeDepth = depth;
+        this.MazeResX = resX;
+        this.MazeResY = resY;
+        
         this.MazeWallImagePath = './_Assets/wall.png';
-        this.MazeCeilImagePath = './_Assets/ceiling2.png';
-        this.MazeFloorImagePath = './_Assets/floor2.png';
+        this.MazeCeilImagePath = './_Assets/ceiling.png';
+        this.MazeFloorImagePath = './_Assets/floor.png';
         this.MazeGlobeImagePath = './_Assets/globe.png';
         this.MazeStartImagePath = './_Assets/start.png';
         this.MazeEndImagePath = './_Assets/end.png';
@@ -17,11 +22,6 @@ class Windows95Maze{
         this.MazeSigns = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
         this.MazeSpinners = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
         this.MazeSpeed = 4;
-        
-        this.MazeWidth = width;
-        this.MazeDepth = depth;
-        this.MazeResX = resX;
-        this.MazeResY = resY;
         //////////////////////////
         
         ////Private variables/////
@@ -51,13 +51,12 @@ class Windows95Maze{
         ////LoadAssets then Go////
         this.LoadAssets().then(
             function(){
-                console.log('Maze assets loaded!');
                 this.CreateActors();
                 this.UpdateWorldInterval = setInterval(this.UpdateWorld.bind(this),10);
                 this.Animate();
             }.bind(this),
             function(error){
-                console.error('Could not load all textures! Aborting maze!');
+                console.error('Could not load all maze assets! Aborting maze!');
             }
         )
         //////////////////////////
@@ -87,13 +86,16 @@ class Windows95Maze{
         for(var i=0;i<this.MazeActors.length;++i)
         {
             this.MazeActors[i].tick();
-            if(this.MazeActors[i].mesh.scale.y < this.MazeActors[i].sizeY)
-            {
-                this.MazeActors[i].mesh.scale.y += this.MazeActors[i].sizeY/100;
+            if(this.MazeActors[i].mesh != null){
+                //console.log(this.MazeActors[i]);
+                if(this.MazeActors[i].mesh.scale.y < this.MazeActors[i].sizeY)
+                {
+                    this.MazeActors[i].mesh.scale.y += this.MazeActors[i].sizeY/100;
+                }
             }
         }
-        this.PointLight.position.z = -( (this.MazePosY*320) + (320)/2 );
-        this.PointLight.position.x = -( (this.MazePosX*320) + (320)/2 );
+        //this.PointLight.position.z = -( (this.MazePosY*320) + (320)/2 );
+        //this.PointLight.position.x = -( (this.MazePosX*320) + (320)/2 );
     }
     
     Animate(){
@@ -722,10 +724,20 @@ class Windows95Maze{
     }
     
     CreateLights(){
-        this.PointLight = new THREE.PointLight(0xFFFFFF);
-        this.PointLight.position.z = -( (this.MazePosY*320) + (320)/2 );
-        this.PointLight.position.x = -( (this.MazePosX*320) + (320)/2 );
-        this.MazeScene.add(this.PointLight);
+        var LightActor = new Actor(0,0);
+        
+        LightActor.PointLight = new THREE.PointLight(0xFFFFFF);
+        //LightActor.PointLight.position.z = -( (this.MazePosY*320) + (320)/2 );
+        //LightActor.PointLight.position.x = -( (this.MazePosX*320) + (320)/2 );
+        
+        
+        LightActor.tick = function(){
+            LightActor.PointLight.position.z = -((this.MazePosY*320) + (320)/2);
+            LightActor.PointLight.position.x = -((this.MazePosX*320) + (320)/2);
+        }.bind(this);
+        
+        this.MazeScene.add(LightActor.PointLight);
+        this.MazeActors.push(LightActor);
     }
     
     CreateCameras(){
@@ -837,9 +849,10 @@ class Windows95Maze{
         //EndActor.posX = X;
         EndActor.mesh.position.z = -( (EndActor.posY*320) + (320)/2 );
         EndActor.mesh.position.x = -( (EndActor.posX*320) + (320)/2 );
-        EndActor.mesh.position.y = 50;
+        EndActor.mesh.position.y = 100;
+        EndActor.mesh.scale.x = 1.25;
         EndActor.mesh.scale.y = 0.05;
-        EndActor.sizeY = 1;
+        EndActor.sizeY = 1.25;
         this.MazeScene.add(EndActor.mesh)
         EndActor.tick = function()
         {
@@ -920,9 +933,7 @@ class Windows95Maze{
         
         RatActor.mesh.material.transparent=true;
         RatActor.mesh.scale.y = 0.05;
-        RatActor.sizeY = 1;
-        //RatActor.posY = Y;
-        //RatActor.posX = X;
+        RatActor.sizeY = 2;
         RatActor.mesh.position.z = -( (RatActor.posY*320) + (320)/2 );
         RatActor.mesh.position.x = -( (RatActor.posX*320) + (320)/2 );
         RatActor.mesh.position.y = 50;
