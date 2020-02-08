@@ -1,61 +1,30 @@
 ///////////////Main///////////////
 class Windows95Maze{
     constructor(width,depth,resX,resY){
-        this.MazeWidth = width;
-        this.MazeDepth = depth;
-        this.MazeResX = resX;
-        this.MazeResY = resY;
-        
-        this.MazeCanvas = document.createElement('canvas');
-        this.MazeContext = this.MazeCanvas.getContext('webgl2', {alpha:false});
-        this.MazeRenderer = new THREE.WebGLRenderer({canvas: this.MazeCanvas, context: this.MazeContext});
-        this.MazeRenderer.setSize(this.MazeResX, this.MazeResY);
-        
-        //Continue construction after all assets have loaded
-        this.LoadAssets().then(
-            function(){
-                console.log('Maze textures loaded!');
-                this.constructor2();
-            }.bind(this),
-            function(error){
-                console.error('Could not load all textures! Aborting maze!');
-            }
-        );
-    }
-    
-    LoadAssets(){
+        ///////User Settings//////
         this.MazeWallImagePath = './_Assets/wall.png';
-        this.MazeCeilImagePath = './_Assets/ceiling.png';
-        this.MazeFloorImagePath = './_Assets/floor.png';
+        this.MazeCeilImagePath = './_Assets/ceiling2.png';
+        this.MazeFloorImagePath = './_Assets/floor2.png';
         this.MazeGlobeImagePath = './_Assets/globe.png';
-        this.MazeEndImagePath = './_Assets/cool.png';
-        this.MazeRatImagePath = './_Assets/rat2.png';
+        this.MazeStartImagePath = './_Assets/start.png';
+        this.MazeEndImagePath = './_Assets/end.png';
+        this.MazeRatImagePath = './_Assets/rat.png';
         this.MazeOpenGLFontPath = './_Assets/droid_serif_bold.typeface.json';
         
-        this.AllPromises = [];
-        this.CreateTexturePromise(this.MazeWallImagePath).then(function(texture){this.MazeWallTexture = texture}.bind(this));
-        this.CreateTexturePromise(this.MazeCeilImagePath).then(function(texture){this.MazeCeilTexture = texture}.bind(this));
-        this.CreateTexturePromise(this.MazeFloorImagePath).then(function(texture){this.MazeFloorTexture = texture}.bind(this));
-        this.CreateTexturePromise(this.MazeGlobeImagePath).then(function(texture){this.MazeGlobeTexture = texture}.bind(this));
-        this.CreateTexturePromise(this.MazeEndImagePath).then(function(texture){this.MazeEndTexture = texture}.bind(this));
-        this.CreateTexturePromise(this.MazeRatImagePath).then(function(texture){this.MazeRatTexture = texture}.bind(this));
-        
-        var promise = Promise.all(this.AllPromises)
-        return promise
-    }
-    
-    constructor2(){
-        this.MazeScene = new THREE.Scene();
-        this.MazeDebug = 0;
+        this.MazeDebug = 1;
         this.MazeAutopilot = true;
-
         this.MazeRats = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
         this.MazeSigns = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
         this.MazeSpinners = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
         this.MazeSpeed = 4;
         
-        this.CreateActors();
+        this.MazeWidth = width;
+        this.MazeDepth = depth;
+        this.MazeResX = resX;
+        this.MazeResY = resY;
+        //////////////////////////
         
+        ////Private variables/////
         this.MazeTurning = 0; //turning
         this.MazeMovement = 0; //going
         this.MazeFlipping = 0; //flipping
@@ -63,121 +32,50 @@ class Windows95Maze{
         this.MazeGoQueue = 0; //presses for Go()
         this.MazeTurnQueue = 0; //presses for Turn()
         this.MazeOrientation = 'n'; //face
+        //////////////////////////
         
-        //Creates the variable this.MazeRows which is an array of arrays of cells of the maze
+        ///////GenerateMaze///////
+        this.MazeScene = new THREE.Scene();
         this.Maze = this.GenerateMaze(this.MazeWidth,this.MazeDepth);
-        
         this.MazePosX = Math.round(this.MazeWidth/2);
         this.MazePosY = this.MazeDepth-1;
+        //////////////////////////
         
-        this.MazeCamera = new THREE.PerspectiveCamera( 75, this.MazeResX/this.MazeResY, 1, 10000 );
-        this.MazeCamera.position.z = -( (this.MazePosY*320) + (320)/2 ) //+ (320/2);
-        this.MazeCamera.position.y = 100;
-        this.MazeCamera.position.x = -( this.MazePosX*320 + (320/2));//-(this.MazeWidth*320)/2 - (320/2);
-        this.MazeCamera.rotation.y = Math.radians(180);
-        this.MazeCamera.far = 100;// Math.max(this.MazeWidth,this.MazeDepth)*320;
-
-        this.MazeScene.add(this.MazeCamera);
+        ////////DOM Element///////
+        this.MazeCanvas = document.createElement('canvas');
+        this.MazeContext = this.MazeCanvas.getContext('webgl2', {alpha:false});
+        this.MazeRenderer = new THREE.WebGLRenderer({canvas: this.MazeCanvas, context: this.MazeContext});
+        this.MazeRenderer.setSize(this.MazeResX, this.MazeResY);
+        //////////////////////////
         
-        //CreateActors//
-        this.PointLight = new THREE.PointLight(0xFFFFFF);
-        this.PointLight.position.z = -( (this.MazePosY*320) + (320)/2 );
-        this.PointLight.position.x = -( (this.MazePosX*320) + (320)/2 );
-        this.MazeScene.add(this.PointLight);
-        ///////////////
-        
-        
-        //Crazy wall generation shenanigans
-        this.MazeCombinedWalls = new THREE.Geometry();
-        
-        this.MazeCoolWalls = new THREE.Geometry();
-        
-        for(var y=0;y<this.MazeDepth;++y)
-        {
-            for(var x=0;x<this.MazeWidth;++x)
-            {
-        
-                if(this.MazeRows[y][x].up)
-                {
-                    var mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
-                    mesh.position.x = -((x+1)*320) + (320/2);
-                    mesh.position.y = 100;
-                    mesh.position.z = -( y*320 )//(this.MazeDepth*320) - y;
-                    mesh.updateMatrix();
-                    if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
-                    {
-                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
-                    }
-                    else
-                    {
-                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
-                    }
-
-                }
-                if(this.MazeRows[y][x].left)
-                {
-                    mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
-                    mesh.position.x = -((x)*320)// - (320/2);
-                    mesh.position.y = 100;
-                    mesh.position.z = -( ((y+1)*320) - (320/2) );//(this.MazeDepth*320) - y;
-                    mesh.updateMatrix();
-                    if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
-                    {
-                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
-                    }
-                    else
-                    {
-                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
-                    }
-                }
-                if(this.MazeRows[y][x].down && y==this.MazeDepth-1) //It only does this on the outside so that there aren't cloned walls all over
-                {
-                    mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
-                    mesh.position.x = -(((x+1)*320) - (320/2));
-                    mesh.position.y = 100;
-                    mesh.position.z = -( (y+1)*320 );//(this.MazeDepth*320) - y;
-                    mesh.updateMatrix();
-                    if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
-                    {
-                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
-                    }
-                    else
-                    {
-                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
-                    }
-                }
-                if(this.MazeRows[y][x].right && x==this.MazeWidth-1) //Ditto
-                {
-                    mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
-                    mesh.position.x = -((x+1)*320)// - (320/2);
-                    mesh.position.y = 100;
-                    mesh.position.z = - ( ((y+1)*320) - (320/2) );//(this.MazeDepth*320) - y;
-                    mesh.updateMatrix();
-                    if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
-                    {
-                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
-                    }
-                    else
-                    {
-                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
-                    }
-                }    
+        ////LoadAssets then Go////
+        this.LoadAssets().then(
+            function(){
+                console.log('Maze assets loaded!');
+                this.CreateActors();
+                this.UpdateWorldInterval = setInterval(this.UpdateWorld.bind(this),10);
+                this.Animate();
+            }.bind(this),
+            function(error){
+                console.error('Could not load all textures! Aborting maze!');
             }
-        }
-        
-        this.MazeWallsMesh = new THREE.Mesh(this.MazeCombinedWalls, new THREE.MeshBasicMaterial({map: this.MazeWallTexture}));
-        this.MazeWallsMesh.scale.y = .05;
-        this.MazeScene.add(this.MazeWallsMesh);
-        this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, new THREE.MeshBasicMaterial({map: this.MazeGlobeTexture}));
-        this.MazeCoolWallsMesh.scale.y = .05;
-        this.MazeScene.add(this.MazeCoolWallsMesh);
-        
-        
-    
-        this.UpdateWorldInterval = setInterval(this.UpdateWorld.bind(this),10);
-        this.Animate();
+        )
+        //////////////////////////
     }
     
+    LoadAssets(){
+        this.AllPromises = [];
+        this.CreateTexturePromise(this.MazeWallImagePath).then(function(texture){this.MazeWallTexture = texture}.bind(this));
+        this.CreateTexturePromise(this.MazeCeilImagePath).then(function(texture){this.MazeCeilTexture = texture}.bind(this));
+        this.CreateTexturePromise(this.MazeFloorImagePath).then(function(texture){this.MazeFloorTexture = texture}.bind(this));
+        this.CreateTexturePromise(this.MazeGlobeImagePath).then(function(texture){this.MazeGlobeTexture = texture}.bind(this));
+        this.CreateTexturePromise(this.MazeStartImagePath).then(function(texture){this.MazeStartTexture = texture}.bind(this));
+        this.CreateTexturePromise(this.MazeEndImagePath).then(function(texture){this.MazeEndTexture = texture}.bind(this));
+        this.CreateTexturePromise(this.MazeRatImagePath).then(function(texture){this.MazeRatTexture = texture}.bind(this));
+        
+        var promise = Promise.all(this.AllPromises)
+        return promise
+    }
     
     //////////////Setup///////////////
     UpdateWorld(){
@@ -728,11 +626,116 @@ class Windows95Maze{
         
         this.CreateFloor();
         this.CreateCeiling();
-
+        this.CreateWalls();
+        this.CreateLights();
+        this.CreateCameras();
+        
         this.CreateRatActors();
         this.LoadSignFont();
         this.CreateSpinnerActors();
         this.MazeActors.push(this.End(0,0));
+    }
+    
+    CreateWalls(){
+        this.MazeCombinedWalls = new THREE.Geometry();
+        this.MazeCoolWalls = new THREE.Geometry();
+        
+        for(var y=0;y<this.MazeDepth;++y)
+        {
+            for(var x=0;x<this.MazeWidth;++x)
+            {
+        
+                if(this.MazeRows[y][x].up)
+                {
+                    var mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
+                    mesh.position.x = -((x+1)*320) + (320/2);
+                    mesh.position.y = 100;
+                    mesh.position.z = -( y*320 )//(this.MazeDepth*320) - y;
+                    mesh.updateMatrix();
+                    if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
+                    {
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                    }
+                    else
+                    {
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
+                    }
+
+                }
+                if(this.MazeRows[y][x].left)
+                {
+                    mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
+                    mesh.position.x = -((x)*320)// - (320/2);
+                    mesh.position.y = 100;
+                    mesh.position.z = -( ((y+1)*320) - (320/2) );//(this.MazeDepth*320) - y;
+                    mesh.updateMatrix();
+                    if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
+                    {
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                    }
+                    else
+                    {
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
+                    }
+                }
+                if(this.MazeRows[y][x].down && y==this.MazeDepth-1) //It only does this on the outside so that there aren't cloned walls all over
+                {
+                    mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
+                    mesh.position.x = -(((x+1)*320) - (320/2));
+                    mesh.position.y = 100;
+                    mesh.position.z = -( (y+1)*320 );//(this.MazeDepth*320) - y;
+                    mesh.updateMatrix();
+                    if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
+                    {
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                    }
+                    else
+                    {
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
+                    }
+                }
+                if(this.MazeRows[y][x].right && x==this.MazeWidth-1) //Ditto
+                {
+                    mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
+                    mesh.position.x = -((x+1)*320)// - (320/2);
+                    mesh.position.y = 100;
+                    mesh.position.z = - ( ((y+1)*320) - (320/2) );//(this.MazeDepth*320) - y;
+                    mesh.updateMatrix();
+                    if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
+                    {
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                    }
+                    else
+                    {
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
+                    }
+                }    
+            }
+        }
+        
+        this.MazeWallsMesh = new THREE.Mesh(this.MazeCombinedWalls, new THREE.MeshBasicMaterial({map: this.MazeWallTexture}));
+        this.MazeWallsMesh.scale.y = .05;
+        this.MazeScene.add(this.MazeWallsMesh);
+        this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, new THREE.MeshBasicMaterial({map: this.MazeGlobeTexture}));
+        this.MazeCoolWallsMesh.scale.y = .05;
+        this.MazeScene.add(this.MazeCoolWallsMesh);
+    }
+    
+    CreateLights(){
+        this.PointLight = new THREE.PointLight(0xFFFFFF);
+        this.PointLight.position.z = -( (this.MazePosY*320) + (320)/2 );
+        this.PointLight.position.x = -( (this.MazePosX*320) + (320)/2 );
+        this.MazeScene.add(this.PointLight);
+    }
+    
+    CreateCameras(){
+        this.MazeCamera = new THREE.PerspectiveCamera( 75, this.MazeResX/this.MazeResY, 1, 10000 );
+        this.MazeCamera.position.z = -( (this.MazePosY*320) + (320)/2 ) //+ (320/2);
+        this.MazeCamera.position.y = 100;
+        this.MazeCamera.position.x = -( this.MazePosX*320 + (320/2));//-(this.MazeWidth*320)/2 - (320/2);
+        this.MazeCamera.rotation.y = Math.radians(180);
+        this.MazeCamera.far = 100;// Math.max(this.MazeWidth,this.MazeDepth)*320;
+        this.MazeScene.add(this.MazeCamera);
     }
     
     CreateFloor(){
@@ -767,7 +770,6 @@ class Windows95Maze{
     }
     
     CreateRatActors(){
-        console.log(this.MazeRats);
         for(var i=0;i<this.MazeRats;++i)
         {
             var X = Math.randomint(0,this.MazeWidth-1);
