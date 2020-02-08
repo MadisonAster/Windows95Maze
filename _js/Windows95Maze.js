@@ -15,9 +15,8 @@ class Windows95Maze{
         this.MazeEndImagePath = './_Assets/end.png';
         this.MazeRatImagePath = './_Assets/rat.png';
         this.MazeOpenGLImagePath = './_Assets/OpenGL.png';
-        this.MazeOpenGLFontPath = './_Assets/droid_serif_bold.typeface.json';
         
-        this.MazeDebug = 0;
+        this.MazeDebug = 1;
         this.MazeAutopilot = true;
         this.MazeRats = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
         this.MazeSigns = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
@@ -629,10 +628,9 @@ class Windows95Maze{
         this.CreateCameras();
         
         this.CreateRatActors();
-        this.LoadSignFont();
+        this.CreateSignActors();
         this.CreateSpinnerActors();
         this.MazeActors.push(this.Start(this.MazePosX,this.MazePosY));
-        //this.MazeActors.push(this.Start(0,0));
         this.MazeActors.push(this.End(0,0));
     }
     
@@ -806,15 +804,6 @@ class Windows95Maze{
         }
     }
 
-    LoadSignFont(){
-        var loader = new THREE.FontLoader();
-        loader.load(this.MazeOpenGLFontPath,
-        function (font) {
-            this.MazeOpenGLFont = font;
-            this.CreateSignActors();
-        }.bind(this));
-    }
-
     CreateSignActors(){
         for(var i=0;i<this.MazeSigns;++i)
         {
@@ -938,22 +927,18 @@ class Windows95Maze{
         var SignActor = new Actor(X,Y);
         SignActor.mesh = new THREE.Mesh
         (
-            new THREE.TextGeometry( "OpenGL",
-            {
-                size: 25,
-                height: 10,
-                curveSegments: 12,
-
-                font: this.MazeOpenGLFont,
-                weight: "bold",
-                style: "bold",
-            }),
-            new THREE.MeshPhongMaterial( { color: 0x00ff00, specular: 0xffffff} )
+            new THREE.CubeGeometry( 100, 100, 0, 1, 1, 1, null),
+            new THREE.MeshBasicMaterial({map: this.MazeOpenGLTexture})
         )
+        SignActor.mesh.material.transparent=true;
+        SignActor.mesh.material.opacity=0.5;
+        
         //SignActor.posY = Y;
         //SignActor.posX = X;
-        SignActor.mesh.position.z = -( (SignActor.posY*320) + (320)/2 - 50);
-        SignActor.mesh.position.x = -( (SignActor.posX*320) + (320)/2 + 50);
+        //SignActor.mesh.position.z = -( (SignActor.posY*320) + (320)/2 - 50);
+        //SignActor.mesh.position.x = -( (SignActor.posX*320) + (320)/2 + 50);
+        SignActor.mesh.position.z = -( (SignActor.posY*320) + (320)/2);
+        SignActor.mesh.position.x = -( (SignActor.posX*320) + (320)/2);
         SignActor.mesh.position.y = 100;
         SignActor.mesh.scale.y = 0.05;
         SignActor.sizeY = 1;
@@ -966,7 +951,7 @@ class Windows95Maze{
         }.bind(this);
         return SignActor;
     }
-
+    
     Rat(X,Y){
         var RatActor = new Actor(X,Y);
         RatActor.name="rat";
