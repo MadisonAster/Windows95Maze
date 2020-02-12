@@ -22,7 +22,12 @@ class Windows95Maze{
         this.MazeSigns = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
         this.MazeSpinners = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
         this.MazeSpeed = 4;
-        this.TickDelta = 10;
+        this.MazeTickDelta = 10;
+        this.MazeCellSize = 320;
+        this.MazeHeight = 200;
+        
+        this.MazeTotalWidth = this.MazeWidth*this.MazeCellSize;
+        this.MazeTotalDepth = this.MazeDepth*this.MazeCellSize;
         //////////////////////////
         
         ////Private variables/////
@@ -33,13 +38,15 @@ class Windows95Maze{
         this.MazeGoQueue = 0; //presses for Go()
         this.MazeTurnQueue = 0; //presses for Turn()
         this.MazeOrientation = 'n'; //face
+        this.UsedCells = new Array();
         //////////////////////////
         
         ///////GenerateMaze///////
         this.MazeScene = new THREE.Scene();
         this.Maze = this.GenerateMaze(this.MazeWidth,this.MazeDepth);
         this.MazePosX = Math.round(this.MazeWidth/2);
-        this.MazePosY = this.MazeDepth-1;
+        this.MazePosY = 0;
+        this.MazePosZ = this.MazeDepth-1;
         //////////////////////////
         
         ////////DOM Element///////
@@ -53,7 +60,7 @@ class Windows95Maze{
         this.LoadAssets().then(
             function(){
                 this.CreateActors();
-                this.TickInterval = setInterval(this.Tick.bind(this),this.TickDelta);
+                this.TickInterval = setInterval(this.Tick.bind(this),this.MazeTickDelta);
                 this.Animate();
             }.bind(this),
             function(error){
@@ -460,14 +467,14 @@ class Windows95Maze{
                         switch(this.MazeOrientation)
                         {
                             case 'n':
-                                if(this.MazeDebug || !this.MazeRows[this.MazePosY][this.MazePosX].up)
+                                if(this.MazeDebug || !this.MazeRows[this.MazePosZ][this.MazePosX].up)
                                 {    
-                                    this.MazePosY--;
+                                    this.MazePosZ--;
                                     goInt = setInterval(function()
                                     {
                                         this.MazeMovement++;
                                         this.MazeCamera.position.z += this.MazeSpeed;
-                                        if( this.MazeMovement>=320/this.MazeSpeed)
+                                        if( this.MazeMovement>=this.MazeCellSize/this.MazeSpeed)
                                         {
                                             this.MazeMovement=0;
                                             this.MazeGoQueue = 0;
@@ -477,14 +484,14 @@ class Windows95Maze{
                                 }
                                 break;
                             case 's':
-                                if(this.MazeDebug || !this.MazeRows[this.MazePosY][this.MazePosX].down)
+                                if(this.MazeDebug || !this.MazeRows[this.MazePosZ][this.MazePosX].down)
                                 {
-                                    this.MazePosY++;
+                                    this.MazePosZ++;
                                     var goInt = setInterval(function()
                                     {
                                         this.MazeMovement++;
                                         this.MazeCamera.position.z -= this.MazeSpeed;
-                                        if( this.MazeMovement>=320/this.MazeSpeed)
+                                        if( this.MazeMovement>=this.MazeCellSize/this.MazeSpeed)
                                         {
                                             this.MazeMovement=0;
                                             this.MazeGoQueue = 0;
@@ -494,14 +501,14 @@ class Windows95Maze{
                                 }
                                 break;
                             case 'w':
-                                if(this.MazeDebug || !this.MazeRows[this.MazePosY][this.MazePosX].left)
+                                if(this.MazeDebug || !this.MazeRows[this.MazePosZ][this.MazePosX].left)
                                 {
                                     this.MazePosX--;
                                     var goInt = setInterval(function()
                                     {
                                         this.MazeMovement++;
                                         this.MazeCamera.position.x += this.MazeSpeed;
-                                        if(this.MazeMovement>=320/this.MazeSpeed)
+                                        if(this.MazeMovement>=this.MazeCellSize/this.MazeSpeed)
                                         {
                                             this.MazeMovement=0;
                                             this.MazeGoQueue = 0;
@@ -511,14 +518,14 @@ class Windows95Maze{
                                 }
                                 break;
                             case 'e':
-                                if(this.MazeDebug || !this.MazeRows[this.MazePosY][this.MazePosX].right)
+                                if(this.MazeDebug || !this.MazeRows[this.MazePosZ][this.MazePosX].right)
                                 {
                                     this.MazePosX++;
                                     var goInt = setInterval(function()
                                     {
                                         this.MazeMovement++;
                                         this.MazeCamera.position.x -= this.MazeSpeed;
-                                        if(this.MazeMovement>=320/this.MazeSpeed)
+                                        if(this.MazeMovement>=this.MazeCellSize/this.MazeSpeed)
                                         {
                                             this.MazeMovement=0;
                                             this.MazeGoQueue = 0;
@@ -538,14 +545,14 @@ class Windows95Maze{
                         switch(this.MazeOrientation)
                         {
                             case 'n':
-                                if(this.MazeDebug || !this.MazeRows[this.MazePosY][this.MazePosX].down)
+                                if(this.MazeDebug || !this.MazeRows[this.MazePosZ][this.MazePosX].down)
                                 {    
-                                    this.MazePosY++;
+                                    this.MazePosZ++;
                                     var goInt = setInterval(function()
                                     {
                                         this.MazeMovement++;
                                         this.MazeCamera.position.z -= this.MazeSpeed;
-                                        if( this.MazeMovement>=320/this.MazeSpeed)
+                                        if( this.MazeMovement>=this.MazeCellSize/this.MazeSpeed)
                                         {
                                             this.MazeMovement=0;
                                             this.MazeGoQueue = 0;
@@ -555,14 +562,14 @@ class Windows95Maze{
                                 }
                                 break;
                             case 's':
-                                if(this.MazeDebug || !this.MazeRows[this.MazePosY][this.MazePosX].up)
+                                if(this.MazeDebug || !this.MazeRows[this.MazePosZ][this.MazePosX].up)
                                 {
-                                    this.MazePosY--;
+                                    this.MazePosZ--;
                                     var goInt = setInterval(function()
                                     {
                                         this.MazeMovement++;
                                         this.MazeCamera.position.z += this.MazeSpeed;
-                                        if(this.MazeMovement>=320/this.MazeSpeed)
+                                        if(this.MazeMovement>=this.MazeCellSize/this.MazeSpeed)
                                         {
                                             this.MazeMovement=0;
                                             this.MazeGoQueue = 0;
@@ -572,14 +579,14 @@ class Windows95Maze{
                                 }
                                 break;
                             case 'w':
-                                if(this.MazeDebug || !this.MazeRows[this.MazePosY][this.MazePosX].right)
+                                if(this.MazeDebug || !this.MazeRows[this.MazePosZ][this.MazePosX].right)
                                 {
                                     this.MazePosX++;
                                     var goInt = setInterval(function()
                                     {
                                         this.MazeMovement++;
                                         this.MazeCamera.position.x -= this.MazeSpeed;
-                                        if(this.MazeMovement>=320/this.MazeSpeed)
+                                        if(this.MazeMovement>=this.MazeCellSize/this.MazeSpeed)
                                         {
                                             this.MazeMovement=0;
                                             this.MazeGoQueue = 0;
@@ -589,14 +596,14 @@ class Windows95Maze{
                                 }
                                 break;
                             case 'e':
-                                if(this.MazeDebug || !this.MazeRows[this.MazePosY][this.MazePosX].left)
+                                if(this.MazeDebug || !this.MazeRows[this.MazePosZ][this.MazePosX].left)
                                 {
                                     this.MazePosX--;
                                     var goInt = setInterval(function()
                                     {
                                         this.MazeMovement++;
                                         this.MazeCamera.position.x += this.MazeSpeed;
-                                        if(this.MazeMovement>=320/this.MazeSpeed)
+                                        if(this.MazeMovement>=this.MazeCellSize/this.MazeSpeed)
                                         {
                                             this.MazeMovement=0;
                                             this.MazeGoQueue = 0;
@@ -624,19 +631,29 @@ class Windows95Maze{
         this.CreateFloor();
         this.CreateCeiling();
         this.CreateWalls();
-        this.CreateLights();
         this.CreateCameras();
+        this.CreateLights();
         
         this.CreateRatActors();
         this.CreateSignActors();
         this.CreateSpinnerActors();
-        this.MazeActors.push(this.Start(this.MazePosX,this.MazePosY));
-        this.MazeActors.push(this.End(0,0));
+        this.MazeActors.push(this.Start(this.MazeCamera.position.x,100,this.MazeCamera.position.z+100));
+        this.MazeActors.push(this.End(0,100,0));
     }
     
+    GetRandomCellPos(Y=0){
+        while(true){
+            var X = -(Math.randomint(0,this.MazeWidth-1)*this.MazeCellSize) + (this.MazeCellSize/2);
+            var Z = -(Math.randomint(0,this.MazeDepth-1)*this.MazeCellSize) + (this.MazeCellSize/2);
+            if (!this.UsedCells.includes([X,Z])){
+                break;
+            }
+        }
+        this.UsedCells.push([X, Z]);
+        return [X, Y, Z];
+    }
+        
     CreateWalls(){
-        
-        
         this.MazeCombinedWalls = new THREE.Geometry();
         this.MazeCoolWalls = new THREE.Geometry();
         
@@ -647,10 +664,10 @@ class Windows95Maze{
         
                 if(this.MazeRows[y][x].up)
                 {
-                    var mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
-                    mesh.position.x = -((x+1)*320) + (320/2);
+                    var mesh = new THREE.Mesh( new THREE.CubeGeometry(this.MazeCellSize, this.MazeHeight, 0, 0, 0, 0) );
+                    mesh.position.x = -((x+1)*this.MazeCellSize) + (this.MazeCellSize/2);
                     mesh.position.y = 100;
-                    mesh.position.z = -( y*320 )//(this.MazeDepth*320) - y;
+                    mesh.position.z = -( y*this.MazeCellSize )//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                     if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
                     {
@@ -664,10 +681,10 @@ class Windows95Maze{
                 }
                 if(this.MazeRows[y][x].left)
                 {
-                    mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
-                    mesh.position.x = -((x)*320)// - (320/2);
+                    mesh = new THREE.Mesh( new THREE.CubeGeometry(0, this.MazeHeight, this.MazeCellSize, 0, 0, 0) );
+                    mesh.position.x = -((x)*this.MazeCellSize)// - (this.MazeCellSize/2);
                     mesh.position.y = 100;
-                    mesh.position.z = -( ((y+1)*320) - (320/2) );//(this.MazeDepth*320) - y;
+                    mesh.position.z = -( ((y+1)*this.MazeCellSize) - (this.MazeCellSize/2) );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                     if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
                     {
@@ -680,10 +697,10 @@ class Windows95Maze{
                 }
                 if(this.MazeRows[y][x].down && y==this.MazeDepth-1) //It only does this on the outside so that there aren't cloned walls all over
                 {
-                    mesh = new THREE.Mesh( new THREE.CubeGeometry(320, 200, 0, 0, 0, 0) );
-                    mesh.position.x = -(((x+1)*320) - (320/2));
+                    mesh = new THREE.Mesh( new THREE.CubeGeometry(this.MazeCellSize, this.MazeHeight, 0, 0, 0, 0) );
+                    mesh.position.x = -(((x+1)*this.MazeCellSize) - (this.MazeCellSize/2));
                     mesh.position.y = 100;
-                    mesh.position.z = -( (y+1)*320 );//(this.MazeDepth*320) - y;
+                    mesh.position.z = -( (y+1)*this.MazeCellSize );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                     if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
                     {
@@ -696,10 +713,10 @@ class Windows95Maze{
                 }
                 if(this.MazeRows[y][x].right && x==this.MazeWidth-1) //Ditto
                 {
-                    mesh = new THREE.Mesh( new THREE.CubeGeometry(0, 200, 320, 0, 0, 0) );
-                    mesh.position.x = -((x+1)*320)// - (320/2);
+                    mesh = new THREE.Mesh( new THREE.CubeGeometry(0, this.MazeHeight, this.MazeCellSize, 0, 0, 0) );
+                    mesh.position.x = -((x+1)*this.MazeCellSize)// - (this.MazeCellSize/2);
                     mesh.position.y = 100;
-                    mesh.position.z = - ( ((y+1)*320) - (320/2) );//(this.MazeDepth*320) - y;
+                    mesh.position.z = - ( ((y+1)*this.MazeCellSize) - (this.MazeCellSize/2) );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                     if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
                     {
@@ -713,8 +730,8 @@ class Windows95Maze{
             }
         }
         
-        var MazeWallsActor = new Actor(0,0);
-        var MazeCoolWallsActor = new Actor(0,0);
+        var MazeWallsActor = new Actor(0,0,0);
+        var MazeCoolWallsActor = new Actor(0,0,0);
         MazeWallsActor.tick = function(){}.bind(this);
         MazeCoolWallsActor.tick = function(){}.bind(this);
         
@@ -738,16 +755,13 @@ class Windows95Maze{
     }
     
     CreateLights(){
-        var LightActor = new Actor(0,0);
+        var LightActor = new Actor(0,0,0);
         
         LightActor.PointLight = new THREE.PointLight(0xFFFFFF);
-        //LightActor.PointLight.position.z = -( (this.MazePosY*320) + (320)/2 );
-        //LightActor.PointLight.position.x = -( (this.MazePosX*320) + (320)/2 );
-        
-        
         LightActor.tick = function(){
-            LightActor.PointLight.position.z = -((this.MazePosY*320) + (320)/2);
-            LightActor.PointLight.position.x = -((this.MazePosX*320) + (320)/2);
+            LightActor.PointLight.position.x = this.MazeCamera.position.x;
+            LightActor.PointLight.position.y = this.MazeCamera.position.y;
+            LightActor.PointLight.position.z = this.MazeCamera.position.z;
         }.bind(this);
         
         this.MazeScene.add(LightActor.PointLight);
@@ -756,112 +770,74 @@ class Windows95Maze{
     
     CreateCameras(){
         this.MazeCamera = new THREE.PerspectiveCamera( 75, this.MazeResX/this.MazeResY, 1, 10000 );
-        this.MazeCamera.position.z = -( (this.MazePosY*320) + (320)/2 ) //+ (320/2);
+        this.MazeCamera.position.z = -((this.MazePosZ*this.MazeCellSize) + (this.MazeCellSize)/2) //+ (this.MazeCellSize/2);
         this.MazeCamera.position.y = 100;
-        this.MazeCamera.position.x = -( this.MazePosX*320 + (320/2));//-(this.MazeWidth*320)/2 - (320/2);
+        this.MazeCamera.position.x = -(this.MazePosX*this.MazeCellSize + (this.MazeCellSize/2));//-(this.MazeWidth*this.MazeCellSize)/2 - (this.MazeCellSize/2);
         this.MazeCamera.rotation.y = Math.radians(180);
-        this.MazeCamera.far = 100;// Math.max(this.MazeWidth,this.MazeDepth)*320;
+        this.MazeCamera.far = 100;// Math.max(this.MazeWidth,this.MazeDepth)*this.MazeCellSize;
         this.MazeScene.add(this.MazeCamera);
+        
+        console.log(this.MazeCamera.position);
     }
     
     CreateFloor(){
-        this.MazeFloorGeometry = new THREE.CubeGeometry(320*this.MazeWidth, 0, 320*this.MazeDepth, 1, 1, 1, null);
+        this.MazeFloorGeometry = new THREE.CubeGeometry(this.MazeTotalWidth, 0, this.MazeTotalDepth, 1, 1, 1, null);
         this.MazeFloorTexture.wrapS = THREE.RepeatWrapping;
         this.MazeFloorTexture.wrapT = THREE.RepeatWrapping;
         this.MazeFloorTexture.offset.x = 0;
         this.MazeFloorTexture.offset.y = 0;
-        this.MazeFloorTexture.repeat.x = (this.MazeWidth*320)/this.MazeFloorTexture.image.width;
-        this.MazeFloorTexture.repeat.y = (this.MazeDepth*320)/this.MazeFloorTexture.image.height;
+        this.MazeFloorTexture.repeat.x = (this.MazeTotalWidth)/this.MazeFloorTexture.image.width;
+        this.MazeFloorTexture.repeat.y = (this.MazeTotalDepth)/this.MazeFloorTexture.image.height;
         this.MazeFloorMaterial = new THREE.MeshBasicMaterial({map: this.MazeFloorTexture});
         this.MazeFloorMesh = new THREE.Mesh(this.MazeFloorGeometry, this.MazeFloorMaterial);
-        this.MazeFloorMesh.position.z = -(320*this.MazeDepth / 2);
+        this.MazeFloorMesh.position.z = -(this.MazeTotalDepth/2);
         this.MazeFloorMesh.position.y = 0;
-        this.MazeFloorMesh.position.x = -320*this.MazeWidth / 2;
+        this.MazeFloorMesh.position.x = -this.MazeTotalWidth/2;
         this.MazeScene.add(this.MazeFloorMesh);
     }
     
     CreateCeiling(){
-        this.MazeCeilGeometry = new THREE.CubeGeometry(320*this.MazeWidth, 0, 320*this.MazeDepth, 1, 1, 1, null);
+        this.MazeCeilGeometry = new THREE.CubeGeometry(this.MazeTotalWidth, 0, this.MazeTotalDepth, 1, 1, 1, null);
         this.MazeCeilTexture.wrapS = this.MazeCeilTexture.wrapT = THREE.RepeatWrapping;
         this.MazeCeilTexture.offset.x = 0;
         this.MazeCeilTexture.offset.y = 0;
-        this.MazeCeilTexture.repeat.x = (this.MazeWidth*320)/this.MazeCeilTexture.image.width;
-        this.MazeCeilTexture.repeat.y = (this.MazeDepth*320)/this.MazeCeilTexture.image.height;
+        this.MazeCeilTexture.repeat.x = (this.MazeTotalWidth)/this.MazeCeilTexture.image.width;
+        this.MazeCeilTexture.repeat.y = (this.MazeTotalDepth)/this.MazeCeilTexture.image.height;
         this.MazeCeilMaterial = new THREE.MeshBasicMaterial({map: this.MazeCeilTexture});
         this.MazeCeilMesh = new THREE.Mesh(this.MazeCeilGeometry, this.MazeCeilMaterial);
-        this.MazeCeilMesh.position.z = -(320*this.MazeDepth / 2);
-        this.MazeCeilMesh.position.y = 200;
-        this.MazeCeilMesh.position.x = -320*this.MazeWidth / 2;
+        this.MazeCeilMesh.position.z = -(this.MazeTotalDepth / 2);
+        this.MazeCeilMesh.position.y = this.MazeHeight;
+        this.MazeCeilMesh.position.x = -this.MazeTotalWidth / 2;
         this.MazeScene.add(this.MazeCeilMesh);
     }
     
-    CreateRatActors(){
-        for(var i=0;i<this.MazeRats;++i)
-        {
-            var X = Math.randomint(0,this.MazeWidth-1);
-            var Y = Math.randomint(0,this.MazeDepth-1);
-            this.MazeActors.push(this.Rat(X,Y));
-        }
-    }
-
     CreateSignActors(){
         for(var i=0;i<this.MazeSigns;++i)
         {
-            var X = Math.randomint(0,this.MazeWidth-1);
-            var Y = Math.randomint(0,this.MazeDepth-1);
-            this.MazeActors.push(this.OpenGLSign(X,Y));
+            this.MazeActors.push(this.OpenGLSign(...this.GetRandomCellPos(100)));
         }
     }
-
+    
     CreateSpinnerActors(){
-        var takenSpinnerPlaces = new Array();
-        
         for(var i=0;i<this.MazeSpinners;++i)
         {
-            var bad=0;
-            var X = Math.randomint(0,this.MazeWidth-1);
-            var Y = Math.randomint(0,this.MazeDepth-2);
-            
-            for(var q=0;q<takenSpinnerPlaces.length;++q)
-            {
-                //alert(takenSpinnerPlaces[q][0] + " " + takenSpinnerPlaces[q][1] + "\n" + Y + " " + X)
-                if(takenSpinnerPlaces[q][0]==Y && takenSpinnerPlaces[q][1]==X)
-                {
-                    bad=1;
-                    //i--;
-                }
-            }
-            if(!bad)
-            {
-                this.MazeActors.push(this.Spinner(X,Y));
-                takenSpinnerPlaces.push(new Array);
-                takenSpinnerPlaces[takenSpinnerPlaces.length-1][0] = Y;
-                takenSpinnerPlaces[takenSpinnerPlaces.length-1][1] = X;
-            }
+            this.MazeActors.push(this.Spinner(...this.GetRandomCellPos(50)));
         }
     }
 
-    Start(X,Y){
-        var StartActor = new Actor(X,Y);
+    Start(X,Y,Z){
+        var StartActor = new Actor(X,Y,Z);
         StartActor.name="start";
-        StartActor.mesh = new THREE.Mesh
-        (
-            new THREE.CubeGeometry( 100, 100, 0, 1, 1, 1, null),
+        StartActor.AddMesh(new THREE.Mesh(
+            new THREE.CubeGeometry(100, 100, 0, 1, 1, 1, null),
             new THREE.MeshBasicMaterial({map: this.MazeStartTexture})
-        )
+        ));
         StartActor.mesh.material.transparent=true;
         StartActor.mesh.material.opacity=0.5;
-        //StartActor.posY = Y;
-        //StartActor.posX = X;
-        //StartActor.mesh.position.z = -( (StartActor.posY*320) + (320)/2 );
-        //StartActor.mesh.position.x = -( (StartActor.posX*320) + (320)/2 );
-        StartActor.mesh.position.z = this.MazeCamera.position.z+100;
-        StartActor.mesh.position.x = this.MazeCamera.position.x;
-        StartActor.mesh.position.y = 100;
         StartActor.mesh.scale.x = 1.25;
         StartActor.mesh.scale.y = 0.05;
         StartActor.sizeY = 2;
-        this.MazeScene.add(StartActor.mesh)
+        this.MazeScene.add(StartActor.mesh);
         StartActor.tick = function()
         {
             StartActor.mesh.rotation.y = this.MazeCamera.rotation.y;
@@ -869,21 +845,14 @@ class Windows95Maze{
         return StartActor;
     }
     
-    End(X,Y){
-        var EndActor = new Actor(X,Y);
-        EndActor.name="end";
-        EndActor.mesh = new THREE.Mesh
-        (
+    End(X,Y,Z){
+        var EndActor = new Actor(X,Y,Z);
+        EndActor.AddMesh(new THREE.Mesh(
             new THREE.CubeGeometry( 100, 100, 0, 1, 1, 1, null),
             new THREE.MeshBasicMaterial({map: this.MazeEndTexture})
-        )
+        ));
         EndActor.mesh.material.transparent=true;
         EndActor.mesh.material.opacity=0.5;
-        //EndActor.posY = Y;
-        //EndActor.posX = X;
-        EndActor.mesh.position.z = -( (EndActor.posY*320) + (320)/2 );
-        EndActor.mesh.position.x = -( (EndActor.posX*320) + (320)/2 );
-        EndActor.mesh.position.y = 100;
         EndActor.mesh.scale.x = 1.25;
         EndActor.mesh.scale.y = 0.05;
         EndActor.sizeY = 1.25;
@@ -923,23 +892,15 @@ class Windows95Maze{
         return EndActor;
     }
 
-    OpenGLSign(X,Y){
-        var SignActor = new Actor(X,Y);
-        SignActor.mesh = new THREE.Mesh
-        (
+    OpenGLSign(X,Y,Z){
+        var SignActor = new Actor(X,Y,Z);
+        SignActor.AddMesh(new THREE.Mesh(
             new THREE.CubeGeometry( 100, 100, 0, 1, 1, 1, null),
             new THREE.MeshBasicMaterial({map: this.MazeOpenGLTexture})
-        )
+        ));
         SignActor.mesh.material.transparent=true;
         SignActor.mesh.material.opacity=0.5;
         
-        //SignActor.posY = Y;
-        //SignActor.posX = X;
-        //SignActor.mesh.position.z = -( (SignActor.posY*320) + (320)/2 - 50);
-        //SignActor.mesh.position.x = -( (SignActor.posX*320) + (320)/2 + 50);
-        SignActor.mesh.position.z = -( (SignActor.posY*320) + (320)/2);
-        SignActor.mesh.position.x = -( (SignActor.posX*320) + (320)/2);
-        SignActor.mesh.position.y = 100;
         SignActor.mesh.scale.y = 0.05;
         SignActor.sizeY = 1;
 
@@ -952,21 +913,31 @@ class Windows95Maze{
         return SignActor;
     }
     
-    Rat(X,Y){
-        var RatActor = new Actor(X,Y);
-        RatActor.name="rat";
-        RatActor.mesh = new THREE.Mesh
-        (
+    CreateRatActors(){
+        for(var i=0;i<this.MazeRats;++i)
+        {
+            var X = Math.randomint(0,this.MazeWidth-1);
+            var Z = Math.randomint(0,this.MazeDepth-1);
+            //var X = Math.randomint(0,this.MazeTotalWidth) + this.MazeCellSize/2;
+            //var Z = Math.randomint(0,this.MazeTotalDepth) + this.MazeCellSize/2;
+            this.MazeActors.push(this.Rat(X,50,Z));
+        }
+    }
+    
+    Rat(X,Y,Z){
+        var RatActor = new Actor(X,Y,Z);
+        RatActor.AddMesh(new THREE.Mesh(
             new THREE.CubeGeometry( 100, 50, 0, 1, 1, 1, null),
             new THREE.MeshBasicMaterial({map: this.MazeRatTexture})
-        )
+        ));
         
         RatActor.mesh.material.transparent=true;
         RatActor.mesh.scale.y = 0.05;
         RatActor.sizeY = 2;
-        RatActor.mesh.position.z = -( (RatActor.posY*320) + (320)/2 );
-        RatActor.mesh.position.x = -( (RatActor.posX*320) + (320)/2 );
-        RatActor.mesh.position.y = 50;
+        RatActor.mesh.position.z = -((RatActor.z*this.MazeCellSize) + (this.MazeCellSize)/2);
+        RatActor.mesh.position.x = -((RatActor.x*this.MazeCellSize) + (this.MazeCellSize)/2);
+        //RatActor.mesh.position.z = -((RatActor.z) + (this.MazeCellSize)/2);
+        //RatActor.mesh.position.x = -((RatActor.x) + (this.MazeCellSize)/2);
         
         this.MazeScene.add(RatActor.mesh);
         RatActor.m=0;
@@ -981,15 +952,15 @@ class Windows95Maze{
                 switch(randey)
                 {
                     case 0:
-                        if(!this.MazeRows[RatActor.posY][RatActor.posX].up)
+                        if(!this.MazeRows[RatActor.z][RatActor.x].up)
                         {
-                            RatActor.posY--;
+                            RatActor.z--;
                             var that = RatActor;
                             RatActor.ratInterval = setInterval(function()
                             {
                                 that.m++
                                 that.mesh.position.z++;
-                                if(that.m == 320)
+                                if(that.m == this.MazeCellSize)
                                 {
                                     that.m=0;
                                     clearInterval(that.ratInterval);
@@ -998,15 +969,15 @@ class Windows95Maze{
                         }
                         break;
                     case 1:
-                        if(!this.MazeRows[RatActor.posY][RatActor.posX].down && RatActor.posY>1)
+                        if(!this.MazeRows[RatActor.z][RatActor.x].down && RatActor.z>1)
                         {
-                            RatActor.posY++;
+                            RatActor.z++;
                             var that = RatActor;
                             RatActor.ratInterval = setInterval(function()
                             {
                                 that.m++
                                 that.mesh.position.z--;
-                                if(that.m == 320)
+                                if(that.m == this.MazeCellSize)
                                 {
                                     that.m=0;
                                     clearInterval(that.ratInterval);
@@ -1015,15 +986,15 @@ class Windows95Maze{
                         }
                         break;
                     case 2:
-                        if(!this.MazeRows[RatActor.posY][RatActor.posX].right)
+                        if(!this.MazeRows[RatActor.z][RatActor.x].right)
                         {
-                            RatActor.posX++;
+                            RatActor.x++;
                             var that = RatActor;
                             RatActor.ratInterval = setInterval(function()
                             {
                                 that.m++
                                 that.mesh.position.x--;
-                                if(that.m == 320)
+                                if(that.m == this.MazeCellSize)
                                 {
                                     that.m=0;
                                     clearInterval(that.ratInterval);
@@ -1032,15 +1003,15 @@ class Windows95Maze{
                         }
                         break;
                     case 3:
-                        if(!this.MazeRows[RatActor.posY][RatActor.posX].left)
+                        if(!this.MazeRows[RatActor.z][RatActor.x].left)
                         {
-                            RatActor.posX--;
+                            RatActor.x--;
                             var that = RatActor;
                             RatActor.ratInterval = setInterval(function()
                             {
                                 that.m++
                                 that.mesh.position.x++;
-                                if(that.m == 320)
+                                if(that.m == this.MazeCellSize)
                                 {
                                     that.m=0;
                                     clearInterval(that.ratInterval);
@@ -1054,27 +1025,18 @@ class Windows95Maze{
         return RatActor;
     }
 
-    Spinner(X,Y){
-        var SpinnerActor = new Actor(X,Y);
-        SpinnerActor.name="Spinner";
-        
-        SpinnerActor.mesh = new THREE.Mesh
-        (
+    Spinner(X,Y,Z){
+        var SpinnerActor = new Actor(X,Y,Z);
+        SpinnerActor.AddMesh(new THREE.Mesh(
             new THREE.IcosahedronGeometry(),
             new THREE.MeshPhongMaterial({ color: 0xcccccc, specular: 0xffffff})
-        )
+        ));
         SpinnerActor.mesh.scale.x=50;
         SpinnerActor.mesh.scale.y=0.05;
         SpinnerActor.sizeY=50;
         SpinnerActor.mesh.scale.z=50;
-        //SpinnerActor.posY = Y;
-        //SpinnerActor.posX = X;
 
-        SpinnerActor.mesh.position.z = -( (SpinnerActor.posY*320) + (320)/2 );
-        SpinnerActor.mesh.position.x = -( (SpinnerActor.posX*320) + (320)/2 );
-        SpinnerActor.mesh.position.y = 50;
-
-        this.MazeScene.add(SpinnerActor.mesh)
+        this.MazeScene.add(SpinnerActor.mesh);
         SpinnerActor.tick = function()
         {
             SpinnerActor.mesh.rotation.y += Math.radians(1);
@@ -1093,11 +1055,17 @@ class Windows95Maze{
 }
 
 class Actor{
-    constructor(X,Y){
-        this.posX = X;
-        this.posY = Y;
+    constructor(x,y,z){
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
-    
+    AddMesh(mesh){
+        this.mesh = mesh;
+        this.mesh.position.x = this.x;
+        this.mesh.position.y = this.y;
+        this.mesh.position.z = this.z;
+    }
 }
 //////////////////////////////////
 
