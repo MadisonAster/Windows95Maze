@@ -1,6 +1,6 @@
 ///////////////Main///////////////
 function Init(){
-    window.DemoMaze = new Windows95Maze(12,12, window.innerWidth, window.innerHeight);
+    window.DemoMaze = new Windows95Maze('Windows95Maze',12,12, window.innerWidth, window.innerHeight);
     window.addEventListener('resize', ResizeHandling);
     window.addEventListener('keydown', KeyHandling);
     document.body.appendChild(window.DemoMaze.MazeRenderer.domElement);

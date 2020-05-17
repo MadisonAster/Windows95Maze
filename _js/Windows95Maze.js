@@ -1,6 +1,6 @@
 ///////////////Main///////////////
 class Windows95Maze{
-    constructor(width,depth,resX,resY){
+    constructor(id,width,depth,resX,resY){
         ///////User Settings//////
         this.MazeWidth = width;
         this.MazeDepth = depth;
@@ -51,6 +51,7 @@ class Windows95Maze{
         
         ////////DOM Element///////
         this.MazeCanvas = document.createElement('canvas');
+        this.MazeCanvas.setAttribute("id", id);
         this.MazeContext = this.MazeCanvas.getContext('webgl2', {alpha:false});
         this.MazeRenderer = new THREE.WebGLRenderer({canvas: this.MazeCanvas, context: this.MazeContext});
         this.MazeRenderer.setSize(this.MazeResX, this.MazeResY);
