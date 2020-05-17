@@ -361,7 +361,7 @@ class Windows95Maze{
         console.log('GetScriptURL');
         var scripts = document.getElementsByTagName('script');
         for(var i=0;i<scripts.length;++i){
-            var filename = scripts[i].src.rsplit('/',1)[-1];
+            var filename = scripts[i].src.rsplit('/',1);
             console.log(filename);
             if(filename == 'Windows95Maze.js'){
                 return scripts[i].src;
