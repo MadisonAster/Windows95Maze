@@ -1,8 +1,14 @@
 ///////////////Main///////////////
 class Windows95Maze{
     constructor(id,width,depth, 
+        EnableFloor=true,
         EnableCeiling=true,
-        EnableRats=true){
+        EnableWalls=true,
+        EnableRats=true,
+        EnableSigns=true,
+        EnableSpinners=true,
+        EnableStart=true,
+        EnableEnd=true){
         ///////User Settings//////
         this.MazeWidth = width;
         this.MazeDepth = depth;
@@ -30,8 +36,14 @@ class Windows95Maze{
         this.MazeTotalWidth = this.MazeWidth*this.MazeCellSize;
         this.MazeTotalDepth = this.MazeDepth*this.MazeCellSize;
         
+        this.EnableFloor = EnableFloor;
         this.EnableCeiling = EnableCeiling;
+        this.EnableWalls = EnableWalls;
         this.EnableRats = EnableRats;
+        this.EnableSigns = EnableSigns;
+        this.EnableSpinners = EnableSpinners;
+        this.EnableStart = EnableStart;
+        this.EnableEnd = EnableEnd;
         //////////////////////////
         
         ////Private variables/////
@@ -666,21 +678,17 @@ class Windows95Maze{
     CreateActors(){
         this.MazeActors = new Array();
         
-        this.CreateFloor();
-        if(this.EnableCeiling){
-            this.CreateCeiling();
-        };
-        this.CreateWalls();
+        if(this.EnableFloor){       this.CreateFloor()};
+        if(this.EnableCeiling){     this.CreateCeiling()};
+        if(this.EnableWalls){       this.CreateWalls()};
         this.CreateCameras();
         this.CreateLights();
         
-        if (this.EnableRats){
-            this.CreateRatActors();
-        };
-        this.CreateSignActors();
-        this.CreateSpinnerActors();
-        this.MazeActors.push(this.Start(this.MazeCamera.position.x,100,this.MazeCamera.position.z+100));
-        this.MazeActors.push(this.End(0,100,0));
+        if (this.EnableRats){       this.CreateRatActors()};
+        if (this.EnableSigns){      this.CreateSignActors()};
+        if (this.EnableSpinners){   this.CreateSpinnerActors()};
+        if (this.EnableStart){      this.MazeActors.push(this.Start(this.MazeCamera.position.x,100,this.MazeCamera.position.z+100))};
+        if (this.EnableEnd){        this.MazeActors.push(this.End(0,100,0))};
     }
     
     GetRandomCellPos(Y=0){
