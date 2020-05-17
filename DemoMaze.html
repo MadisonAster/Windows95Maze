@@ -2,22 +2,20 @@
 <head>
     <style>
     #Windows95Maze {
-        position:absolute;
+        position:fixed;
         top:0px;
         left:0px;
+        width:100%;
+        height:100%;
     }
     </style>
     <script src="_js/Three.js"></script>
     <script src="_js/Windows95Maze.js"></script>
     <script>
         function Init(){
-            window.DemoMaze = new Windows95Maze('Windows95Maze',12,12, window.innerWidth, window.innerHeight);
-            window.addEventListener('resize', ResizeHandling);
-            window.addEventListener('keydown', KeyHandling);
-        }
-
-        function ResizeHandling(){
-            window.DemoMaze.MazeRenderer.setSize(window.innerWidth, window.innerHeight);
+            window.DemoMaze = new Windows95Maze('Windows95Maze',12,12); //args: CanvasID, MazeWidth, MazeDepth
+            window.addEventListener('resize', window.DemoMaze.Resize); //add this if you want resize events to work
+            window.addEventListener('keydown', KeyHandling); //implement your own controllers for now
         }
 
         function KeyHandling(event){
