@@ -20,20 +20,26 @@ class Windows95Maze{
         MazeCellSize=320,
         MazeHeight=200,
         MazeCameraInitY=100,
+        
+        MazeTexturePack=null,
         ){
         ///////User Settings//////
         this.MazeWidth = MazeWidth;
         this.MazeDepth = MazeDepth;
         
         this.PackagePath = this.GetPackagePath();
-        this.MazeWallImagePath = this.PackagePath+'/_Assets/wall.png';
-        this.MazeCeilImagePath = this.PackagePath+'/_Assets/ceiling.png';
-        this.MazeFloorImagePath = this.PackagePath+'/_Assets/floor.png';
-        this.MazeGlobeImagePath = this.PackagePath+'/_Assets/globe.png';
-        this.MazeStartImagePath = this.PackagePath+'/_Assets/start.png';
-        this.MazeEndImagePath = this.PackagePath+'/_Assets/end.png';
-        this.MazeRatImagePath = this.PackagePath+'/_Assets/rat.png';
-        this.MazeOpenGLImagePath = this.PackagePath+'/_Assets/OpenGL.png';
+        this.MazeTexturePack = MazeTexturePack;
+        if (this.MazeTexturePack == null){
+            this.MazeTexturePack = this.PackagePath+'/_Assets';
+        };
+        this.MazeWallImagePath = this.MazeTexturePack+'/wall.png';
+        this.MazeCeilImagePath = this.MazeTexturePack+'/ceiling.png';
+        this.MazeFloorImagePath = this.MazeTexturePack+'/floor.png';
+        this.MazeGlobeImagePath = this.MazeTexturePack+'/globe.png';
+        this.MazeStartImagePath = this.MazeTexturePack+'/start.png';
+        this.MazeEndImagePath = this.MazeTexturePack+'/end.png';
+        this.MazeRatImagePath = this.MazeTexturePack+'/rat.png';
+        this.MazeOpenGLImagePath = this.MazeTexturePack+'/OpenGL.png';
         
         this.MazeRats = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
         this.MazeSigns = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
