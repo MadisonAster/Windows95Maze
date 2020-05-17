@@ -1,4 +1,6 @@
 ///////////////Main///////////////
+console.log('Windows95Maze included!!!!');
+
 class Windows95Maze{
     constructor(width,depth,resX,resY){
         ///////User Settings//////
