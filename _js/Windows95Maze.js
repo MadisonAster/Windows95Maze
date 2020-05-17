@@ -62,6 +62,7 @@ class Windows95Maze{
         //////////////////////////
         
         ////LoadAssets then Go////
+        this.src = this.GetScriptURL();
         this.LoadAssets().then(
             function(){
                 this.CreateActors();
@@ -352,6 +353,14 @@ class Windows95Maze{
     }
     
     ResetMaze(){
+    }
+    
+    GetScriptURL(){
+        console.log('GetScriptURL');
+        var scripts = document.getElementsByTagName('script');
+        for(var i=0;i<scripts.length;++i){
+            console.log(scripts[i].src);
+        };
     }
     
     CreateTexturePromise(ImagePath){
