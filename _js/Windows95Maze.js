@@ -804,7 +804,7 @@ class Windows95Maze{
     CreateCameras(){
         this.MazeCamera = new THREE.PerspectiveCamera( 75, this.MazeInitResX/this.MazeInitResY, 1, 10000 );
         this.MazeCamera.position.z = -((this.MazePosZ*this.MazeCellSize) + (this.MazeCellSize)/2) //+ (this.MazeCellSize/2);
-        this.MazeCamera.position.y = 100;
+        this.MazeCamera.position.y = this.MazeHeight/2;
         this.MazeCamera.position.x = -(this.MazePosX*this.MazeCellSize + (this.MazeCellSize/2));//-(this.MazeWidth*this.MazeCellSize)/2 - (this.MazeCellSize/2);
         this.MazeCamera.rotation.y = Math.radians(180);
         this.MazeCamera.updateProjectionMatrix();
