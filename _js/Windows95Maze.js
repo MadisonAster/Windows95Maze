@@ -1,6 +1,8 @@
 ///////////////Main///////////////
 class Windows95Maze{
-    constructor(id,width,depth, EnableCeiling=true){
+    constructor(id,width,depth, 
+        EnableCeiling=true,
+        EnableRats=true){
         ///////User Settings//////
         this.MazeWidth = width;
         this.MazeDepth = depth;
@@ -29,6 +31,7 @@ class Windows95Maze{
         this.MazeTotalDepth = this.MazeDepth*this.MazeCellSize;
         
         this.EnableCeiling = EnableCeiling;
+        this.EnableRats = EnableRats;
         //////////////////////////
         
         ////Private variables/////
@@ -671,7 +674,9 @@ class Windows95Maze{
         this.CreateCameras();
         this.CreateLights();
         
-        this.CreateRatActors();
+        if (this.EnableRats){
+            this.CreateRatActors();
+        };
         this.CreateSignActors();
         this.CreateSpinnerActors();
         this.MazeActors.push(this.Start(this.MazeCamera.position.x,100,this.MazeCamera.position.z+100));
