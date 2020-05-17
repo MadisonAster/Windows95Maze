@@ -13,11 +13,13 @@
     <script src="_js/Windows95Maze.js"></script>
     <script>
         function Init(){
-            window.DemoMaze = new Windows95Maze('Windows95Maze',12,12); //args: CanvasID, MazeWidth, MazeDepth
-            window.addEventListener('resize', window.DemoMaze.Resize); //add this if you want resize events to work
+            window.DemoMaze = new Windows95Maze('Windows95Maze',12,12); //args: MazeCanvasID, MazeWidth, MazeDepth
+            window.addEventListener('resize', ResizeHandling); //add this if you want resize events to work
             window.addEventListener('keydown', KeyHandling); //implement your own controllers for now
         }
-
+        function ResizeHandling(){
+            window.DemoMaze.Resize();
+        }
         function KeyHandling(event){
                 switch(event.keyCode)
                 {

@@ -50,18 +50,17 @@ class Windows95Maze{
         
         ////////DOM Element///////
         this.MazeCanvasID = id;
-        this.MazeCanvas = document.getElementById(id);
+        this.MazeCanvas = document.getElementById(this.MazeCanvasID);
         if(this.MazeCanvas == null){
             console.log('creating default canvas');
             this.MazeCanvas = document.createElement('canvas');
-            this.MazeCanvas.setAttribute("id", id);
+            this.MazeCanvas.setAttribute("id", this.MazeCanvasID);
         };
         this.MazeContext = this.MazeCanvas.getContext('webgl2', {alpha:false});
         this.MazeRenderer = new THREE.WebGLRenderer({canvas: this.MazeCanvas, context: this.MazeContext});
         this.MazeInitResX = this.MazeCanvas.getBoundingClientRect().width;
         this.MazeInitResY = this.MazeCanvas.getBoundingClientRect().height;
         this.MazeRenderer.setSize(this.MazeInitResX, this.MazeInitResY, false);
-        //this.Resize();
         //////////////////////////
         
         ////LoadAssets then Go////
@@ -69,7 +68,6 @@ class Windows95Maze{
             function(){
                 this.CreateActors();
                 this.TickInterval = setInterval(this.Tick.bind(this),this.MazeTickDelta);
-                //this.Resize();
                 this.Animate();
             }.bind(this),
             function(error){
@@ -95,11 +93,6 @@ class Windows95Maze{
     }
     
     //////////////Setup///////////////
-    //GetCanvas(){
-    //    this.MazeCanvas = document.getElementById(this.MazeCanvasID);
-    //    return this.MazeCanvas;
-    //}
-    
     Tick(){
         for(var i=0;i<this.MazeActors.length;++i)
         {
@@ -393,18 +386,14 @@ class Windows95Maze{
     }
     
     SetSize(SizeX,SizeY){
-        //this.MazeRenderer.setSize(SizeX, SizeY, false);
-        //this.MazeCamera.aspect = SizeX/SizeY;
-        //this.MazeCamera.updateProjectionMatrix();
+        this.MazeRenderer.setSize(SizeX, SizeY, false);
+        this.MazeCamera.aspect = SizeX/SizeY;
+        this.MazeCamera.updateProjectionMatrix();
     }
     
     Resize(){
-        //get canvas sizeToContent
-        //this.GetCanvas();
-        console.log('Resize!');
         var width = this.MazeCanvas.getBoundingClientRect().width;
         var height = this.MazeCanvas.getBoundingClientRect().height;
-        console.log(width, height);
         this.SetSize(width, height);
     }
     //////////////////////////////////
@@ -813,16 +802,13 @@ class Windows95Maze{
     }
     
     CreateCameras(){
-        //this.MazeCamera = new THREE.PerspectiveCamera( 75, this.MazeResX/this.MazeResY, 1, 10000 );
-        this.MazeCamera = new THREE.PerspectiveCamera( 75, this.MazeCanvas.getBoundingClientRect().width/this.MazeCanvas.getBoundingClientRect().height, 1, 10000 );
+        this.MazeCamera = new THREE.PerspectiveCamera( 75, this.MazeInitResX/this.MazeInitResY, 1, 10000 );
         this.MazeCamera.position.z = -((this.MazePosZ*this.MazeCellSize) + (this.MazeCellSize)/2) //+ (this.MazeCellSize/2);
         this.MazeCamera.position.y = 100;
         this.MazeCamera.position.x = -(this.MazePosX*this.MazeCellSize + (this.MazeCellSize/2));//-(this.MazeWidth*this.MazeCellSize)/2 - (this.MazeCellSize/2);
         this.MazeCamera.rotation.y = Math.radians(180);
-        this.MazeCamera.far = 100;// Math.max(this.MazeWidth,this.MazeDepth)*this.MazeCellSize;
+        this.MazeCamera.updateProjectionMatrix();
         this.MazeScene.add(this.MazeCamera);
-        
-        console.log(this.MazeCamera.position);
     }
     
     CreateFloor(){
