@@ -12,6 +12,14 @@ class Windows95Maze{
         EnableSpinners=true,
         EnableStart=true,
         EnableEnd=true,
+        
+        MazeDebug=false,
+        MazeAutopilot=true,
+        MazeSpeed=4,
+        MazeTickDelta=10,
+        MazeCellSize=320,
+        MazeHeight=200,
+        MazeCameraInitY=100,
         ){
         ///////User Settings//////
         this.MazeWidth = MazeWidth;
@@ -27,15 +35,17 @@ class Windows95Maze{
         this.MazeRatImagePath = this.PackagePath+'/_Assets/rat.png';
         this.MazeOpenGLImagePath = this.PackagePath+'/_Assets/OpenGL.png';
         
-        this.MazeDebug = 0;
-        this.MazeAutopilot = true;
         this.MazeRats = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
         this.MazeSigns = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
         this.MazeSpinners = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
-        this.MazeSpeed = 4;
-        this.MazeTickDelta = 10;
-        this.MazeCellSize = 320;
-        this.MazeHeight = 200;
+        
+        this.MazeDebug = MazeDebug;
+        this.MazeAutopilot = MazeAutopilot;
+        this.MazeSpeed = MazeSpeed;
+        this.MazeTickDelta = MazeTickDelta;
+        this.MazeCellSize = MazeCellSize;
+        this.MazeHeight = MazeHeight;
+        this.MazeCameraInitY = MazeCameraInitY;
         
         this.MazeTotalWidth = this.MazeWidth*this.MazeCellSize;
         this.MazeTotalDepth = this.MazeDepth*this.MazeCellSize;
@@ -825,7 +835,7 @@ class Windows95Maze{
     CreateCameras(){
         this.MazeCamera = new THREE.PerspectiveCamera( 75, this.MazeInitResX/this.MazeInitResY, 1, 10000 );
         this.MazeCamera.position.z = -((this.MazePosZ*this.MazeCellSize) + (this.MazeCellSize)/2) //+ (this.MazeCellSize/2);
-        this.MazeCamera.position.y = this.MazeHeight/2;
+        this.MazeCamera.position.y = this.MazeCameraInitY;
         this.MazeCamera.position.x = -(this.MazePosX*this.MazeCellSize + (this.MazeCellSize/2));//-(this.MazeWidth*this.MazeCellSize)/2 - (this.MazeCellSize/2);
         this.MazeCamera.rotation.y = Math.radians(180);
         this.MazeCamera.updateProjectionMatrix();
