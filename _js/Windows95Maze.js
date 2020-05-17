@@ -7,14 +7,15 @@ class Windows95Maze{
         this.MazeResX = resX;
         this.MazeResY = resY;
         
-        this.MazeWallImagePath = './_Assets/wall.png';
-        this.MazeCeilImagePath = './_Assets/ceiling.png';
-        this.MazeFloorImagePath = './_Assets/floor.png';
-        this.MazeGlobeImagePath = './_Assets/globe.png';
-        this.MazeStartImagePath = './_Assets/start.png';
-        this.MazeEndImagePath = './_Assets/end.png';
-        this.MazeRatImagePath = './_Assets/rat.png';
-        this.MazeOpenGLImagePath = './_Assets/OpenGL.png';
+        this.PackagePath = this.GetPackagePath();
+        this.MazeWallImagePath = this.PackagePath+'/_Assets/wall.png';
+        this.MazeCeilImagePath = this.PackagePath+'/_Assets/ceiling.png';
+        this.MazeFloorImagePath = this.PackagePath+'/_Assets/floor.png';
+        this.MazeGlobeImagePath = this.PackagePath+'/_Assets/globe.png';
+        this.MazeStartImagePath = this.PackagePath+'/_Assets/start.png';
+        this.MazeEndImagePath = this.PackagePath+'/_Assets/end.png';
+        this.MazeRatImagePath = this.PackagePath+'/_Assets/rat.png';
+        this.MazeOpenGLImagePath = this.PackagePath+'/_Assets/OpenGL.png';
         
         this.MazeDebug = 0;
         this.MazeAutopilot = true;
@@ -62,8 +63,6 @@ class Windows95Maze{
         //////////////////////////
         
         ////LoadAssets then Go////
-        this.src = this.GetScriptURL();
-        console.log('this.src!!!');
         console.log(this.src);
         this.LoadAssets().then(
             function(){
@@ -357,16 +356,16 @@ class Windows95Maze{
     ResetMaze(){
     }
     
-    GetScriptURL(){
-        console.log('GetScriptURL');
+    GetPackagePath(){
         var scripts = document.getElementsByTagName('script');
         for(var i=0;i<scripts.length;++i){
             var src = scripts[i].src;
             var split = src.split('/');
             var filename = split.slice(-1)[0];
-            console.log(filename);
             if(filename == 'Windows95Maze.js'){
-                return scripts[i].src;
+                var split = scripts[i].src.split('/');
+                var packagepath = split.slice(0, -2).join('/');
+                return packagepath;
             };
         };
     }
