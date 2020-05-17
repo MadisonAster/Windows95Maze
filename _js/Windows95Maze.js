@@ -16,7 +16,7 @@ class Windows95Maze{
         this.MazeRatImagePath = './_Assets/rat.png';
         this.MazeOpenGLImagePath = './_Assets/OpenGL.png';
         
-        this.MazeDebug = 1;
+        this.MazeDebug = 0;
         this.MazeAutopilot = true;
         this.MazeRats = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
         this.MazeSigns = Math.ceil((this.MazeWidth*this.MazeDepth)/50);
@@ -63,6 +63,8 @@ class Windows95Maze{
         
         ////LoadAssets then Go////
         this.src = this.GetScriptURL();
+        console.log('this.src!!!');
+        console.log(this.src);
         this.LoadAssets().then(
             function(){
                 this.CreateActors();
@@ -359,7 +361,11 @@ class Windows95Maze{
         console.log('GetScriptURL');
         var scripts = document.getElementsByTagName('script');
         for(var i=0;i<scripts.length;++i){
-            console.log(scripts[i].src);
+            filename = scripts[i].src.rsplit('/',1)[-1];
+            console.log(filename);
+            if(filename == 'Windows95Maze.js'){
+                return scripts[i].src;
+            };
         };
     }
     
