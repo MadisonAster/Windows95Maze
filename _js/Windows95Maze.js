@@ -1,6 +1,9 @@
 ///////////////Main///////////////
 class Windows95Maze{
-    constructor(id,width,depth, 
+    constructor(
+        MazeCanvasID='Windows95Maze',
+        MazeWidth=12,
+        MazeDepth=12,
         EnableFloor=true,
         EnableCeiling=true,
         EnableWalls=true,
@@ -8,10 +11,11 @@ class Windows95Maze{
         EnableSigns=true,
         EnableSpinners=true,
         EnableStart=true,
-        EnableEnd=true){
+        EnableEnd=true,
+        ){
         ///////User Settings//////
-        this.MazeWidth = width;
-        this.MazeDepth = depth;
+        this.MazeWidth = MazeWidth;
+        this.MazeDepth = MazeDepth;
         
         this.PackagePath = this.GetPackagePath();
         this.MazeWallImagePath = this.PackagePath+'/_Assets/wall.png';
@@ -66,7 +70,7 @@ class Windows95Maze{
         //////////////////////////
         
         ////////DOM Element///////
-        this.MazeCanvasID = id;
+        this.MazeCanvasID = MazeCanvasID;
         this.MazeCanvas = document.getElementById(this.MazeCanvasID);
         if(this.MazeCanvas == null){
             console.log('creating default canvas');
