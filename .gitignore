@@ -1,0 +1,8 @@
+/_testing
+.git-ftp.log
+.git-ftp-tmp
+/stats
+*.pyc
+Thumbs.db
+.DS_Store
+Desktop.ini
