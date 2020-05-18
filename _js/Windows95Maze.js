@@ -836,8 +836,8 @@ class Windows95Maze{
         
         MazeWallsActor.sizeY = 1;
         MazeCoolWallsActor.sizeY = 1;
-        //this.MazeWallsMesh.scale.y = .05;
-        //this.MazeCoolWallsMesh.scale.y = .05;
+        this.MazeWallsMesh.scale.y = .05; //For Intro animation
+        this.MazeCoolWallsMesh.scale.y = .05; //For Intro animation
         
         MazeWallsActor.mesh = this.MazeWallsMesh;
         MazeCoolWallsActor.mesh = this.MazeCoolWallsMesh;
@@ -936,9 +936,9 @@ class Windows95Maze{
         ));
         StartActor.mesh.material.transparent=true;
         StartActor.mesh.material.opacity=0.5;
-        //StartActor.mesh.scale.x = 1.25;
-        //StartActor.mesh.scale.y = 0.05;
-        //StartActor.sizeY = 2;
+        
+        StartActor.mesh.scale.y = 0.05; //For Intro animation
+        StartActor.sizeY = 1;
         this.MazeScene.add(StartActor.mesh);
         StartActor.tick = function()
         {
@@ -1006,7 +1006,7 @@ class Windows95Maze{
         SignActor.mesh.material.transparent=true;
         SignActor.mesh.material.opacity=0.5;
         
-        SignActor.mesh.scale.y = 0.05;
+        SignActor.mesh.scale.y = 0.05; //For Intro animation
         SignActor.sizeY = 1;
 
         this.MazeScene.add(SignActor.mesh);
@@ -1037,8 +1037,8 @@ class Windows95Maze{
         ));
         
         RatActor.mesh.material.transparent=true;
-        //RatActor.mesh.scale.y = 0.05;
-        //RatActor.sizeY = 2;
+        RatActor.mesh.scale.y = 0.05; //For Intro animation
+        RatActor.sizeY = 1;
         RatActor.mesh.position.z = -((RatActor.z*this.MazeCellSize) + (this.MazeCellSize)/2);
         RatActor.mesh.position.x = -((RatActor.x*this.MazeCellSize) + (this.MazeCellSize)/2);
         //RatActor.mesh.position.z = -((RatActor.z) + (this.MazeCellSize)/2);
@@ -1137,7 +1137,7 @@ class Windows95Maze{
             new THREE.MeshPhongMaterial({ color: 0xcccccc, specular: 0xffffff})
         ));
         SpinnerActor.mesh.scale.x=50;
-        SpinnerActor.mesh.scale.y=0.05;
+        SpinnerActor.mesh.scale.y=0.05; //For Intro animation
         SpinnerActor.sizeY=50;
         SpinnerActor.mesh.scale.z=50;
 
