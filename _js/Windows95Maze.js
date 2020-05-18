@@ -885,7 +885,7 @@ class Windows95Maze{
         this.MazeCeilMesh = new THREE.Mesh(this.MazeCeilGeometry, this.MazeCeilMaterial);
         this.MazeCeilMesh.position.z = -(this.MazeTotalDepth / 2);
         //this.MazeCeilMesh.position.y = this.MazeHeight;
-        this.MazeCeilMesh.position.y = 200;
+        this.MazeCeilMesh.position.y = 220;
         
         this.MazeCeilMesh.position.x = -this.MazeTotalWidth / 2;
         this.MazeScene.add(this.MazeCeilMesh);
