@@ -1037,8 +1037,8 @@ class Windows95Maze{
         ));
         
         RatActor.mesh.material.transparent=true;
-        RatActor.mesh.scale.y = 0.05;
-        RatActor.sizeY = 2;
+        //RatActor.mesh.scale.y = 0.05;
+        //RatActor.sizeY = 2;
         RatActor.mesh.position.z = -((RatActor.z*this.MazeCellSize) + (this.MazeCellSize)/2);
         RatActor.mesh.position.x = -((RatActor.x*this.MazeCellSize) + (this.MazeCellSize)/2);
         //RatActor.mesh.position.z = -((RatActor.z) + (this.MazeCellSize)/2);
@@ -1052,7 +1052,7 @@ class Windows95Maze{
             //return;
             RatActor.mesh.rotation.y = this.MazeCamera.rotation.y;
             if(!RatActor.m)
-            {
+            {d
                 var randey = Math.randomint(0,3);
                 switch(randey)
                 {
