@@ -4,6 +4,9 @@ class Windows95Maze{
         MazeCanvasID='Windows95Maze',
         MazeWidth=12,
         MazeDepth=12,
+        MazePosX=6,
+        MazePosY=0,
+        MazePosZ=11,
         EnableFloor=true,
         EnableCeiling=true,
         EnableWalls=true,
@@ -14,7 +17,7 @@ class Windows95Maze{
         EnableStart=true,
         EnableEnd=true,
         
-        MazeDebug=false,
+        MazeDebug=true,
         MazeAutopilot=true,
         MazeSpeed=4,
         MazeTickDelta=10,
@@ -86,10 +89,9 @@ class Windows95Maze{
         ///////GenerateMaze///////
         this.MazeScene = new THREE.Scene();
         this.Maze = this.GenerateMaze(this.MazeWidth,this.MazeDepth);
-        this.MazePosX = Math.round(this.MazeWidth/2);
-        this.MazePosY = 0;
-        //this.MazePosZ = this.MazeDepth-1;
-        this.MazePosZ = Math.round(this.MazeDepth/2);
+        this.MazePosX = MazePosX;
+        this.MazePosY = MazePosY;
+        this.MazePosZ = MazePosZ;
         //////////////////////////
         
         ////////DOM Element///////
@@ -714,8 +716,9 @@ class Windows95Maze{
         if (this.EnableRats){       this.CreateRatActors()};
         if (this.EnableSigns){      this.CreateSignActors()};
         if (this.EnableSpinners){   this.CreateSpinnerActors()};
-        if (this.EnableStart){      this.MazeActors.push(this.Start(this.MazeCamera.position.x,100,this.MazeCamera.position.z+100))};
-        if (this.EnableEnd){        this.MazeActors.push(this.End(0,100,0))};
+        if (this.EnableStart){      this.MazeActors.push(this.Start(this.MazeCamera.position.x,this.MazeHeight/2,this.MazeCamera.position.z+100))};
+        //if (this.EnableEnd){        this.MazeActors.push(this.End(-this.MazeTotalWidth+(this.MazeCellSize/2),this.MazeHeight/2,-this.MazeTotalDepth+(this.MazeCellSize/2)))};
+        if (this.EnableEnd){        this.MazeActors.push(this.End(0-(this.MazeCellSize/2),this.MazeHeight/2,0-(this.MazeCellSize/2)))};
     }
     
     GetRandomCellPos(Y=0){
@@ -928,12 +931,15 @@ class Windows95Maze{
     End(X,Y,Z){
         var EndActor = new Actor(X,Y,Z);
         EndActor.AddMesh(new THREE.Mesh(
-            new THREE.CubeGeometry( 100, 100, 0, 1, 1, 1, null),
+            new THREE.CubeGeometry(100, 100, 0, 1, 1, 1, null),
             new THREE.MeshBasicMaterial({map: this.MazeEndTexture})
         ));
         EndActor.mesh.material.transparent=true;
         EndActor.mesh.material.opacity=0.5;
         EndActor.mesh.scale.x = 1.25;
+        //EndActor.mesh.position.x = X;
+        //EndActor.mesh.position.y = Y;
+        //EndActor.mesh.position.z = Z;
         //EndActor.mesh.scale.y = 0.05;
         EndActor.sizeY = 1.25;
         this.MazeScene.add(EndActor.mesh)
