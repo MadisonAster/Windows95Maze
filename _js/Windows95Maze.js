@@ -7,6 +7,7 @@ class Windows95Maze{
         EnableFloor=true,
         EnableCeiling=true,
         EnableWalls=true,
+        EnableGlobe=true,
         EnableRats=true,
         EnableSigns=true,
         EnableSpinners=true,
@@ -59,6 +60,7 @@ class Windows95Maze{
         this.EnableFloor = EnableFloor;
         this.EnableCeiling = EnableCeiling;
         this.EnableWalls = EnableWalls;
+        this.EnableGlobe = EnableGlobe;
         this.EnableRats = EnableRats;
         this.EnableSigns = EnableSigns;
         this.EnableSpinners = EnableSpinners;
@@ -116,14 +118,14 @@ class Windows95Maze{
     
     LoadAssets(){
         this.AllPromises = [];
-        this.CreateTexturePromise(this.MazeWallImagePath).then(function(texture){this.MazeWallTexture = texture}.bind(this));
-        this.CreateTexturePromise(this.MazeCeilImagePath).then(function(texture){this.MazeCeilTexture = texture}.bind(this));
-        this.CreateTexturePromise(this.MazeFloorImagePath).then(function(texture){this.MazeFloorTexture = texture}.bind(this));
-        this.CreateTexturePromise(this.MazeGlobeImagePath).then(function(texture){this.MazeGlobeTexture = texture}.bind(this));
-        this.CreateTexturePromise(this.MazeStartImagePath).then(function(texture){this.MazeStartTexture = texture}.bind(this));
-        this.CreateTexturePromise(this.MazeEndImagePath).then(function(texture){this.MazeEndTexture = texture}.bind(this));
-        this.CreateTexturePromise(this.MazeRatImagePath).then(function(texture){this.MazeRatTexture = texture}.bind(this));
-        this.CreateTexturePromise(this.MazeOpenGLImagePath).then(function(texture){this.MazeOpenGLTexture = texture}.bind(this));
+        if(this.EnableFloor){   this.CreateTexturePromise(this.MazeFloorImagePath).then(function(texture){this.MazeFloorTexture = texture}.bind(this))};
+        if(this.EnableCeiling){ this.CreateTexturePromise(this.MazeCeilImagePath).then(function(texture){this.MazeCeilTexture = texture}.bind(this))};
+        if(this.EnableWalls){   this.CreateTexturePromise(this.MazeWallImagePath).then(function(texture){this.MazeWallTexture = texture}.bind(this))};
+        if(this.EnableGlobe){   this.CreateTexturePromise(this.MazeGlobeImagePath).then(function(texture){this.MazeGlobeTexture = texture}.bind(this))};
+        if(this.EnableStart){   this.CreateTexturePromise(this.MazeStartImagePath).then(function(texture){this.MazeStartTexture = texture}.bind(this))};
+        if(this.EnableEnd){     this.CreateTexturePromise(this.MazeEndImagePath).then(function(texture){this.MazeEndTexture = texture}.bind(this))};
+        if(this.EnableRats){    this.CreateTexturePromise(this.MazeRatImagePath).then(function(texture){this.MazeRatTexture = texture}.bind(this))};
+        if(this.EnableSigns){   this.CreateTexturePromise(this.MazeOpenGLImagePath).then(function(texture){this.MazeOpenGLTexture = texture}.bind(this))};
         
         var promise = Promise.all(this.AllPromises)
         return promise
@@ -806,7 +808,11 @@ class Windows95Maze{
         MazeCoolWallsActor.tick = function(){}.bind(this);
         
         this.MazeWallsMesh = new THREE.Mesh(this.MazeCombinedWalls, new THREE.MeshBasicMaterial({map: this.MazeWallTexture}));
-        this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, new THREE.MeshBasicMaterial({map: this.MazeGlobeTexture}));
+        if(this.EnableGlobe){
+            this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, new THREE.MeshBasicMaterial({map: this.MazeGlobeTexture}));
+        } else {
+            this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, new THREE.MeshBasicMaterial({map: this.MazeWallTexture}));
+        };
         
         MazeWallsActor.sizeY = 1;
         MazeCoolWallsActor.sizeY = 1;
