@@ -21,6 +21,7 @@ class Windows95Maze{
         MazeCellSize=320,
         MazeHeight=200,
         MazeCameraInitY=100,
+        MazeFloorScale=1,
         
         MazeTexturePack=null,
         ){
@@ -53,6 +54,7 @@ class Windows95Maze{
         this.MazeCellSize = MazeCellSize;
         this.MazeHeight = MazeHeight;
         this.MazeCameraInitY = MazeCameraInitY;
+        this.MazeFloorScale = MazeFloorScale;
         
         this.MazeTotalWidth = this.MazeWidth*this.MazeCellSize;
         this.MazeTotalDepth = this.MazeDepth*this.MazeCellSize;
@@ -860,8 +862,8 @@ class Windows95Maze{
         this.MazeFloorTexture.wrapT = THREE.RepeatWrapping;
         this.MazeFloorTexture.offset.x = 0;
         this.MazeFloorTexture.offset.y = 0;
-        this.MazeFloorTexture.repeat.x = (this.MazeTotalWidth)/this.MazeFloorTexture.image.width;
-        this.MazeFloorTexture.repeat.y = (this.MazeTotalDepth)/this.MazeFloorTexture.image.height;
+        this.MazeFloorTexture.repeat.x = (this.MazeTotalWidth)/this.MazeFloorTexture.image.width/this.MazeFloorScale;
+        this.MazeFloorTexture.repeat.y = (this.MazeTotalDepth)/this.MazeFloorTexture.image.height/this.MazeFloorScale;
         this.MazeFloorMaterial = new THREE.MeshBasicMaterial({map: this.MazeFloorTexture});
         this.MazeFloorMesh = new THREE.Mesh(this.MazeFloorGeometry, this.MazeFloorMaterial);
         this.MazeFloorMesh.position.z = -(this.MazeTotalDepth/2);
