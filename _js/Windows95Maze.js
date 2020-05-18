@@ -17,7 +17,7 @@ class Windows95Maze{
         EnableStart=true,
         EnableEnd=true,
         
-        MazeDebug=true,
+        MazeDebug=false,
         MazeAutopilot=true,
         MazeSpeed=4,
         MazeTickDelta=10,
