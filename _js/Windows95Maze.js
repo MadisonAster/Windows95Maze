@@ -28,9 +28,9 @@ class Windows95Maze{
         MazeCeilingScale=1,
         
         EnableFog=false,
-        FogColor=0x000000,
-        FogNear=1000,
-        FogFar=2000,
+        FogColor= 0x000000,
+        FogNear=100,
+        FogFar=1000,
         
         MazeTexturePack=null,
         ){
@@ -851,10 +851,10 @@ class Windows95Maze{
     }
     
     CreateFog(){
-        var Fog = new THREE.Fog(this.FogColor, this.FogNear, this.FogFar);
-        //this.MazeActors.push(Fog);
-        this.MazeScene.fog = Fog;
-        this.MazeScene.background = THREE.Color(this.FogColor);
+        const color = new THREE.Color(this.FogColor);
+        this.MazeScene.fog = new THREE.Fog(color, this.FogNear, this.FogFar);
+        
+        this.MazeScene.background = color;
     }
     
     CreateLights(){
