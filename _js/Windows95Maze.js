@@ -936,9 +936,9 @@ class Windows95Maze{
         ));
         StartActor.mesh.material.transparent=true;
         StartActor.mesh.material.opacity=0.5;
-        StartActor.mesh.scale.x = 1.25;
+        //StartActor.mesh.scale.x = 1.25;
         //StartActor.mesh.scale.y = 0.05;
-        StartActor.sizeY = 2;
+        //StartActor.sizeY = 2;
         this.MazeScene.add(StartActor.mesh);
         StartActor.tick = function()
         {
