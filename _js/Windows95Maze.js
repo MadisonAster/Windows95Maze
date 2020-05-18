@@ -742,7 +742,7 @@ class Windows95Maze{
                 {
                     var mesh = new THREE.Mesh( new THREE.CubeGeometry(this.MazeCellSize, this.MazeHeight, 0, 0, 0, 0) );
                     mesh.position.x = -((x+1)*this.MazeCellSize) + (this.MazeCellSize/2);
-                    mesh.position.y = 100;
+                    mesh.position.y = this.MazeHeight/2;
                     mesh.position.z = -( y*this.MazeCellSize )//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                     if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
@@ -759,7 +759,7 @@ class Windows95Maze{
                 {
                     mesh = new THREE.Mesh( new THREE.CubeGeometry(0, this.MazeHeight, this.MazeCellSize, 0, 0, 0) );
                     mesh.position.x = -((x)*this.MazeCellSize)// - (this.MazeCellSize/2);
-                    mesh.position.y = 100;
+                    mesh.position.y = this.MazeHeight/2;
                     mesh.position.z = -( ((y+1)*this.MazeCellSize) - (this.MazeCellSize/2) );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                     if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
@@ -775,7 +775,7 @@ class Windows95Maze{
                 {
                     mesh = new THREE.Mesh( new THREE.CubeGeometry(this.MazeCellSize, this.MazeHeight, 0, 0, 0, 0) );
                     mesh.position.x = -(((x+1)*this.MazeCellSize) - (this.MazeCellSize/2));
-                    mesh.position.y = 100;
+                    mesh.position.y = this.MazeHeight/2;
                     mesh.position.z = -( (y+1)*this.MazeCellSize );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                     if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
@@ -791,7 +791,7 @@ class Windows95Maze{
                 {
                     mesh = new THREE.Mesh( new THREE.CubeGeometry(0, this.MazeHeight, this.MazeCellSize, 0, 0, 0) );
                     mesh.position.x = -((x+1)*this.MazeCellSize)// - (this.MazeCellSize/2);
-                    mesh.position.y = 100;
+                    mesh.position.y = this.MazeHeight/2;
                     mesh.position.z = - ( ((y+1)*this.MazeCellSize) - (this.MazeCellSize/2) );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                     if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
