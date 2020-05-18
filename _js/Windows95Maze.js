@@ -27,6 +27,11 @@ class Windows95Maze{
         MazeFloorScale=1,
         MazeCeilingScale=1,
         
+        EnableFog=false,
+        FogColor=0x000000,
+        FogNear=1000,
+        FogFar=2000,
+        
         MazeTexturePack=null,
         ){
         ///////User Settings//////
@@ -60,6 +65,11 @@ class Windows95Maze{
         this.MazeCameraInitY = MazeCameraInitY;
         this.MazeFloorScale = MazeFloorScale;
         this.MazeCeilingScale = MazeCeilingScale;
+        
+        this.EnableFog = EnableFog;
+        this.FogColor = FogColor;
+        this.FogNear = FogNear;
+        this.FogFar = FogFar;
         
         this.MazeTotalWidth = this.MazeWidth*this.MazeCellSize;
         this.MazeTotalDepth = this.MazeDepth*this.MazeCellSize;
@@ -719,6 +729,8 @@ class Windows95Maze{
         if (this.EnableStart){      this.MazeActors.push(this.Start(this.MazeCamera.position.x,this.MazeHeight/2,this.MazeCamera.position.z+100))};
         //if (this.EnableEnd){        this.MazeActors.push(this.End(-this.MazeTotalWidth+(this.MazeCellSize/2),this.MazeHeight/2,-this.MazeTotalDepth+(this.MazeCellSize/2)))};
         if (this.EnableEnd){        this.MazeActors.push(this.End(0-(this.MazeCellSize/2),this.MazeHeight/2,0-(this.MazeCellSize/2)))};
+        
+        if (this.EnableFog){        this.CreateFog()};
     }
     
     GetRandomCellPos(Y=0){
@@ -836,6 +848,11 @@ class Windows95Maze{
         this.MazeActors.push(MazeWallsActor);
         this.MazeActors.push(MazeCoolWallsActor);
         
+    }
+    
+    CreateFog(){
+        var Fog = new THREE.Fog(this.FogColor, this.FogNear, this.FogFar);
+        this.MazeActors.push(Fog);
     }
     
     CreateLights(){
