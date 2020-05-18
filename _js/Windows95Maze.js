@@ -820,8 +820,8 @@ class Windows95Maze{
         
         MazeWallsActor.sizeY = 1;
         MazeCoolWallsActor.sizeY = 1;
-        this.MazeWallsMesh.scale.y = .05;
-        this.MazeCoolWallsMesh.scale.y = .05;
+        //this.MazeWallsMesh.scale.y = .05;
+        //this.MazeCoolWallsMesh.scale.y = .05;
         
         MazeWallsActor.mesh = this.MazeWallsMesh;
         MazeCoolWallsActor.mesh = this.MazeCoolWallsMesh;
@@ -913,7 +913,7 @@ class Windows95Maze{
         StartActor.mesh.material.transparent=true;
         StartActor.mesh.material.opacity=0.5;
         StartActor.mesh.scale.x = 1.25;
-        StartActor.mesh.scale.y = 0.05;
+        //StartActor.mesh.scale.y = 0.05;
         StartActor.sizeY = 2;
         this.MazeScene.add(StartActor.mesh);
         StartActor.tick = function()
@@ -932,7 +932,7 @@ class Windows95Maze{
         EndActor.mesh.material.transparent=true;
         EndActor.mesh.material.opacity=0.5;
         EndActor.mesh.scale.x = 1.25;
-        EndActor.mesh.scale.y = 0.05;
+        //EndActor.mesh.scale.y = 0.05;
         EndActor.sizeY = 1.25;
         this.MazeScene.add(EndActor.mesh)
         EndActor.tick = function()
