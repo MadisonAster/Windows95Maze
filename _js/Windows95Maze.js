@@ -1052,7 +1052,7 @@ class Windows95Maze{
             //return;
             RatActor.mesh.rotation.y = this.MazeCamera.rotation.y;
             if(!RatActor.m)
-            {d
+            {
                 var randey = Math.randomint(0,3);
                 switch(randey)
                 {
