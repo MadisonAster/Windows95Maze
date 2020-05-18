@@ -1032,7 +1032,7 @@ class Windows95Maze{
     Rat(X,Y,Z){
         var RatActor = new Actor(X,Y,Z);
         RatActor.AddMesh(new THREE.Mesh(
-            new THREE.CubeGeometry( 100, 50, 0, 1, 1, 1, null),
+            new THREE.CubeGeometry( 100, 100, 0, 1, 1, 1, null),
             new THREE.MeshBasicMaterial({map: this.MazeRatTexture})
         ));
         
