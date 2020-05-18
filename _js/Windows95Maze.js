@@ -916,7 +916,7 @@ class Windows95Maze{
     CreateSignActors(){
         for(var i=0;i<this.MazeSigns;++i)
         {
-            this.MazeActors.push(this.OpenGLSign(...this.GetRandomCellPos(100)));
+            this.MazeActors.push(this.OpenGLSign(...this.GetRandomCellPos(Y=this.MazeHeight/2)));
         }
     }
     
