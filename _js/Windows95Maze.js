@@ -852,7 +852,9 @@ class Windows95Maze{
     
     CreateFog(){
         var Fog = new THREE.Fog(this.FogColor, this.FogNear, this.FogFar);
-        this.MazeActors.push(Fog);
+        //this.MazeActors.push(Fog);
+        this.MazeScene.fog = Fog;
+        this.MazeScene.background = THREE.Color(this.FogColor);
     }
     
     CreateLights(){
