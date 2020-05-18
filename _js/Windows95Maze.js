@@ -88,7 +88,8 @@ class Windows95Maze{
         this.Maze = this.GenerateMaze(this.MazeWidth,this.MazeDepth);
         this.MazePosX = Math.round(this.MazeWidth/2);
         this.MazePosY = 0;
-        this.MazePosZ = this.MazeDepth-1;
+        //this.MazePosZ = this.MazeDepth-1;
+        this.MazePosZ = Math.round(this.MazeDepth/2);
         //////////////////////////
         
         ////////DOM Element///////
