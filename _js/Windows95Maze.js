@@ -39,8 +39,9 @@ class Windows95Maze{
         WallsShininess=30,
         
         LightColor=0xFFFFFF,
-        LightIntensity=40,
-        LightDecay=0.5,
+        LightIntensity=1,
+        LightDecay=1,
+        LightDistance=0,
         
         MazeTexturePack=null,
         ){
@@ -90,6 +91,7 @@ class Windows95Maze{
         this.LightColor = LightColor;
         this.LightIntensity = LightIntensity;
         this.LightDecay = LightDecay;
+        this.LightDistance = LightDistance;
         
         this.MazeTotalWidth = this.MazeWidth*this.MazeCellSize;
         this.MazeTotalDepth = this.MazeDepth*this.MazeCellSize;
@@ -917,6 +919,7 @@ class Windows95Maze{
             color:this.LightColor,
             intensity:this.LightIntensity,
             decay:this.LightDecay,
+            distance:this.LightDistance,
             });
         LightActor.tick = function(){
             LightActor.PointLight.position.x = this.MazeCamera.position.x;
