@@ -54,6 +54,7 @@ class Windows95Maze{
         this.PackagePath = this.GetPackagePath();
         this.MazeTexturePack = MazeTexturePack;
         this.MazeCoolWallList = MazeCoolWallList;
+        this.MazeCoolWallTextures = new Array();
         if (this.MazeTexturePack == null){
             this.MazeTexturePack = this.PackagePath+'/_Assets';
         };
@@ -172,7 +173,7 @@ class Windows95Maze{
         
         if (this.MazeCoolWallList != null){
             for (var i=0;i<this.MazeCoolWallList.length;++i){
-                this.CreateTexturePromise(this.MazeCoolWallList[i]);
+                this.CreateTexturePromise(this.MazeCoolWallList[i]).then(function(texture){this.MazeCoolWallTextures.push(texture)}.bind(this));
             }
         }
         
@@ -835,8 +836,9 @@ class Windows95Maze{
         };
         
         if(this.EnableGlobe){
-            var CoolTexture = this.MazeGlobeTexture;
+            //var CoolTexture = this.MazeGlobeTexture;
             //var CoolTexture = this.MazeCoolWallList[0];
+            var CoolTexture = this.MazeCoolWallTextures[0];
             console.log(this.MazeCoolWallList);
             this.MazeCoolWallsMaterial = new THREE.MeshBasicMaterial({map: CoolTexture});
             
