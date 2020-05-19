@@ -37,6 +37,7 @@ class Windows95Maze{
         WallsEmissiveIntensity=0.0,
         WallsSpecular=0x111111,
         WallsShininess=30,
+        CoolWallRarity=10,
         
         LightColor=0xFFFFFF,
         LightIntensity=1,
@@ -89,6 +90,7 @@ class Windows95Maze{
         this.WallsEmissiveIntensity = WallsEmissiveIntensity;
         this.WallsSpecular = WallsSpecular;
         this.WallsShininess = WallsShininess;
+        this.CoolWallRarity = CoolWallRarity;
         
         this.LightColor = LightColor;
         this.LightIntensity = LightIntensity;
@@ -809,7 +811,7 @@ class Windows95Maze{
                     mesh.position.z = - ( ((y+1)*this.MazeCellSize) - (this.MazeCellSize/2) );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                 };
-                if(!Math.randomint(0,4) && this.EnableGlobe){
+                if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
                     this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                 } else {
                     this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
