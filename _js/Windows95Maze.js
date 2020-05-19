@@ -743,7 +743,7 @@ class Windows95Maze{
         if(this.EnableCeiling){     this.CreateCeiling()};
         if(this.EnableWalls){       this.CreateWalls()};
         this.CreateCameras();
-        this.CreateLights();
+        //this.CreateLights();
         
         if (this.EnableRats){       this.CreateRatActors()};
         if (this.EnableSigns){      this.CreateSignActors()};
