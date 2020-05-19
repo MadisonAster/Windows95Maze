@@ -901,7 +901,8 @@ class Windows95Maze{
         
         LightActor.PointLight = new THREE.PointLight({
             color:0xFFFFFF,
-            intensity:2,
+            intensity:4,
+            decay:2,
             });
         LightActor.tick = function(){
             LightActor.PointLight.position.x = this.MazeCamera.position.x;
