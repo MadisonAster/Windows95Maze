@@ -916,7 +916,18 @@ class Windows95Maze{
         this.MazeFloorTexture.offset.y = 0;
         this.MazeFloorTexture.repeat.x = (this.MazeTotalWidth)/this.MazeFloorTexture.image.width/this.MazeFloorScale;
         this.MazeFloorTexture.repeat.y = (this.MazeTotalDepth)/this.MazeFloorTexture.image.height/this.MazeFloorScale;
-        this.MazeFloorMaterial = new THREE.MeshBasicMaterial({map: this.MazeFloorTexture});
+        
+        if (this.WallsMaterialType == 'Basic'){
+            this.MazeFloorMaterial = new THREE.MeshBasicMaterial({map: this.MazeFloorTexture});
+        } else if (this.WallsMaterialType == 'Lambert'){
+            this.MazeFloorMaterial = new THREE.MeshLambertMaterial({
+                map: this.MazeFloorTexture,
+                emissive: this.WallsEmissiveColor,
+                emissiveIntensity: this.WallsEmissiveIntensity,
+                emissiveMap: this.MazeFloorTexture,
+            });
+        };
+        
         this.MazeFloorMesh = new THREE.Mesh(this.MazeFloorGeometry, this.MazeFloorMaterial);
         this.MazeFloorMesh.position.z = -(this.MazeTotalDepth/2);
         this.MazeFloorMesh.position.y = 0;
@@ -931,7 +942,18 @@ class Windows95Maze{
         this.MazeCeilTexture.offset.y = 0;
         this.MazeCeilTexture.repeat.x = (this.MazeTotalWidth)/this.MazeCeilTexture.image.width/this.MazeCeilingScale;
         this.MazeCeilTexture.repeat.y = (this.MazeTotalDepth)/this.MazeCeilTexture.image.height/this.MazeCeilingScale;
-        this.MazeCeilMaterial = new THREE.MeshBasicMaterial({map: this.MazeCeilTexture});
+        
+        if (this.WallsMaterialType == 'Basic'){
+            this.MazeCeilMaterial = new THREE.MeshBasicMaterial({map: this.MazeCeilTexture});
+        } else if (this.WallsMaterialType == 'Lambert'){
+            this.MazeCeilMaterial = new THREE.MeshLambertMaterial({
+                map: this.MazeCeilTexture,
+                emissive: this.WallsEmissiveColor,
+                emissiveIntensity: this.WallsEmissiveIntensity,
+                emissiveMap: this.MazeCeilTexture,
+            });
+        };
+        
         this.MazeCeilMesh = new THREE.Mesh(this.MazeCeilGeometry, this.MazeCeilMaterial);
         this.MazeCeilMesh.position.z = -(this.MazeTotalDepth / 2);
         this.MazeCeilMesh.position.y = this.MazeHeight;
