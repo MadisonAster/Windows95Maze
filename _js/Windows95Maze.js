@@ -865,6 +865,7 @@ class Windows95Maze{
                 emissive: this.WallsEmissiveColor,
                 emissiveIntensity: this.WallsEmissiveIntensity,
                 emissiveMap: this.MazeWallTexture,
+                specular: 0xFFFFFF,
                 shininess: 15,
                 });
             if(this.EnableGlobe){
