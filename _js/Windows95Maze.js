@@ -828,7 +828,7 @@ class Windows95Maze{
         MazeCoolWallsActor.tick = function(){}.bind(this);
         
         //this.MazeWallsMesh = new THREE.Mesh(this.MazeCombinedWalls, new THREE.MeshBasicMaterial({
-        this.MazeWallsMesh = new THREE.Mesh(this.MazeCombinedWalls, new THREE.MeshLamberMaterial({
+        this.MazeWallsMesh = new THREE.Mesh(this.MazeCombinedWalls, new THREE.MeshLambertMaterial({
                                                                                                 map: this.MazeWallTexture,
                                                                                                 
                                                                                                 }));
