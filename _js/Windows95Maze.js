@@ -866,7 +866,7 @@ class Windows95Maze{
                 emissiveIntensity: this.WallsEmissiveIntensity,
                 emissiveMap: this.MazeWallTexture,
                 specular: 0xFFFFFF,
-                shininess: 15,
+                shininess: 8,
                 });
             if(this.EnableGlobe){
                 this.MazeCoolWallsMaterial = new THREE.MeshPhongMaterial({
