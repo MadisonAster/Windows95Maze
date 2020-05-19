@@ -859,6 +859,18 @@ class Windows95Maze{
                     map: CoolTexture,
                     });
             };
+        } else if (this.WallsMaterialType == 'Phong'){
+            this.MazeWallsMaterial = new THREE.MeshPhongMaterial({
+                map: this.MazeWallTexture,
+                emissive: this.WallsEmissiveColor,
+                emissiveIntensity: this.WallsEmissiveIntensity,
+                emissiveMap: this.MazeWallTexture,
+                });
+            if(this.EnableGlobe){
+                this.MazeCoolWallsMaterial = new THREE.MeshPhongMaterial({
+                    map: CoolTexture,
+                    });
+            };
         };
         this.MazeWallsMesh = new THREE.Mesh(this.MazeCombinedWalls, this.MazeWallsMaterial);
         if(this.EnableGlobe){
@@ -926,7 +938,14 @@ class Windows95Maze{
                 emissiveIntensity: this.WallsEmissiveIntensity,
                 emissiveMap: this.MazeFloorTexture,
             });
-        };
+        } else if (this.WallsMaterialType == 'Phong'){
+            this.MazeFloorMaterial = new THREE.MeshPhongMaterial({
+                map: this.MazeFloorTexture,
+                emissive: this.WallsEmissiveColor,
+                emissiveIntensity: this.WallsEmissiveIntensity,
+                emissiveMap: this.MazeFloorTexture,
+            });
+        }
         
         this.MazeFloorMesh = new THREE.Mesh(this.MazeFloorGeometry, this.MazeFloorMaterial);
         this.MazeFloorMesh.position.z = -(this.MazeTotalDepth/2);
@@ -947,6 +966,13 @@ class Windows95Maze{
             this.MazeCeilMaterial = new THREE.MeshBasicMaterial({map: this.MazeCeilTexture});
         } else if (this.WallsMaterialType == 'Lambert'){
             this.MazeCeilMaterial = new THREE.MeshLambertMaterial({
+                map: this.MazeCeilTexture,
+                emissive: this.WallsEmissiveColor,
+                emissiveIntensity: this.WallsEmissiveIntensity,
+                emissiveMap: this.MazeCeilTexture,
+            });
+        } else if (this.WallsMaterialType == 'Phong'){
+            this.MazeCeilMaterial = new THREE.MeshPhongMaterial({
                 map: this.MazeCeilTexture,
                 emissive: this.WallsEmissiveColor,
                 emissiveIntensity: this.WallsEmissiveIntensity,
