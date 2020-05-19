@@ -32,6 +32,8 @@ class Windows95Maze{
         FogNear=100,
         FogFar=1000,
         
+        WallsMaterialType='Basic',
+        
         MazeTexturePack=null,
         ){
         ///////User Settings//////
@@ -70,6 +72,8 @@ class Windows95Maze{
         this.FogColor = FogColor;
         this.FogNear = FogNear;
         this.FogFar = FogFar;
+        
+        this.WallsMaterialType = WallsMaterialType;
         
         this.MazeTotalWidth = this.MazeWidth*this.MazeCellSize;
         this.MazeTotalDepth = this.MazeDepth*this.MazeCellSize;
@@ -827,16 +831,26 @@ class Windows95Maze{
         MazeWallsActor.tick = function(){}.bind(this);
         MazeCoolWallsActor.tick = function(){}.bind(this);
         
-        //this.MazeWallsMesh = new THREE.Mesh(this.MazeCombinedWalls, new THREE.MeshBasicMaterial({
-        this.MazeWallsMesh = new THREE.Mesh(this.MazeCombinedWalls, new THREE.MeshLambertMaterial({
-                                                                                                map: this.MazeWallTexture,
-                                                                                                
-                                                                                                }));
+        
         if(this.EnableGlobe){
-            this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, new THREE.MeshBasicMaterial({map: this.MazeGlobeTexture}));
+            var CoolTexture = this.MazeGlobeTexture;
         } else {
-            this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, new THREE.MeshBasicMaterial({map: this.MazeWallTexture}));
+            var CoolTexture = this.MazeWallTexture;
         };
+        if (this.WallsMaterialType == 'Basic'){
+            this.MazeWallsMaterial = new THREE.MeshBasicMaterial({map: this.MazeWallTexture});
+            this.MazeCoolWallsMaterial = new THREE.MeshBasicMaterial({map: CoolTexture});
+        } else if (this.WallsMaterialType == 'Lambert'){
+            this.MazeWallsMaterial = new THREE.MeshLambertMaterial({
+                map: this.MazeWallTexture,
+                });
+            this.MazeCoolWallsMaterial = new THREE.MeshLambertMaterial({
+                map: CoolTexture,
+                });
+        };
+        this.MazeWallsMesh = new THREE.Mesh(this.MazeCombinedWalls, this.MazeWallsMaterial);
+        this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, this.MazeCoolWallsMaterial);
+        
         
         MazeWallsActor.sizeY = 1;
         MazeCoolWallsActor.sizeY = 1;
