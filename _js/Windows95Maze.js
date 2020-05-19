@@ -166,26 +166,30 @@ class Windows95Maze{
         if(this.EnableFloor){   this.CreateTexturePromise(this.MazeFloorImagePath).then(function(texture){this.MazeFloorTexture = texture}.bind(this))};
         if(this.EnableCeiling){ this.CreateTexturePromise(this.MazeCeilImagePath).then(function(texture){this.MazeCeilTexture = texture}.bind(this))};
         if(this.EnableWalls){   this.CreateTexturePromise(this.MazeWallImagePath).then(function(texture){this.MazeWallTexture = texture}.bind(this))};
-        if(this.EnableGlobe){   this.CreateTexturePromise(this.MazeGlobeImagePath).then(function(texture){
-            this.MazeGlobeTexture = texture
-            this.MazeGlobeMaterial = new THREE.MeshBasicMaterial({map: this.MazeGlobeTexture});
-        }.bind(this))};
+        
         if(this.EnableStart){   this.CreateTexturePromise(this.MazeStartImagePath).then(function(texture){this.MazeStartTexture = texture}.bind(this))};
         if(this.EnableEnd){     this.CreateTexturePromise(this.MazeEndImagePath).then(function(texture){this.MazeEndTexture = texture}.bind(this))};
         if(this.EnableRats){    this.CreateTexturePromise(this.MazeRatImagePath).then(function(texture){this.MazeRatTexture = texture}.bind(this))};
         if(this.EnableSigns){   this.CreateTexturePromise(this.MazeOpenGLImagePath).then(function(texture){this.MazeOpenGLTexture = texture}.bind(this))};
         
+        
+        if(this.EnableGlobe){   };
         if (this.MazeCoolWallList != null){
             for (var i=0;i<this.MazeCoolWallList.length;++i){
                 this.CreateTexturePromise(this.MazeCoolWallList[i]).then(function(texture){
                     this.MazeCoolWallTextures.push(texture);
                     this.MazeCoolWallMaterials.push(new THREE.MeshBasicMaterial({map: texture}));
                 }.bind(this));
-            }
-        }
+            };
+        } else {
+            this.CreateTexturePromise(this.MazeGlobeImagePath).then(function(texture){
+            this.MazeCoolWallTextures.push(texture);
+            this.MazeCoolWallMaterials.push(new THREE.MeshBasicMaterial({map: texture}));
+            }.bind(this));
+        };
         
-        var promise = Promise.all(this.AllPromises)
-        return promise
+        var promise = Promise.all(this.AllPromises);
+        return promise;
     }
     
     //////////////Setup///////////////
@@ -784,23 +788,6 @@ class Windows95Maze{
         this.UsedCells.push([X, Z]);
         return [X, Y, Z];
     }
-        
-    GetCoolMaterial(){
-        if (this.MazeCoolWallList != null){
-            var coolindex = Math.randomint(0,this.MazeCoolWallMaterials.length);
-            return this.MazeCoolWallMaterials[coolindex];
-        } else {
-            return this.MazeGlobeMaterial;
-        }
-    }
-    
-    GetCoolMaterials(){
-        if (this.MazeCoolWallList != null){
-            return this.MazeCoolWallMaterials;
-        } else {
-            return this.MazeGlobeMaterial;
-        }
-    }
     
     MergeMeshes (meshArr) {
         var geometry = new THREE.Geometry(),
@@ -899,12 +886,14 @@ class Windows95Maze{
                     mesh.updateMatrix();
                     this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
                     if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
+                        var coolindex = Math.randomint(0,this.MazeCoolWallMaterials.length);
+                        var cooltexture = this.MazeCoolWallTextures[coolindex];
+                        
                         var mesh = new THREE.Mesh( new THREE.CubeGeometry(2, this.MazeHeight, this.MazeCellSize, 0, 0, 0) );
                         mesh.position.x = -((x+1)*this.MazeCellSize);// - (this.MazeCellSize/2);
                         mesh.position.y = this.MazeHeight/2;
                         mesh.position.z = - ( ((y+1)*this.MazeCellSize) - (this.MazeCellSize/2) );//(this.MazeDepth*this.MazeCellSize) - y;
                         mesh.updateMatrix();
-                        var coolindex = Math.randomint(0,this.MazeCoolWallMaterials.length);
                         for(var i=0;i<mesh.geometry.faces.length;++i){
                             mesh.geometry.faces[i].materialIndex = coolindex;
                         }
@@ -918,7 +907,7 @@ class Windows95Maze{
             var MazeCoolWallsActor = new Actor(0,0,0);
             MazeCoolWallsActor.tick = function(){}.bind(this);
             MazeCoolWallsActor.sizeY = 1;
-            this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, this.GetCoolMaterials());
+            this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, this.MazeCoolWallMaterials);
             this.MazeCoolWallsMesh.scale.y = .05; //For Intro animation
             MazeCoolWallsActor.mesh = this.MazeCoolWallsMesh;
             this.MazeScene.add(this.MazeCoolWallsMesh);
