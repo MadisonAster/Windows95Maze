@@ -835,8 +835,8 @@ class Windows95Maze{
         };
         
         if(this.EnableGlobe){
-            var CoolTexture = this.MazeGlobeTexture;
-            //var CoolTexture = this.MazeCoolWallList[10];
+            //var CoolTexture = this.MazeGlobeTexture;
+            var CoolTexture = this.MazeCoolWallList[10];
             this.MazeCoolWallsMaterial = new THREE.MeshBasicMaterial({map: CoolTexture});
             
             var MazeCoolWallsActor = new Actor(0,0,0);
