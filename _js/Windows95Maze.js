@@ -44,6 +44,7 @@ class Windows95Maze{
         LightDistance=0,
         
         MazeTexturePack=null,
+        MazeCoolWallList=null,
         ){
         ///////User Settings//////
         this.MazeWidth = MazeWidth;
@@ -51,6 +52,7 @@ class Windows95Maze{
         
         this.PackagePath = this.GetPackagePath();
         this.MazeTexturePack = MazeTexturePack;
+        this.MazeCoolWallList = MazeCoolWallList;
         if (this.MazeTexturePack == null){
             this.MazeTexturePack = this.PackagePath+'/_Assets';
         };
@@ -165,6 +167,12 @@ class Windows95Maze{
         if(this.EnableEnd){     this.CreateTexturePromise(this.MazeEndImagePath).then(function(texture){this.MazeEndTexture = texture}.bind(this))};
         if(this.EnableRats){    this.CreateTexturePromise(this.MazeRatImagePath).then(function(texture){this.MazeRatTexture = texture}.bind(this))};
         if(this.EnableSigns){   this.CreateTexturePromise(this.MazeOpenGLImagePath).then(function(texture){this.MazeOpenGLTexture = texture}.bind(this))};
+        
+        if (this.MazeCoolWallList != null){
+            for (var i=0;i<this.MazeCoolWallList.length;++i){
+                this.CreateTexturePromise(this.MazeCoolWallList[i]);
+            }
+        }
         
         var promise = Promise.all(this.AllPromises)
         return promise
