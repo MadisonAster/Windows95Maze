@@ -789,6 +789,11 @@ class Windows95Maze{
                     mesh.position.y = this.MazeHeight/2;
                     mesh.position.z = -( y*this.MazeCellSize )//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
+                    if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
+                    } else {
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                    };
                 };
                 if(this.MazeRows[y][x].left) {
                     mesh = new THREE.Mesh( new THREE.CubeGeometry(0, this.MazeHeight, this.MazeCellSize, 0, 0, 0) );
@@ -796,6 +801,11 @@ class Windows95Maze{
                     mesh.position.y = this.MazeHeight/2;
                     mesh.position.z = -( ((y+1)*this.MazeCellSize) - (this.MazeCellSize/2) );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
+                    if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
+                    } else {
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                    };
                 };
                 if(this.MazeRows[y][x].down && y==this.MazeDepth-1) {//It only does this on the outside so that there aren't cloned walls all over
                     mesh = new THREE.Mesh( new THREE.CubeGeometry(this.MazeCellSize, this.MazeHeight, 0, 0, 0, 0) );
@@ -803,6 +813,11 @@ class Windows95Maze{
                     mesh.position.y = this.MazeHeight/2;
                     mesh.position.z = -( (y+1)*this.MazeCellSize );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
+                    if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
+                    } else {
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                    };
                 };
                 if(this.MazeRows[y][x].right && x==this.MazeWidth-1) {//Ditto
                     mesh = new THREE.Mesh( new THREE.CubeGeometry(0, this.MazeHeight, this.MazeCellSize, 0, 0, 0) );
@@ -810,11 +825,11 @@ class Windows95Maze{
                     mesh.position.y = this.MazeHeight/2;
                     mesh.position.z = - ( ((y+1)*this.MazeCellSize) - (this.MazeCellSize/2) );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
-                };
-                if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
-                    this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
-                } else {
-                    this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                    if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
+                    } else {
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                    };
                 };
             };
         };
