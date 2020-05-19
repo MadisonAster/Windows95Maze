@@ -854,36 +854,30 @@ class Windows95Maze{
             }
         }
         
-        var MazeWallsActor = new Actor(0,0,0);
-        MazeWallsActor.tick = function(){}.bind(this);
-        MazeWallsActor.sizeY = 1;
-        
         if(this.EnableGlobe){
+            var CoolTexture = this.MazeGlobeTexture;
+            //var CoolTexture = this.MazeCoolWallList[10];
+            this.MazeCoolWallsMaterial = new THREE.MeshBasicMaterial({map: CoolTexture});
+            
             var MazeCoolWallsActor = new Actor(0,0,0);
             MazeCoolWallsActor.tick = function(){}.bind(this);
             MazeCoolWallsActor.sizeY = 1;
-            var CoolTexture = this.MazeGlobeTexture;
-            //var CoolTexture = this.MazeCoolWallList[10];
-        } else {
-            var CoolTexture = this.MazeWallTexture;
+            this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, this.MazeCoolWallsMaterial);
+            this.MazeCoolWallsMesh.scale.y = .05; //For Intro animation
+            MazeCoolWallsActor.mesh = this.MazeCoolWallsMesh;
+            this.MazeScene.add(this.MazeCoolWallsMesh);
+            this.MazeActors.push(MazeCoolWallsActor);
         };
+        
         if (this.WallsMaterialType == 'Basic'){
             this.MazeWallsMaterial = new THREE.MeshBasicMaterial({map: this.MazeWallTexture});
-            if(this.EnableGlobe){
-                this.MazeCoolWallsMaterial = new THREE.MeshBasicMaterial({map: CoolTexture});
-            };
         } else if (this.WallsMaterialType == 'Lambert'){
             this.MazeWallsMaterial = new THREE.MeshLambertMaterial({
                 map: this.MazeWallTexture,
                 emissive: this.WallsEmissiveColor,
                 emissiveIntensity: this.WallsEmissiveIntensity,
                 emissiveMap: this.MazeWallTexture,
-                });
-            if(this.EnableGlobe){
-                this.MazeCoolWallsMaterial = new THREE.MeshBasicMaterial({
-                    map: CoolTexture,
-                    });
-            };
+            });
         } else if (this.WallsMaterialType == 'Phong'){
             this.MazeWallsMaterial = new THREE.MeshPhongMaterial({
                 map: this.MazeWallTexture,
@@ -892,23 +886,12 @@ class Windows95Maze{
                 emissiveMap: this.MazeWallTexture,
                 specular: this.WallsSpecular,
                 shininess: this.WallsShininess,
-                });
-            if(this.EnableGlobe){
-                this.MazeCoolWallsMaterial = new THREE.MeshBasicMaterial({
-                    map: CoolTexture,
-                    });
-            };
+            });
         };
+        var MazeWallsActor = new Actor(0,0,0);
+        MazeWallsActor.tick = function(){}.bind(this);
+        MazeWallsActor.sizeY = 1;
         this.MazeWallsMesh = new THREE.Mesh(this.MazeCombinedWalls, this.MazeWallsMaterial);
-        if(this.EnableGlobe){
-            this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, this.MazeCoolWallsMaterial);
-            this.MazeCoolWallsMesh.scale.y = .05; //For Intro animation
-            MazeCoolWallsActor.mesh = this.MazeCoolWallsMesh;
-            this.MazeScene.add(this.MazeCoolWallsMesh);
-            this.MazeActors.push(MazeCoolWallsActor);
-        };
-        
-        
         this.MazeWallsMesh.scale.y = .05; //For Intro animation
         MazeWallsActor.mesh = this.MazeWallsMesh;
         this.MazeScene.add(this.MazeWallsMesh);
