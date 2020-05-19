@@ -794,6 +794,37 @@ class Windows95Maze{
         }
     }
     
+    GetCoolMaterials(){
+        if (this.MazeCoolWallList != null){
+            return this.MazeCoolWallMaterials;
+        } else {
+            return this.MazeGlobeMaterial;
+        }
+    }
+    
+    MergeMeshes (meshArr) {
+        var geometry = new THREE.Geometry(),
+            materials = [],
+            m,
+            materialPointer = 0,
+            reindex = 0;
+
+        for (var i = 0; i < meshArr.length; i++) {
+            m = meshArr[i];
+
+            if (m.material.materials) {
+                for (var j = 0; j < m.material.materials.length; j++) {
+                    materials[materialPointer++] = m.material.materials[j];
+                }
+            } else if (m.material) {
+                materials[materialPointer++] = m.material;
+            }
+            geometry.merge(m.geometry, m.matrix, reindex);
+            reindex = materialPointer;
+        }
+        return new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+    }
+    
     CreateWalls(){
         this.MazeCombinedWalls = new THREE.Geometry();
         this.MazeCoolWalls = new THREE.Geometry();
@@ -855,7 +886,8 @@ class Windows95Maze{
             var MazeCoolWallsActor = new Actor(0,0,0);
             MazeCoolWallsActor.tick = function(){}.bind(this);
             MazeCoolWallsActor.sizeY = 1;
-            this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, this.GetCoolMaterial());
+            //this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, this.GetCoolMaterial());
+            this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, this.GetCoolMaterials());
             this.MazeCoolWallsMesh.scale.y = .05; //For Intro animation
             MazeCoolWallsActor.mesh = this.MazeCoolWallsMesh;
             this.MazeScene.add(this.MazeCoolWallsMesh);
