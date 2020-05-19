@@ -826,11 +826,13 @@ class Windows95Maze{
                     mesh.updateMatrix();
                     if(!Math.randomint(0,this.MazeWidth*this.MazeDepth) && this.EnableGlobe)
                     {
-                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
+                        //this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
                     }
                     else
                     {
-                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                        //this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);   
                     }
                 }
                 if(this.MazeRows[y][x].right && x==this.MazeWidth-1) //Ditto
@@ -878,7 +880,7 @@ class Windows95Maze{
                 emissiveMap: this.MazeWallTexture,
                 });
             if(this.EnableGlobe){
-                this.MazeCoolWallsMaterial = new THREE.MeshLambertMaterial({
+                this.MazeCoolWallsMaterial = new THREE.MeshBasicMaterial({
                     map: CoolTexture,
                     });
             };
@@ -892,7 +894,7 @@ class Windows95Maze{
                 shininess: this.WallsShininess,
                 });
             if(this.EnableGlobe){
-                this.MazeCoolWallsMaterial = new THREE.MeshPhongMaterial({
+                this.MazeCoolWallsMaterial = new THREE.MeshBasicMaterial({
                     map: CoolTexture,
                     });
             };
