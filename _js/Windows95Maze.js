@@ -35,6 +35,8 @@ class Windows95Maze{
         WallsMaterialType='Basic',
         WallsEmissiveColor=0x000000,
         WallsEmissiveIntensity=0.0,
+        WallsSpecular=0x111111,
+        WallsShininess=30,
         
         MazeTexturePack=null,
         ){
@@ -78,6 +80,8 @@ class Windows95Maze{
         this.WallsMaterialType = WallsMaterialType;
         this.WallsEmissiveColor = WallsEmissiveColor;
         this.WallsEmissiveIntensity = WallsEmissiveIntensity;
+        this.WallsSpecular = WallsSpecular;
+        this.WallsShininess = WallsShininess;
         
         this.MazeTotalWidth = this.MazeWidth*this.MazeCellSize;
         this.MazeTotalDepth = this.MazeDepth*this.MazeCellSize;
@@ -865,8 +869,8 @@ class Windows95Maze{
                 emissive: this.WallsEmissiveColor,
                 emissiveIntensity: this.WallsEmissiveIntensity,
                 emissiveMap: this.MazeWallTexture,
-                specular: 0xFFFFFF,
-                shininess: 2,
+                specular: this.WallsSpecular,
+                shininess: this.WallsShininess,
                 });
             if(this.EnableGlobe){
                 this.MazeCoolWallsMaterial = new THREE.MeshPhongMaterial({
@@ -950,6 +954,8 @@ class Windows95Maze{
                 emissive: this.WallsEmissiveColor,
                 emissiveIntensity: this.WallsEmissiveIntensity,
                 emissiveMap: this.MazeFloorTexture,
+                specular: this.WallsSpecular,
+                shininess: this.WallsShininess,
             });
         }
         
@@ -983,6 +989,8 @@ class Windows95Maze{
                 emissive: this.WallsEmissiveColor,
                 emissiveIntensity: this.WallsEmissiveIntensity,
                 emissiveMap: this.MazeCeilTexture,
+                specular: this.WallsSpecular,
+                shininess: this.WallsShininess,
             });
         };
         
