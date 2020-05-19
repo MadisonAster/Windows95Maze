@@ -38,6 +38,10 @@ class Windows95Maze{
         WallsSpecular=0x111111,
         WallsShininess=30,
         
+        LightColor=0xFFFFFF,
+        LightIntensity=40,
+        LightDecay=0.5,
+        
         MazeTexturePack=null,
         ){
         ///////User Settings//////
@@ -82,6 +86,10 @@ class Windows95Maze{
         this.WallsEmissiveIntensity = WallsEmissiveIntensity;
         this.WallsSpecular = WallsSpecular;
         this.WallsShininess = WallsShininess;
+        
+        this.LightColor = LightColor;
+        this.LightIntensity = LightIntensity;
+        this.LightDecay = LightDecay;
         
         this.MazeTotalWidth = this.MazeWidth*this.MazeCellSize;
         this.MazeTotalDepth = this.MazeDepth*this.MazeCellSize;
@@ -906,14 +914,14 @@ class Windows95Maze{
         var LightActor = new Actor(0,0,0);
         
         LightActor.PointLight = new THREE.PointLight({
-            color:0xFFFFFF,
-            intensity:40,
-            decay:0.5,
+            color:this.LightColor,
+            intensity:this.LightIntensity,
+            decay:this.LightDecay,
             });
         LightActor.tick = function(){
             LightActor.PointLight.position.x = this.MazeCamera.position.x;
             LightActor.PointLight.position.y = this.MazeCamera.position.y;
-            LightActor.PointLight.position.z = this.MazeCamera.position.z+100;
+            LightActor.PointLight.position.z = this.MazeCamera.position.z;
         }.bind(this);
         
         this.MazeScene.add(LightActor.PointLight);
