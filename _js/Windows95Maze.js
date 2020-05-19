@@ -849,6 +849,7 @@ class Windows95Maze{
                 map: this.MazeWallTexture,
                 emissive: this.WallsEmissiveColor,
                 emissiveIntensity: this.WallsEmissiveIntensity,
+                emissiveMap: this.MazeWallTexture,
                 });
             this.MazeCoolWallsMaterial = new THREE.MeshLambertMaterial({
                 map: CoolTexture,
