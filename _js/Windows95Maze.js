@@ -802,7 +802,7 @@ class Windows95Maze{
                         mesh.material = this.GetCoolMaterial();
                         var coolactor = new Actor(0,0,0);
                         coolactor.mesh = mesh;
-                        this.MazeScene.add(coolactor);
+                        this.MazeScene.add(mesh);
                         this.MazeActors.push(coolactor);
                         //this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                     } else {
@@ -820,7 +820,7 @@ class Windows95Maze{
                         mesh.material = this.GetCoolMaterial();
                         var coolactor = new Actor(0,0,0);
                         coolactor.mesh = mesh;
-                        this.MazeScene.add(coolactor);
+                        this.MazeScene.add(mesh);
                         this.MazeActors.push(coolactor);
                         //this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                     } else {
@@ -838,7 +838,7 @@ class Windows95Maze{
                         mesh.material = this.GetCoolMaterial();
                         var coolactor = new Actor(0,0,0);
                         coolactor.mesh = mesh;
-                        this.MazeScene.add(coolactor);
+                        this.MazeScene.add(mesh);
                         this.MazeActors.push(coolactor);
                         //this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                     } else {
@@ -856,7 +856,7 @@ class Windows95Maze{
                         mesh.material = this.GetCoolMaterial();
                         var coolactor = new Actor(0,0,0);
                         coolactor.mesh = mesh;
-                        this.MazeScene.add(coolactor);
+                        this.MazeScene.add(mesh);
                         this.MazeActors.push(coolactor);
                         //this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                     } else {
