@@ -838,7 +838,10 @@ class Windows95Maze{
                     mesh.position.z = -( y*this.MazeCellSize )//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                     if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
-                        mesh.geometry.materialIndex = Math.randomint(0,this.MazeCoolWallMaterials.length);
+                        //mesh.geometry.materialIndex = Math.randomint(0,this.MazeCoolWallMaterials.length);
+                        mesh.geometry.faces.forEach(function (face, i) {
+                            face.materialIndex = Math.randomint(0,this.MazeCoolWallMaterials.length);
+                        }.bind(this));
                         this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                     } else {
                         this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
@@ -851,7 +854,10 @@ class Windows95Maze{
                     mesh.position.z = -( ((y+1)*this.MazeCellSize) - (this.MazeCellSize/2) );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                     if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
-                        mesh.geometry.materialIndex = Math.randomint(0,this.MazeCoolWallMaterials.length);
+                        //mesh.geometry.materialIndex = Math.randomint(0,this.MazeCoolWallMaterials.length);
+                        mesh.geometry.faces.forEach(function (face, i) {
+                            face.materialIndex = Math.randomint(0,this.MazeCoolWallMaterials.length);
+                        }.bind(this));
                         this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                     } else {
                         this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
@@ -864,7 +870,10 @@ class Windows95Maze{
                     mesh.position.z = -( (y+1)*this.MazeCellSize );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                     if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
-                        mesh.geometry.materialIndex = Math.randomint(0,this.MazeCoolWallMaterials.length);
+                        //mesh.geometry.materialIndex = Math.randomint(0,this.MazeCoolWallMaterials.length);
+                        mesh.geometry.faces.forEach(function (face, i) {
+                            face.materialIndex = Math.randomint(0,this.MazeCoolWallMaterials.length);
+                        }.bind(this));
                         this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                     } else {
                         this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
@@ -877,7 +886,10 @@ class Windows95Maze{
                     mesh.position.z = - ( ((y+1)*this.MazeCellSize) - (this.MazeCellSize/2) );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                     if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
-                        mesh.geometry.materialIndex = Math.randomint(0,this.MazeCoolWallMaterials.length);
+                        //mesh.geometry.materialIndex = Math.randomint(0,this.MazeCoolWallMaterials.length);
+                        mesh.geometry.faces.forEach(function (face, i) {
+                            face.materialIndex = Math.randomint(0,this.MazeCoolWallMaterials.length);
+                        }.bind(this));
                         this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                     } else {
                         this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
