@@ -860,8 +860,8 @@ class Windows95Maze{
             var MazeCoolWallsActor = new Actor(0,0,0);
             MazeCoolWallsActor.tick = function(){}.bind(this);
             MazeCoolWallsActor.sizeY = 1;
-            //var CoolTexture = this.MazeGlobeTexture;
-            var CoolTexture = this.MazeCoolWallList[10];
+            var CoolTexture = this.MazeGlobeTexture;
+            //var CoolTexture = this.MazeCoolWallList[10];
         } else {
             var CoolTexture = this.MazeWallTexture;
         };
