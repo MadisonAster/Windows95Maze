@@ -37,7 +37,7 @@ class Windows95Maze{
         WallsEmissiveIntensity=0.0,
         WallsSpecular=0x111111,
         WallsShininess=30,
-        CoolWallRarity=10,
+        CoolWallRarity=20,
         
         LightColor=0xFFFFFF,
         LightIntensity=1,
