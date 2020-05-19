@@ -743,7 +743,7 @@ class Windows95Maze{
         if(this.EnableCeiling){     this.CreateCeiling()};
         if(this.EnableWalls){       this.CreateWalls()};
         this.CreateCameras();
-        //this.CreateLights();
+        this.CreateLights();
         
         if (this.EnableRats){       this.CreateRatActors()};
         if (this.EnableSigns){      this.CreateSignActors()};
@@ -915,12 +915,12 @@ class Windows95Maze{
     CreateLights(){
         var LightActor = new Actor(0,0,0);
         
-        LightActor.PointLight = new THREE.PointLight({
-            color:this.LightColor,
-            intensity:this.LightIntensity,
-            decay:this.LightDecay,
-            distance:this.LightDistance,
-            });
+        LightActor.PointLight = new THREE.PointLight(
+            this.LightColor,
+            this.LightIntensity,
+            this.LightDistance,
+            this.LightDecay,
+            );
         LightActor.tick = function(){
             LightActor.PointLight.position.x = this.MazeCamera.position.x;
             LightActor.PointLight.position.y = this.MazeCamera.position.y;
