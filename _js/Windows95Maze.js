@@ -33,6 +33,8 @@ class Windows95Maze{
         FogFar=1000,
         
         WallsMaterialType='Basic',
+        WallsEmissiveColor=0x000000,
+        WallsEmissiveIntensity=0.0,
         
         MazeTexturePack=null,
         ){
@@ -74,6 +76,8 @@ class Windows95Maze{
         this.FogFar = FogFar;
         
         this.WallsMaterialType = WallsMaterialType;
+        this.WallsEmissiveColor = WallsEmissiveColor;
+        this.WallsEmissiveIntensity = WallsEmissiveIntensity;
         
         this.MazeTotalWidth = this.MazeWidth*this.MazeCellSize;
         this.MazeTotalDepth = this.MazeDepth*this.MazeCellSize;
@@ -843,6 +847,8 @@ class Windows95Maze{
         } else if (this.WallsMaterialType == 'Lambert'){
             this.MazeWallsMaterial = new THREE.MeshLambertMaterial({
                 map: this.MazeWallTexture,
+                emissive: this.WallsEmissiveColor,
+                emissiveIntensity: this.WallsEmissiveIntensity,
                 });
             this.MazeCoolWallsMaterial = new THREE.MeshLambertMaterial({
                 map: CoolTexture,
