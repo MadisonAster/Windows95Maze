@@ -810,11 +810,13 @@ class Windows95Maze{
                     mesh.updateMatrix();
                     if(!Math.randomint(0,this.MazeWidth*this.MazeDepth) && this.EnableGlobe)
                     {
-                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
+                        //this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
                     }
                     else
                     {
-                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                        //this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);   
                     }
                 }
                 if(this.MazeRows[y][x].down && y==this.MazeDepth-1) //It only does this on the outside so that there aren't cloned walls all over
