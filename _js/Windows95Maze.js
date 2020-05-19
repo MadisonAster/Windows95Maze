@@ -907,7 +907,7 @@ class Windows95Maze{
         LightActor.tick = function(){
             LightActor.PointLight.position.x = this.MazeCamera.position.x;
             LightActor.PointLight.position.y = this.MazeCamera.position.y;
-            LightActor.PointLight.position.z = this.MazeCamera.position.z;
+            LightActor.PointLight.position.z = this.MazeCamera.position.z+100;
         }.bind(this);
         
         this.MazeScene.add(LightActor.PointLight);
