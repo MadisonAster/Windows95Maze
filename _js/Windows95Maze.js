@@ -812,6 +812,24 @@ class Windows95Maze{
         return new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
     }
     
+    ZoomCrop(image){
+        var image_width = image.width;
+        var image_height =  image.height;
+        var image_aspect_ratio = image.width/image.height;
+        var width_ratio = image.width / this.MazeCellSize();
+        var height_ratio = image.height / this.MazeHeight();
+        
+        if (height_ratio < width_ratio){
+            var corrected_width = this.MazeCellSize();
+            var corrected_height = corrected_width / image_aspect_ratio;
+            
+        }else{
+            var corrected_height = this.MazeHeight();
+            var corrected_width = corrected_height * image_aspect_ratio;
+        };
+        return [correctedwidth, correctedheight];
+    }
+    
     CreateWalls(){
         this.MazeCombinedWalls = new THREE.Geometry();
         this.MazeCoolWalls = new THREE.Geometry();
