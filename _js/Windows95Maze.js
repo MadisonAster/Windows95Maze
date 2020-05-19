@@ -769,13 +769,13 @@ class Windows95Maze{
                     mesh.position.y = this.MazeHeight/2;
                     mesh.position.z = -( y*this.MazeCellSize )//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
-                    if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
+                    if(!Math.randomint(0,this.MazeWidth*this.MazeDepth) && this.EnableGlobe)
                     {
-                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                     }
                     else
                     {
-                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
                     }
 
                 }
@@ -786,13 +786,13 @@ class Windows95Maze{
                     mesh.position.y = this.MazeHeight/2;
                     mesh.position.z = -( ((y+1)*this.MazeCellSize) - (this.MazeCellSize/2) );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
-                    if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
+                    if(!Math.randomint(0,this.MazeWidth*this.MazeDepth) && this.EnableGlobe)
                     {
-                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                     }
                     else
                     {
-                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
                     }
                 }
                 if(this.MazeRows[y][x].down && y==this.MazeDepth-1) //It only does this on the outside so that there aren't cloned walls all over
@@ -802,13 +802,13 @@ class Windows95Maze{
                     mesh.position.y = this.MazeHeight/2;
                     mesh.position.z = -( (y+1)*this.MazeCellSize );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
-                    if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
+                    if(!Math.randomint(0,this.MazeWidth*this.MazeDepth) && this.EnableGlobe)
                     {
-                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                     }
                     else
                     {
-                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
                     }
                 }
                 if(this.MazeRows[y][x].right && x==this.MazeWidth-1) //Ditto
@@ -818,32 +818,35 @@ class Windows95Maze{
                     mesh.position.y = this.MazeHeight/2;
                     mesh.position.z = - ( ((y+1)*this.MazeCellSize) - (this.MazeCellSize/2) );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
-                    if(Math.randomint(0,this.MazeWidth*this.MazeDepth))
+                    if(!Math.randomint(0,this.MazeWidth*this.MazeDepth) && this.EnableGlobe)
                     {
-                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
+                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
                     }
                     else
                     {
-                        this.MazeCoolWalls.merge(mesh.geometry, mesh.matrix);
+                        this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
                     }
                 }    
             }
         }
         
         var MazeWallsActor = new Actor(0,0,0);
-        var MazeCoolWallsActor = new Actor(0,0,0);
         MazeWallsActor.tick = function(){}.bind(this);
-        MazeCoolWallsActor.tick = function(){}.bind(this);
-        
+        MazeWallsActor.sizeY = 1;
         
         if(this.EnableGlobe){
+            var MazeCoolWallsActor = new Actor(0,0,0);
+            MazeCoolWallsActor.tick = function(){}.bind(this);
+            MazeCoolWallsActor.sizeY = 1;
             var CoolTexture = this.MazeGlobeTexture;
         } else {
             var CoolTexture = this.MazeWallTexture;
         };
         if (this.WallsMaterialType == 'Basic'){
             this.MazeWallsMaterial = new THREE.MeshBasicMaterial({map: this.MazeWallTexture});
-            this.MazeCoolWallsMaterial = new THREE.MeshBasicMaterial({map: CoolTexture});
+            if(this.EnableGlobe){
+                this.MazeCoolWallsMaterial = new THREE.MeshBasicMaterial({map: CoolTexture});
+            };
         } else if (this.WallsMaterialType == 'Lambert'){
             this.MazeWallsMaterial = new THREE.MeshLambertMaterial({
                 map: this.MazeWallTexture,
@@ -851,27 +854,26 @@ class Windows95Maze{
                 emissiveIntensity: this.WallsEmissiveIntensity,
                 emissiveMap: this.MazeWallTexture,
                 });
-            this.MazeCoolWallsMaterial = new THREE.MeshLambertMaterial({
-                map: CoolTexture,
-                });
+            if(this.EnableGlobe){
+                this.MazeCoolWallsMaterial = new THREE.MeshLambertMaterial({
+                    map: CoolTexture,
+                    });
+            };
         };
         this.MazeWallsMesh = new THREE.Mesh(this.MazeCombinedWalls, this.MazeWallsMaterial);
-        this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, this.MazeCoolWallsMaterial);
+        if(this.EnableGlobe){
+            this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, this.MazeCoolWallsMaterial);
+            this.MazeCoolWallsMesh.scale.y = .05; //For Intro animation
+            MazeCoolWallsActor.mesh = this.MazeCoolWallsMesh;
+            this.MazeScene.add(this.MazeCoolWallsMesh);
+            this.MazeActors.push(MazeCoolWallsActor);
+        };
         
         
-        MazeWallsActor.sizeY = 1;
-        MazeCoolWallsActor.sizeY = 1;
         this.MazeWallsMesh.scale.y = .05; //For Intro animation
-        this.MazeCoolWallsMesh.scale.y = .05; //For Intro animation
-        
         MazeWallsActor.mesh = this.MazeWallsMesh;
-        MazeCoolWallsActor.mesh = this.MazeCoolWallsMesh;
-        
         this.MazeScene.add(this.MazeWallsMesh);
-        this.MazeScene.add(this.MazeCoolWallsMesh);
-        
         this.MazeActors.push(MazeWallsActor);
-        this.MazeActors.push(MazeCoolWallsActor);
         
     }
     
