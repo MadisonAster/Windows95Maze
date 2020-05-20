@@ -816,18 +816,18 @@ class Windows95Maze{
         var image_width = image.width;
         var image_height =  image.height;
         var image_aspect_ratio = image.width/image.height;
-        var width_ratio = image.width / this.MazeCellSize();
-        var height_ratio = image.height / this.MazeHeight();
+        var width_ratio = image.width / this.MazeCellSize;
+        var height_ratio = image.height / this.MazeHeight;
         
         if (height_ratio < width_ratio){
-            var corrected_width = this.MazeCellSize();
+            var corrected_width = this.MazeCellSize;
             var corrected_height = corrected_width / image_aspect_ratio;
             
         }else{
-            var corrected_height = this.MazeHeight();
+            var corrected_height = this.MazeHeight;
             var corrected_width = corrected_height * image_aspect_ratio;
         };
-        return [correctedwidth, correctedheight];
+        return [corrected_width, corrected_height];
     }
     
     CreateWalls(){
@@ -846,10 +846,9 @@ class Windows95Maze{
                     if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
                         var coolindex = Math.randomint(0,this.MazeCoolWallMaterials.length-1);
                         var cooltexture = this.MazeCoolWallTextures[coolindex];
-                        var correctedheight = cooltexture.image.height;
-                        var correctedwidth = cooltexture.image.width;
+                        let [corrected_width, corrected_height] = this.ZoomCrop(cooltexture.image);
                         
-                        var mesh = new THREE.Mesh( new THREE.CubeGeometry(correctedwidth, correctedheight, 2, 0, 0, 0) );
+                        var mesh = new THREE.Mesh( new THREE.CubeGeometry(corrected_width, corrected_height, 2, 0, 0, 0) );
                         mesh.position.x = -((x+1)*this.MazeCellSize) + (this.MazeCellSize/2);
                         mesh.position.y = this.MazeHeight/2;
                         mesh.position.z = -( y*this.MazeCellSize );//(this.MazeDepth*this.MazeCellSize) - y;
@@ -870,10 +869,9 @@ class Windows95Maze{
                     if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
                         var coolindex = Math.randomint(0,this.MazeCoolWallMaterials.length-1);
                         var cooltexture = this.MazeCoolWallTextures[coolindex];
-                        var correctedheight = cooltexture.image.height;
-                        var correctedwidth = cooltexture.image.width;
+                        let [corrected_width, corrected_height] = this.ZoomCrop(cooltexture.image);
                         
-                        var mesh = new THREE.Mesh( new THREE.CubeGeometry(2, correctedheight, correctedwidth, 0, 0, 0) );
+                        var mesh = new THREE.Mesh( new THREE.CubeGeometry(2, corrected_height, corrected_width, 0, 0, 0) );
                         mesh.position.x = -((x)*this.MazeCellSize);// - (this.MazeCellSize/2);
                         mesh.position.y = this.MazeHeight/2;
                         mesh.position.z = -( ((y+1)*this.MazeCellSize) - (this.MazeCellSize/2) );//(this.MazeDepth*this.MazeCellSize) - y;
@@ -894,10 +892,9 @@ class Windows95Maze{
                     if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
                         var coolindex = Math.randomint(0,this.MazeCoolWallMaterials.length-1);
                         var cooltexture = this.MazeCoolWallTextures[coolindex];
-                        var correctedheight = cooltexture.image.height;
-                        var correctedwidth = cooltexture.image.width;
+                        let [corrected_width, corrected_height] = this.ZoomCrop(cooltexture.image);
                         
-                        var mesh = new THREE.Mesh( new THREE.CubeGeometry(correctedwidth, correctedheight, 2, 0, 0, 0) );
+                        var mesh = new THREE.Mesh( new THREE.CubeGeometry(corrected_width, corrected_height, 2, 0, 0, 0) );
                         mesh.position.x = -(((x+1)*this.MazeCellSize) - (this.MazeCellSize/2));
                         mesh.position.y = this.MazeHeight/2;
                         mesh.position.z = -( (y+1)*this.MazeCellSize );//(this.MazeDepth*this.MazeCellSize) - y;
@@ -918,12 +915,9 @@ class Windows95Maze{
                     if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
                         var coolindex = Math.randomint(0,this.MazeCoolWallMaterials.length-1);
                         var cooltexture = this.MazeCoolWallTextures[coolindex];
-                        var correctedheight = cooltexture.image.height;
-                        var correctedwidth = cooltexture.image.width;
-                        //console.log('cooltexture', cooltexture.image.height);
-                        //console.log('cooltexture', cooltexture.image.width);
+                        let [corrected_width, corrected_height] = this.ZoomCrop(cooltexture.image);
                         
-                        var mesh = new THREE.Mesh( new THREE.CubeGeometry(2, correctedheight, correctedwidth, 0, 0, 0) );
+                        var mesh = new THREE.Mesh( new THREE.CubeGeometry(2, corrected_height, corrected_width, 0, 0, 0) );
                         mesh.position.x = -((x+1)*this.MazeCellSize);// - (this.MazeCellSize/2);
                         mesh.position.y = this.MazeHeight/2;
                         mesh.position.z = - ( ((y+1)*this.MazeCellSize) - (this.MazeCellSize/2) );//(this.MazeDepth*this.MazeCellSize) - y;
