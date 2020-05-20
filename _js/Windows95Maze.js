@@ -19,7 +19,7 @@ class Windows95Maze{
         
         MazeDebug=false,
         MazeAutopilot=true,
-        MazeSpeed=4,
+        MazeSpeed=2,
         MazeTickDelta=10,
         MazeCellSize=320,
         MazeHeight=200,
