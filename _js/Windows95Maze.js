@@ -207,7 +207,7 @@ class Windows95Maze{
                 }
             }
         }
-        if (this.MazeAutopilot) {
+        if (this.MazeAutopilot == true) {
             if( !this.MazeMovement && !this.MazeTurning) {
                 var Options = {
                     'n': this.MazeRows[this.MazePosZ][this.MazePosX].up,
