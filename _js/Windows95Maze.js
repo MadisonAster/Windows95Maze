@@ -878,6 +878,7 @@ class Windows95Maze{
                         var coolindex = Math.randomint(0,this.MazeCoolWallMaterials.length-1);
                         var cooltexture = this.MazeCoolWallTextures[coolindex];
                         if (this.CoolWallZoomCrop == true){
+                            console.log('lolololol!');
                             let [corrected_width, corrected_height] = this.ZoomCrop(cooltexture.image);
                         } else {
                             var corrected_width = this.MazeCellSize;
