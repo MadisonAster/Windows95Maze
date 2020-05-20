@@ -207,6 +207,7 @@ class Windows95Maze{
                 }
             }
         }
+        /*
         if (this.MazeAutopilot == true) {
             if( !this.MazeMovement && !this.MazeTurning) {
                 var Options = {
@@ -229,6 +230,7 @@ class Windows95Maze{
                 };
             };
         };
+        */
     }
     
     Animate(){
