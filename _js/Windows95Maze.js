@@ -848,12 +848,12 @@ class Windows95Maze{
                     if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
                         var coolindex = Math.randomint(0,this.MazeCoolWallMaterials.length-1);
                         var cooltexture = this.MazeCoolWallTextures[coolindex];
-                        if (this.CoolWallZoomCrop == true){
+                        //if (this.CoolWallZoomCrop == true){
                             let [corrected_width, corrected_height] = this.ZoomCrop(cooltexture.image);
-                        } else {
-                            var corrected_width = this.MazeCellSize;
-                            var corrected_height = this.MazeHeight;
-                        };
+                        //} else {
+                        //    var corrected_width = this.MazeCellSize;
+                        //    var corrected_height = this.MazeHeight;
+                        //};
                         
                         
                         var mesh = new THREE.Mesh( new THREE.CubeGeometry(corrected_width, corrected_height, 2, 0, 0, 0) );
