@@ -207,6 +207,28 @@ class Windows95Maze{
                 }
             }
         }
+        if (this.MazeAutopilot) {
+            if( !this.MazeMovement && !this.MazeTurning) {
+                var Options = {
+                    'n': this.MazeRows[this.MazePosZ][this.MazePosX].up,
+                    'e': this.MazeRows[this.MazePosZ][this.MazePosX].right,
+                    's': this.MazeRows[this.MazePosZ][this.MazePosX].down,
+                    'w': this.MazeRows[this.MazePosZ][this.MazePosX].left,
+                };
+                var OptionKeys = ['n','e','s','w'];
+                var forwardindex = OptionKeys.indexOf(this.MazeOrientation);
+                var leftdir = OptionKeys[(forwardindex+3) % 4];
+                
+                if (!Options[leftdir]){ //if possible turn left
+                    this.Turn('l');
+                    this.Go('f');
+                } else if (!Options[this.MazeOrientation]) { //elif possible go forward
+                    this.Go('f');
+                } else { //else turn right
+                    this.Turn('r');
+                };
+            };
+        };
     }
     
     Animate(){
