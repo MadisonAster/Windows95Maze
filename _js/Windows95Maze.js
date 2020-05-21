@@ -543,7 +543,7 @@ class Windows95Maze{
     }
 
     Turn(d){
-        if(!this.MazeTurning)
+        if(!this.MazeTurning && !this.MazeMovement && !this.MazeFlipping)
         {
             this.MazeTurnQueue++;
             //if(this.MazeTurnQueue<2) this fixes the infinite spin bug but makes the controls suck
@@ -612,7 +612,7 @@ class Windows95Maze{
 
     Go(d){
         //I have a feeling this might be able to be simplified a bit 
-        if(!this.MazeMovement)
+        if(!this.MazeTurning && !this.MazeMovement && !this.MazeFlipping)
         {
             this.MazeGoQueue++;
             //if(this.MazeGoQueue<2)
