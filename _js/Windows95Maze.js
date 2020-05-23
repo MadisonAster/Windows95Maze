@@ -199,16 +199,23 @@ class Windows95Maze{
     //////////////Setup///////////////
     Tick(){
         if (this.MazeIntroAnimation == true) {
+            var DidSomething = false;
             for(var i=0;i<this.MazeActors.length;++i) {
-                this.MazeActors[i].tick();
                 if(this.MazeActors[i].mesh != null){
                     //console.log(this.MazeActors[i]);
                     if(this.MazeActors[i].mesh.scale.y < this.MazeActors[i].sizeY)
                     {
                         this.MazeActors[i].mesh.scale.y += this.MazeActors[i].sizeY/100;
+                        DidSomething = true;
                     }
                 }
             }
+            if (!DidSomething) {
+                this.MazeIntroAnimation = false;
+            }
+        }
+        for(var i=0;i<this.MazeTickActors.length;++i) {
+            this.MazeTickActors[i].tick();
         }
         if (this.MazeAutopilot == true) {
             if( !this.MazeMovement && !this.MazeTurning) {
@@ -788,6 +795,7 @@ class Windows95Maze{
     /////////////Actors///////////////
     CreateActors(){
         this.MazeActors = new Array();
+        this.MazeTickActors = new Array();
         
         if(this.EnableFloor){       this.CreateFloor()};
         if(this.EnableCeiling){     this.CreateCeiling()};
@@ -1154,7 +1162,9 @@ class Windows95Maze{
     CreateSpinnerActors(){
         for(var i=0;i<this.MazeSpinners;++i)
         {
-            this.MazeActors.push(this.Spinner(...this.GetRandomCellPos(50)));
+            var spinner = this.Spinner(...this.GetRandomCellPos(50));
+            this.MazeActors.push(spinner);
+            this.MazeTickActors.push(spinner);
         }
     }
 
@@ -1272,7 +1282,9 @@ class Windows95Maze{
             var Z = Math.randomint(0,this.MazeDepth-1);
             //var X = Math.randomint(0,this.MazeTotalWidth) + this.MazeCellSize/2;
             //var Z = Math.randomint(0,this.MazeTotalDepth) + this.MazeCellSize/2;
-            this.MazeActors.push(this.Rat(X,50,Z));
+            var rat = this.Rat(X,50,Z)
+            this.MazeActors.push(rat);
+            this.MazeTickActors.push(rat);
         }
     }
     
