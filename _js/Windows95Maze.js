@@ -19,6 +19,7 @@ class Windows95Maze{
         
         MazeDebug=false,
         MazeAutopilot=true,
+        MazeIntroAnimation=true,
         MazeSpeed=2,
         MazeTickDelta=10,
         MazeCellSize=320,
@@ -75,6 +76,7 @@ class Windows95Maze{
         
         this.MazeDebug = MazeDebug;
         this.MazeAutopilot = MazeAutopilot;
+        this.MazeIntroAnimation = MazeIntroAnimation;
         this.MazeSpeed = MazeSpeed;
         this.MazeTickDelta = MazeTickDelta;
         this.MazeCellSize = MazeCellSize;
@@ -196,14 +198,15 @@ class Windows95Maze{
     
     //////////////Setup///////////////
     Tick(){
-        for(var i=0;i<this.MazeActors.length;++i)
-        {
-            this.MazeActors[i].tick();
-            if(this.MazeActors[i].mesh != null){
-                //console.log(this.MazeActors[i]);
-                if(this.MazeActors[i].mesh.scale.y < this.MazeActors[i].sizeY)
-                {
-                    this.MazeActors[i].mesh.scale.y += this.MazeActors[i].sizeY/100;
+        if (this.MazeIntroAnimation == true) {
+            for(var i=0;i<this.MazeActors.length;++i) {
+                this.MazeActors[i].tick();
+                if(this.MazeActors[i].mesh != null){
+                    //console.log(this.MazeActors[i]);
+                    if(this.MazeActors[i].mesh.scale.y < this.MazeActors[i].sizeY)
+                    {
+                        this.MazeActors[i].mesh.scale.y += this.MazeActors[i].sizeY/100;
+                    }
                 }
             }
         }
@@ -982,10 +985,15 @@ class Windows95Maze{
         if(this.EnableGlobe){
             var MazeCoolWallsActor = new Actor(0,0,0);
             MazeCoolWallsActor.tick = function(){}.bind(this);
-            MazeCoolWallsActor.sizeY = 1;
             this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, this.MazeCoolWallMaterials);
-            this.MazeCoolWallsMesh.scale.y = .05; //For Intro animation
             MazeCoolWallsActor.mesh = this.MazeCoolWallsMesh;
+            if (this.MazeIntroAnimation == true{
+                MazeCoolWallsActor.sizeY = 1;
+                MazeCoolWallsActor.mesh.scale.y = .05; //For Intro animation
+            } else {
+                MazeCoolWallsActor.mesh.scale.y = 1; //For Intro animation
+            }
+            
             this.MazeScene.add(this.MazeCoolWallsMesh);
             this.MazeActors.push(MazeCoolWallsActor);
         };
@@ -1011,10 +1019,17 @@ class Windows95Maze{
         };
         var MazeWallsActor = new Actor(0,0,0);
         MazeWallsActor.tick = function(){}.bind(this);
-        MazeWallsActor.sizeY = 1;
         this.MazeWallsMesh = new THREE.Mesh(this.MazeCombinedWalls, this.MazeWallsMaterial);
-        this.MazeWallsMesh.scale.y = .05; //For Intro animation
         MazeWallsActor.mesh = this.MazeWallsMesh;
+        if (this.MazeIntroAnimation == true{
+            MazeWallsActor.sizeY = 1;
+            MazeWallsActor.mesh.scale.y = .05; 
+        } else {
+            MazeWallsActor.mesh.scale.y = 1; //For Intro animation
+        }
+
+        
+        
         this.MazeScene.add(this.MazeWallsMesh);
         this.MazeActors.push(MazeWallsActor);
         
@@ -1151,9 +1166,14 @@ class Windows95Maze{
         ));
         StartActor.mesh.material.transparent=true;
         StartActor.mesh.material.opacity=0.5;
+        if (this.MazeIntroAnimation == true{
+            StartActor.sizeY = 1;
+            StartActor.mesh.scale.y = 0.05; //For Intro animation
+        } else {
+            StartActor.mesh.scale.y = 1;
+        }
         
-        StartActor.mesh.scale.y = 0.05; //For Intro animation
-        StartActor.sizeY = 1;
+        
         this.MazeScene.add(StartActor.mesh);
         StartActor.tick = function()
         {
@@ -1174,8 +1194,14 @@ class Windows95Maze{
         //EndActor.mesh.position.x = X;
         //EndActor.mesh.position.y = Y;
         //EndActor.mesh.position.z = Z;
-        //EndActor.mesh.scale.y = 0.05;
-        EndActor.sizeY = 1.25;
+        
+        if (this.MazeIntroAnimation == true{
+            EndActor.sizeY = 1;
+            EndActor.mesh.scale.y = 0.05; //For Intro animation
+        } else {
+            EndActor.mesh.scale.y = 1;
+        }
+        
         this.MazeScene.add(EndActor.mesh)
         EndActor.tick = function()
         {
@@ -1221,8 +1247,13 @@ class Windows95Maze{
         SignActor.mesh.material.transparent=true;
         SignActor.mesh.material.opacity=0.5;
         
-        SignActor.mesh.scale.y = 0.05; //For Intro animation
-        SignActor.sizeY = 1;
+        if (this.MazeIntroAnimation == true{
+            SignActor.sizeY = 1;
+            SignActor.mesh.scale.y = 0.05; //For Intro animation
+        } else {
+            SignActor.mesh.scale.y = 1;
+        }
+
 
         this.MazeScene.add(SignActor.mesh);
         
@@ -1252,8 +1283,13 @@ class Windows95Maze{
         ));
         
         RatActor.mesh.material.transparent=true;
-        RatActor.mesh.scale.y = 0.05; //For Intro animation
-        RatActor.sizeY = 1;
+        if (this.MazeIntroAnimation == true{
+            RatActor.sizeY = 1;
+            RatActor.mesh.scale.y = 0.05; //For Intro animation
+        } else {
+            RatActor.mesh.scale.y = 1;
+        }
+        
         RatActor.mesh.position.z = -((RatActor.z*this.MazeCellSize) + (this.MazeCellSize)/2);
         RatActor.mesh.position.x = -((RatActor.x*this.MazeCellSize) + (this.MazeCellSize)/2);
         //RatActor.mesh.position.z = -((RatActor.z) + (this.MazeCellSize)/2);
@@ -1352,8 +1388,13 @@ class Windows95Maze{
             new THREE.MeshPhongMaterial({ color: 0xcccccc, specular: 0xffffff})
         ));
         SpinnerActor.mesh.scale.x=50;
-        SpinnerActor.mesh.scale.y=0.05; //For Intro animation
-        SpinnerActor.sizeY=50;
+        if (this.MazeIntroAnimation == true{
+            SpinnerActor.sizeY = 50;
+            SpinnerActor.mesh.scale.y = 0.05; //For Intro animation
+        } else {
+            SpinnerActor.mesh.scale.y = 50;
+        }
+        
         SpinnerActor.mesh.scale.z=50;
 
         this.MazeScene.add(SpinnerActor.mesh);
