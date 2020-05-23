@@ -578,8 +578,8 @@ class Windows95Maze{
                     }
                     var turnInt = setInterval(function()
                     {
-                        this.MazeTurning++;
-                        this.MazeCamera.rotation.y -= Math.radians(1);
+                        this.MazeTurning += this.MazeSpeed;
+                        this.MazeCamera.rotation.y -= Math.radians(this.MazeSpeed);
                         if(this.MazeTurning==90)
                         {
                             this.MazeTurning=0;
@@ -604,8 +604,8 @@ class Windows95Maze{
                     }
                     var turnInt = setInterval(function()
                     {
-                        this.MazeTurning++;
-                        this.MazeCamera.rotation.y += Math.radians(1);
+                        this.MazeTurning += this.MazeSpeed;
+                        this.MazeCamera.rotation.y += Math.radians(this.MazeSpeed);
                         if(this.MazeTurning==90)
                         {
                             this.MazeTurning=0;
