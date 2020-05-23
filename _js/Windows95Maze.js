@@ -235,8 +235,8 @@ class Windows95Maze{
     }
     
     Animate(){
-        //requestAnimationFrame(this.Animate.bind(this));
-        window.requestAnimFrame (this.Animate.bind(this));
+        requestAnimationFrame(this.Animate.bind(this));
+        //window.requestAnimFrame (this.Animate.bind(this));
         this.Render();
     }
     
