@@ -987,7 +987,7 @@ class Windows95Maze{
             MazeCoolWallsActor.tick = function(){}.bind(this);
             this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, this.MazeCoolWallMaterials);
             MazeCoolWallsActor.mesh = this.MazeCoolWallsMesh;
-            if (this.MazeIntroAnimation == true{
+            if (this.MazeIntroAnimation == true) {
                 MazeCoolWallsActor.sizeY = 1;
                 MazeCoolWallsActor.mesh.scale.y = .05; //For Intro animation
             } else {
@@ -1021,7 +1021,7 @@ class Windows95Maze{
         MazeWallsActor.tick = function(){}.bind(this);
         this.MazeWallsMesh = new THREE.Mesh(this.MazeCombinedWalls, this.MazeWallsMaterial);
         MazeWallsActor.mesh = this.MazeWallsMesh;
-        if (this.MazeIntroAnimation == true{
+        if (this.MazeIntroAnimation == true) {
             MazeWallsActor.sizeY = 1;
             MazeWallsActor.mesh.scale.y = .05; 
         } else {
@@ -1166,7 +1166,7 @@ class Windows95Maze{
         ));
         StartActor.mesh.material.transparent=true;
         StartActor.mesh.material.opacity=0.5;
-        if (this.MazeIntroAnimation == true{
+        if (this.MazeIntroAnimation == true) {
             StartActor.sizeY = 1;
             StartActor.mesh.scale.y = 0.05; //For Intro animation
         } else {
@@ -1195,7 +1195,7 @@ class Windows95Maze{
         //EndActor.mesh.position.y = Y;
         //EndActor.mesh.position.z = Z;
         
-        if (this.MazeIntroAnimation == true{
+        if (this.MazeIntroAnimation == true) {
             EndActor.sizeY = 1;
             EndActor.mesh.scale.y = 0.05; //For Intro animation
         } else {
@@ -1247,7 +1247,7 @@ class Windows95Maze{
         SignActor.mesh.material.transparent=true;
         SignActor.mesh.material.opacity=0.5;
         
-        if (this.MazeIntroAnimation == true{
+        if (this.MazeIntroAnimation == true) {
             SignActor.sizeY = 1;
             SignActor.mesh.scale.y = 0.05; //For Intro animation
         } else {
@@ -1283,7 +1283,7 @@ class Windows95Maze{
         ));
         
         RatActor.mesh.material.transparent=true;
-        if (this.MazeIntroAnimation == true{
+        if (this.MazeIntroAnimation == true) {
             RatActor.sizeY = 1;
             RatActor.mesh.scale.y = 0.05; //For Intro animation
         } else {
@@ -1388,7 +1388,7 @@ class Windows95Maze{
             new THREE.MeshPhongMaterial({ color: 0xcccccc, specular: 0xffffff})
         ));
         SpinnerActor.mesh.scale.x=50;
-        if (this.MazeIntroAnimation == true{
+        if (this.MazeIntroAnimation == true) {
             SpinnerActor.sizeY = 50;
             SpinnerActor.mesh.scale.y = 0.05; //For Intro animation
         } else {
