@@ -806,9 +806,9 @@ class Windows95Maze{
         if (this.EnableRats){       this.CreateRatActors()};
         if (this.EnableSigns){      this.CreateSignActors()};
         if (this.EnableSpinners){   this.CreateSpinnerActors()};
-        if (this.EnableStart){      this.MazeActors.push(this.Start(this.MazeCamera.position.x,this.MazeHeight/2,this.MazeCamera.position.z+100))};
-        //if (this.EnableEnd){        this.MazeActors.push(this.End(-this.MazeTotalWidth+(this.MazeCellSize/2),this.MazeHeight/2,-this.MazeTotalDepth+(this.MazeCellSize/2)))};
-        if (this.EnableEnd){        this.MazeActors.push(this.End(0-(this.MazeCellSize/2),this.MazeHeight/2,0-(this.MazeCellSize/2)))};
+        if (this.EnableStart){      this.Start(this.MazeCamera.position.x,this.MazeHeight/2,this.MazeCamera.position.z+100)};
+        //if (this.EnableEnd){        this.End(-this.MazeTotalWidth+(this.MazeCellSize/2),this.MazeHeight/2,-this.MazeTotalDepth+(this.MazeCellSize/2))};
+        if (this.EnableEnd){        this.End(0-(this.MazeCellSize/2),this.MazeHeight/2,0-(this.MazeCellSize/2))};
         
         if (this.EnableFog){        this.CreateFog()};
     }
