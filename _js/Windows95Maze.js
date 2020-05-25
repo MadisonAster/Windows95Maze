@@ -1154,21 +1154,27 @@ class Windows95Maze{
     }
     
     CreateSignActors(){
-        for(var i=0;i<this.MazeSigns;++i)
-        {
+        for(var i=0;i<this.MazeSigns;++i){
             this.MazeActors.push(this.OpenGLSign(...this.GetRandomCellPos(this.MazeHeight/2)));
         }
     }
     
     CreateSpinnerActors(){
-        for(var i=0;i<this.MazeSpinners;++i)
-        {
+        for(var i=0;i<this.MazeSpinners;++i){
             var spinner = this.Spinner(...this.GetRandomCellPos(50));
-            this.MazeActors.push(spinner);
-            this.MazeTickActors.push(spinner);
         }
     }
-
+    
+    CreateRatActors(){
+        for(var i=0;i<this.MazeRats;++i){
+            var X = Math.randomint(0,this.MazeWidth-1);
+            var Z = Math.randomint(0,this.MazeDepth-1);
+            //var X = Math.randomint(0,this.MazeTotalWidth) + this.MazeCellSize/2;
+            //var Z = Math.randomint(0,this.MazeTotalDepth) + this.MazeCellSize/2;
+            var rat = this.Rat(X,50,Z);
+        }
+    }
+    
     Start(X,Y,Z){
         var StartActor = new Actor(X,Y,Z);
         StartActor.name="start";
@@ -1191,6 +1197,8 @@ class Windows95Maze{
         {
             StartActor.mesh.rotation.y = this.MazeCamera.rotation.y;
         }.bind(this);
+        this.MazeTickActors.push(StartActor);
+        this.MazeActors.push(StartActor);
         return StartActor;
     }
     
@@ -1247,6 +1255,9 @@ class Windows95Maze{
                 */
             }
         }.bind(this);
+        
+        this.MazeTickActors.push(EndActor);
+        this.MazeActors.push(EndActor);
         return EndActor;
     }
 
@@ -1273,22 +1284,12 @@ class Windows95Maze{
         {
             SignActor.mesh.rotation.y = this.MazeCamera.rotation.y;
         }.bind(this);
+        
+        this.MazeTickActors.push(SignActor);
+        this.MazeActors.push(SignActor);
         return SignActor;
     }
-    
-    CreateRatActors(){
-        for(var i=0;i<this.MazeRats;++i)
-        {
-            var X = Math.randomint(0,this.MazeWidth-1);
-            var Z = Math.randomint(0,this.MazeDepth-1);
-            //var X = Math.randomint(0,this.MazeTotalWidth) + this.MazeCellSize/2;
-            //var Z = Math.randomint(0,this.MazeTotalDepth) + this.MazeCellSize/2;
-            var rat = this.Rat(X,50,Z)
-            this.MazeActors.push(rat);
-            this.MazeTickActors.push(rat);
-        }
-    }
-    
+        
     Rat(X,Y,Z){
         var RatActor = new Actor(X,Y,Z);
         RatActor.AddMesh(new THREE.Mesh(
@@ -1392,6 +1393,9 @@ class Windows95Maze{
                 }
             }
         }.bind(this);
+        
+        this.MazeTickActors.push(RatActor);
+        this.MazeActors.push(RatActor);
         return RatActor;
     }
 
@@ -1424,6 +1428,8 @@ class Windows95Maze{
                 SpinnerActor.tick = function(){return 0}
             }
         }.bind(this);
+        this.MazeTickActors.push(SpinnerActor);
+        this.MazeActors.push(SpinnerActor);
         return SpinnerActor;
     }
     //////////////////////////////////
