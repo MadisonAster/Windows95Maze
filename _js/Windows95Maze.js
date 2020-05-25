@@ -1068,6 +1068,7 @@ class Windows95Maze{
         
         this.MazeScene.add(LightActor.PointLight);
         this.MazeActors.push(LightActor);
+        this.MazeTickActors.push(LightActor);
     }
     
     CreateCameras(){
