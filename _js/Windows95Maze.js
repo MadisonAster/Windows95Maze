@@ -10,7 +10,8 @@ class Windows95Maze{
         EnableFloor=true,
         EnableCeiling=true,
         EnableWalls=true,
-        EnableGlobe=true,
+        EnableCoolWalls=true,
+        EnableLights=false,
         EnableRats=true,
         EnableSigns=true,
         EnableSpinners=true,
@@ -109,7 +110,8 @@ class Windows95Maze{
         this.EnableFloor = EnableFloor;
         this.EnableCeiling = EnableCeiling;
         this.EnableWalls = EnableWalls;
-        this.EnableGlobe = EnableGlobe;
+        this.EnableCoolWalls = EnableCoolWalls;
+        this.EnableLights = EnableLights;
         this.EnableRats = EnableRats;
         this.EnableSigns = EnableSigns;
         this.EnableSpinners = EnableSpinners;
@@ -177,19 +179,20 @@ class Windows95Maze{
         if(this.EnableSigns){   this.CreateTexturePromise(this.MazeOpenGLImagePath).then(function(texture){this.MazeOpenGLTexture = texture}.bind(this))};
         
         
-        if(this.EnableGlobe){   };
-        if (this.MazeCoolWallList != null){
-            for (var i=0;i<this.MazeCoolWallList.length;++i){
-                this.CreateTexturePromise(this.MazeCoolWallList[i]).then(function(texture){
-                    this.MazeCoolWallTextures.push(texture);
-                    this.MazeCoolWallMaterials.push(new THREE.MeshBasicMaterial({map: texture}));
+        if(this.EnableCoolWalls){
+            if (this.MazeCoolWallList != null){
+                for (var i=0;i<this.MazeCoolWallList.length;++i){
+                    this.CreateTexturePromise(this.MazeCoolWallList[i]).then(function(texture){
+                        this.MazeCoolWallTextures.push(texture);
+                        this.MazeCoolWallMaterials.push(new THREE.MeshBasicMaterial({map: texture}));
+                    }.bind(this));
+                };
+            } else {
+                this.CreateTexturePromise(this.MazeGlobeImagePath).then(function(texture){
+                this.MazeCoolWallTextures.push(texture);
+                this.MazeCoolWallMaterials.push(new THREE.MeshBasicMaterial({map: texture}));
                 }.bind(this));
             };
-        } else {
-            this.CreateTexturePromise(this.MazeGlobeImagePath).then(function(texture){
-            this.MazeCoolWallTextures.push(texture);
-            this.MazeCoolWallMaterials.push(new THREE.MeshBasicMaterial({map: texture}));
-            }.bind(this));
         };
         
         var promise = Promise.all(this.AllPromises);
@@ -801,7 +804,7 @@ class Windows95Maze{
         if(this.EnableCeiling){     this.CreateCeiling()};
         if(this.EnableWalls){       this.CreateWalls()};
         this.CreateCameras();
-        this.CreateLights();
+        if(this.EnableLights){     this.CreateLights()};
         
         if (this.EnableRats){       this.CreateRatActors()};
         if (this.EnableSigns){      this.CreateSignActors()};
@@ -879,7 +882,7 @@ class Windows95Maze{
                     mesh.position.z = -( y*this.MazeCellSize )//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                     this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
-                    if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
+                    if(!Math.randomint(0,this.CoolWallRarity) && this.EnableCoolWalls){
                         var coolindex = Math.randomint(0,this.MazeCoolWallMaterials.length-1);
                         var cooltexture = this.MazeCoolWallTextures[coolindex];
                         if (this.CoolWallZoomCrop == true){
@@ -908,7 +911,7 @@ class Windows95Maze{
                     mesh.position.z = -( ((y+1)*this.MazeCellSize) - (this.MazeCellSize/2) );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                     this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
-                    if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
+                    if(!Math.randomint(0,this.CoolWallRarity) && this.EnableCoolWalls){
                         var coolindex = Math.randomint(0,this.MazeCoolWallMaterials.length-1);
                         var cooltexture = this.MazeCoolWallTextures[coolindex];
                         if (this.CoolWallZoomCrop == true){
@@ -937,7 +940,7 @@ class Windows95Maze{
                     mesh.position.z = -( (y+1)*this.MazeCellSize );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                     this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
-                    if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
+                    if(!Math.randomint(0,this.CoolWallRarity) && this.EnableCoolWalls){
                         var coolindex = Math.randomint(0,this.MazeCoolWallMaterials.length-1);
                         var cooltexture = this.MazeCoolWallTextures[coolindex];
                         if (this.CoolWallZoomCrop == true){
@@ -966,7 +969,7 @@ class Windows95Maze{
                     mesh.position.z = - ( ((y+1)*this.MazeCellSize) - (this.MazeCellSize/2) );//(this.MazeDepth*this.MazeCellSize) - y;
                     mesh.updateMatrix();
                     this.MazeCombinedWalls.merge(mesh.geometry, mesh.matrix);
-                    if(!Math.randomint(0,this.CoolWallRarity) && this.EnableGlobe){
+                    if(!Math.randomint(0,this.CoolWallRarity) && this.EnableCoolWalls){
                         var coolindex = Math.randomint(0,this.MazeCoolWallMaterials.length-1);
                         var cooltexture = this.MazeCoolWallTextures[coolindex];
                         if (this.CoolWallZoomCrop == true){
@@ -991,7 +994,7 @@ class Windows95Maze{
             };
         };
         
-        if(this.EnableGlobe){
+        if(this.EnableCoolWalls){
             var MazeCoolWallsActor = new Actor(0,0,0);
             MazeCoolWallsActor.tick = function(){}.bind(this);
             this.MazeCoolWallsMesh = new THREE.Mesh(this.MazeCoolWalls, this.MazeCoolWallMaterials);
